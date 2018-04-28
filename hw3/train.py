@@ -21,7 +21,7 @@ BATCHSIZE = 4
 LR = 0.001
 MOMENTUM = 0.5
 
-EVAL_SIZE = 1000
+EVAL_SIZE = 100
 RECORD_MODEL_PERIOD = 10
 
 X_TRAIN_FP = "./data/x_train.npy"
@@ -64,7 +64,7 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d()
+loss_func = tor.nn.NLLLoss2d(dim=1)
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
 lr_schedule = StepLR(optim, step_size=20, gamma=0.9)
