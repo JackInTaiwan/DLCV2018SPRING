@@ -37,7 +37,7 @@ def data_loader(limit) :
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
-
+    y_train = y_train.astype(np.long)
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
@@ -64,7 +64,7 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d(dim=1)
+loss_func = tor.nn.NLLLoss2d()
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
 lr_schedule = StepLR(optim, step_size=20, gamma=0.9)

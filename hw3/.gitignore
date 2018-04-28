@@ -7,7 +7,7 @@ note*.py
 *.jpg
 *.txt
 *.json
-
+*_test*.py
 
 ### Dirs
 __pycache__/
