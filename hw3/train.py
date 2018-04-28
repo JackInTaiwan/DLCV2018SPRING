@@ -37,6 +37,7 @@ def data_loader(limit) :
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
+    print ("|Loaded Data: {} {}".format(str(x_train.shape), str(y_train.shape)))
 
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
@@ -52,7 +53,6 @@ def data_loader(limit) :
         drop_last=True,
     )
 
-    print ("|Loaded Data: {}". format(x_train.shape))
 
     return data_loader
 
@@ -64,7 +64,7 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d(dim=1)
+loss_func = tor.nn.NLLLoss2d()
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
 lr_schedule = StepLR(optim, step_size=20, gamma=0.9)
@@ -82,8 +82,9 @@ def train(data_loader) :
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
 
-            pred = fcn(x)
             optim.zero_grad()
+            pred = fcn(x)
+            print (y[3])
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
