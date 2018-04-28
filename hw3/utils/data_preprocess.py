@@ -23,19 +23,22 @@ def pic_to_npy(pic_dir_fp, output_fp, mode="sat", limit=float("inf")) :
 def sat_pic_to_npy(pic_dir_fp, output_fp, limit) :
     output = np.array([])
     total = len(os.listdir(pic_dir_fp)) / 2
-    i = 0
-    for file in os.listdir(pic_dir_fp) :
-        if "sat" in file :
-            i += 1
+
+    for index in range(int(total)) :
+        if index >= limit :
+            break
+
+        else :
+            file = "{:0>4}_sat.jpg".format(index)
             img = plt.imread(os.path.join(pic_dir_fp, file))
-            print ("Num: {}/{} | File: {} | Size: {}".format(i, total, file, img.shape))
+            print ("Num: {}/{} | File: {} | Size: {}".format(index, total, file, img.shape))
 
             if len(output) == 0 :
                 output = np.array([img])
+
             else :
                 print (output.shape)
                 output = np.vstack((output, np.array([img])))
-
 
     np.save(output_fp, output)
 

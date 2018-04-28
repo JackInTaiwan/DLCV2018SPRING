@@ -23,7 +23,10 @@ if __name__ == "__main__" :
     if parser.parse_args().x :
         name = "x_{}".format(parser.parse_args().x)
         x_fp = os.path.join(OUTPUT_DATA_FP, name)
-        pic_to_npy(parser.parse_args().f, x_fp, mode="sat")
+        if parser.parse_args().l != None :
+            pic_to_npy(parser.parse_args().f, x_fp, mode="sat", limit=parser.parse_args().l)
+        else :
+            pic_to_npy(parser.parse_args().f, x_fp, mode="sat")
 
     elif parser.parse_args().y :
         name = "y_{}".format(parser.parse_args().y)
