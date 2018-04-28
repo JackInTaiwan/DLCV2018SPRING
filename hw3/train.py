@@ -17,7 +17,7 @@ except :
 
 AVAILABLA_SIZE = None
 EPOCH = 100
-BATCHSIZE = 32
+BATCHSIZE = 4
 LR = 0.001
 MOMENTUM = 0.5
 
@@ -93,7 +93,7 @@ def train(data_loader) :
         #x_eval_train = Variable(x_train[:EVAL_SIZE]).type(tor.FloatTensor).cuda()
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
 
-        loss = loss_func(pred, y_batch)
+        loss = loss_func(pred, y)
         print (loss)
         #loss, acc = evaluation(vgg, loss_func, x_eval_train, y_eval_train)
         #print("Acc: {:<7} |Loss: {:<7} |".format(acc, loss))
