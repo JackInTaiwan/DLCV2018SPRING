@@ -37,8 +37,7 @@ def data_loader(limit) :
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
-    print ("|Loaded Data: {} {}".format(str(x_train.shape), str(y_train.shape)))
-
+    y_train = y_train.astype(np.long)
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
