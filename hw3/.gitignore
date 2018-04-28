@@ -10,5 +10,6 @@ note*.py
 
 
 ### Dirs
+__pycache__/
 hw3-train-validation/
 data/
