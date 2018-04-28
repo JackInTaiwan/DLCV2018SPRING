@@ -1,4 +1,5 @@
 import cv2
+import os
 import torch as tor
 import numpy as np
 from argparse import ArgumentParser
@@ -15,10 +16,11 @@ except :
 
 
 
+""" Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 100
+EPOCH = 50
 BATCHSIZE = 16
-LR = 0.001
+LR = 0.0001
 MOMENTUM = 0.5
 
 EVAL_SIZE = 100
@@ -26,6 +28,8 @@ RECORD_MODEL_PERIOD = 10
 
 X_TRAIN_FP = "./data/x_train.npy"
 Y_TRAIN_FP = "./data/y_train.npy"
+
+MODEL_ROOT = "./models"
 
 
 
@@ -37,7 +41,7 @@ def data_loader(limit) :
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
-    y_train = y_train.astype(np.long)
+    y_train = y_train.astype(np.int16)
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
@@ -64,15 +68,15 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d()
+loss_func = tor.nn.CrossEntropyLoss()
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
-lr_schedule = StepLR(optim, step_size=20, gamma=0.9)
+lr_schedule = StepLR(optim, step_size=1, gamma=0.9)
 
 
 
 """ Model Training """
-def train(data_loader) :
+def train(data_loader, model_index) :
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
@@ -94,25 +98,27 @@ def train(data_loader) :
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
 
         loss = loss_func(pred, y)
-        print (loss)
+        print ("Loss: {}".format(loss))
+
         #loss, acc = evaluation(vgg, loss_func, x_eval_train, y_eval_train)
         #print("Acc: {:<7} |Loss: {:<7} |".format(acc, loss))
 
 
         ### Save model
-        """
+
         if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(vgg.state_dict(), MODEL_ROOT + "vgg16_model_{}.pkl".format(model_index))
+            tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}.pkl".format(model_index)))
     
-            output(fp_record,
-                   "|Epoch: {:<4} |LR: {:<7} |Acc: {:<7} |Loss: {:<7} |".format(epoch + 1, optim.param_groups[0]["lr"],
-                                                                                acc, loss))
-            t = time.localtime()
-            output(fp_record,
-                   "Saving Time: {:<4}/{:<2}/{:<2} {:<2}:{:<2}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour,
-                                                                       t.tm_min))
-            output(fp_record, "\n")
-        """
+            #output(fp_record,
+            #       "|Epoch: {:<4} |LR: {:<7} |Acc: {:<7} |Loss: {:<7} |".format(epoch + 1, optim.param_groups[0]["lr"],
+            #
+            #                                                                     acc, loss))
+            #t = time.localtime()
+            #output(fp_record,
+            #       "Saving Time: {:<4}/{:<2}/{:<2} {:<2}:{:<2}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour,
+            #                                                           t.tm_min))
+            #output(fp_record, "\n")
+
 
 
 
@@ -121,9 +127,11 @@ if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-l", action="store", type=int, default=False, help="limitation of data for training")
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
+    parser.add_argument("-i", action="store", type=int, required=True)
 
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
+    model_index = parser.parse_args().i
 
     ### Load Data
     console("Load Data")
@@ -131,4 +139,4 @@ if __name__ == "__main__" :
 
     ### Train Data
     console("Train Data")
-    train(data_loader)
+    train(data_loader, model_index)
