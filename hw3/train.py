@@ -8,10 +8,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 try :
     from model import FCN
-    from utils import train_tools
+    from utils import load_data, console
 except :
     from .model import FCN
-    from .utils import train_tools
+    from .utils import load_data, console
 
 
 
@@ -31,7 +31,7 @@ Y_TRAIN_FP = "./data/y_train.npy"
 
 """ Data Setting """
 def data_loader(limit) :
-    x_train, y_train, x_size = train_tools.load_data(X_TRAIN_FP, Y_TRAIN_FP)
+    x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
 
@@ -45,7 +45,8 @@ def data_loader(limit) :
         batch_size=BATCHSIZE,
         shuffle=True,
         drop_last=True,
-)
+    )
+    return data_loader
 
 
 
@@ -116,5 +117,10 @@ if __name__ == "__main__" :
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
 
+    ### Load Data
+    console("Load Data")
     data_loader = data_loader(limit)
+
+    ### Train Data
+    console("Train Data")
     train(data_loader)
