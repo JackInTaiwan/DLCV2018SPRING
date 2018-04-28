@@ -34,6 +34,10 @@ def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+
+    # Move axis in data for Pytorch
+    x_train = np.moveaxis(x_train, 3, 1)
+
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
