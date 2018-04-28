@@ -11,10 +11,11 @@ except :
 
 
 
-x_train = np.load("./data/x_train.npy")
-
+x_train = np.load("./data/x_train.npy")[:10]
+x_train = np.moveaxis(x_train, 3, 1)
+print (x_train.shape)
 fcn = FCN()
 fcn.vgg16_init()
-x_v = Variable(tor.FloatTensor(np.array([x_train])))
+x_v = Variable(tor.FloatTensor(np.array(x_train)))
 pred = fcn(x_v)
 print (pred)

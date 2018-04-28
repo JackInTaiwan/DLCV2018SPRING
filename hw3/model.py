@@ -72,7 +72,7 @@ class FCN(nn.Module):
         self.b_6_conv_1 = self.conv(channels[13], channels[13], 3, 1)
         self.b_6_conv_2 = self.conv(channels[13], channels[13], 3, 1)
         # block 7
-        self.b_7_trans_1 = nn.ConvTranspose2d(channels[13], 7, 16, padding=16) # f.m. size = (16, 16)
+        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=channels[13], out_channels=7, kernel_size=62, stride=30) # f.m. size = (16, 16)
 
 
     def forward(self, x):
