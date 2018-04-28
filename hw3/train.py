@@ -87,7 +87,6 @@ def train(data_loader, model_index) :
 
             optim.zero_grad()
             pred = fcn(x)
-            print (y[3])
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
