@@ -9,10 +9,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 try :
     from model import FCN
-    from utils import load_data, console
+    from utils import load_data, console, record
 except :
     from .model import FCN
-    from .utils import load_data, console
+    from .utils import load_data, console, record
 
 
 
@@ -29,6 +29,8 @@ RECORD_MODEL_PERIOD = 10
 X_TRAIN_FP = "./data/x_train.npy"
 Y_TRAIN_FP = "./data/y_train.npy"
 
+RECORD_FP = "./record/model_fcn.json"
+
 MODEL_ROOT = "./models"
 
 
@@ -38,6 +40,7 @@ def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+    AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
@@ -97,27 +100,31 @@ def train(data_loader, model_index) :
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
 
         loss = loss_func(pred, y)
+        acc = 0
         print ("Loss: {}".format(loss))
-
-        #loss, acc = evaluation(vgg, loss_func, x_eval_train, y_eval_train)
-        #print("Acc: {:<7} |Loss: {:<7} |".format(acc, loss))
 
 
         ### Save model
-
         if epoch % RECORD_MODEL_PERIOD == 0:
             tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}.pkl".format(model_index)))
-    
-            #output(fp_record,
-            #       "|Epoch: {:<4} |LR: {:<7} |Acc: {:<7} |Loss: {:<7} |".format(epoch + 1, optim.param_groups[0]["lr"],
-            #
-            #                                                                     acc, loss))
-            #t = time.localtime()
-            #output(fp_record,
-            #       "Saving Time: {:<4}/{:<2}/{:<2} {:<2}:{:<2}".format(t.tm_year, t.tm_mon, t.tm_mday, t.tm_hour,
-            #                                                           t.tm_min))
-            #output(fp_record, "\n")
+            record_data = dict()
+            if epoch == 0 :
+                record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+                record_data["data_size"] = AVAILABLA_SIZE
+                record_data["batch_size"] = BATCHSIZE
+                record_data["lr_init"] = LR
+                record_data["record_epoch"] = RECORD_MODEL_PERIOD
+                record_data["lr"] = optim.param_groups[0]["lr"]
+                record_data["loss"] = loss
+                record_data["acc"] = acc
 
+            else :
+                record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+                record_data["lr"] = optim.param_groups[0]["lr"]
+                record_data["loss"] = loss
+                record_data["acc"] = acc
+
+            record(RECORD_FP, record_data)
 
 
 
