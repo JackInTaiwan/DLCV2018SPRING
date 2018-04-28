@@ -56,7 +56,6 @@ def data_loader(limit) :
         drop_last=True,
     )
 
-    print ("|Loaded Data: {}". format(x_train.shape))
 
     return data_loader
 
@@ -86,8 +85,9 @@ def train(data_loader, model_index) :
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
 
-            pred = fcn(x)
             optim.zero_grad()
+            pred = fcn(x)
+            print (y[3])
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
