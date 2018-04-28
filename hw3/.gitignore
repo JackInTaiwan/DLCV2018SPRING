@@ -1,0 +1,14 @@
+### Files
+note*.py
+*.zip
+*.h5
+*.pkl
+*.png
+*.jpg
+*.txt
+*.json
+
+
+### Dirs
+hw3-train-validation/
+data/
