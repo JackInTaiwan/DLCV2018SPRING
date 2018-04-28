@@ -17,11 +17,11 @@ except :
 
 AVAILABLA_SIZE = None
 EPOCH = 100
-BATCHSIZE = 32
+BATCHSIZE = 16
 LR = 0.001
 MOMENTUM = 0.5
 
-EVAL_SIZE = 1000
+EVAL_SIZE = 100
 RECORD_MODEL_PERIOD = 10
 
 X_TRAIN_FP = "./data/x_train.npy"
@@ -64,7 +64,7 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d()
+loss_func = tor.nn.NLLLoss2d(dim=1)
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
 lr_schedule = StepLR(optim, step_size=20, gamma=0.9)
@@ -93,7 +93,7 @@ def train(data_loader) :
         #x_eval_train = Variable(x_train[:EVAL_SIZE]).type(tor.FloatTensor).cuda()
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
 
-        loss = loss_func(pred, y_batch)
+        loss = loss_func(pred, y)
         print (loss)
         #loss, acc = evaluation(vgg, loss_func, x_eval_train, y_eval_train)
         #print("Acc: {:<7} |Loss: {:<7} |".format(acc, loss))
