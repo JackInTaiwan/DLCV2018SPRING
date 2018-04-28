@@ -19,7 +19,6 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-<<<<<<< HEAD
 EPOCH = 10
 BATCHSIZE = 8
 LR = 0.001
