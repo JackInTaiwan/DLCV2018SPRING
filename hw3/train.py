@@ -1,6 +1,7 @@
 import cv2
 import torch as tor
 import numpy as np
+import time
 from argparse import ArgumentParser
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
@@ -16,8 +17,8 @@ except :
 
 
 AVAILABLA_SIZE = None
-EPOCH = 100
-BATCHSIZE = 4
+EPOCH = 10
+BATCHSIZE = 8
 LR = 0.001
 MOMENTUM = 0.5
 
@@ -37,7 +38,10 @@ def data_loader(limit) :
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
-    y_train = y_train.astype(np.long)
+    s = time.time()
+    y_train = y_train.astype(np.int16)
+    e = time.time()
+    print ("transfer y time", e-s)
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
@@ -63,7 +67,7 @@ fcn = FCN()
 fcn.vgg16_init()
 fcn.cuda()
 
-loss_func = tor.nn.NLLLoss2d()
+loss_func = tor.nn.CrossEntropyLoss()
 optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
 #optim = tor.optim.Adam(vgg.parameters(), lr=LR)
 lr_schedule = StepLR(optim, step_size=20, gamma=0.9)
@@ -83,7 +87,6 @@ def train(data_loader) :
 
             optim.zero_grad()
             pred = fcn(x)
-            print (y[3])
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
@@ -92,7 +95,8 @@ def train(data_loader) :
         ### Evaluation
         #x_eval_train = Variable(x_train[:EVAL_SIZE]).type(tor.FloatTensor).cuda()
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
-
+        print (pred[0])
+        print (y[0])
         loss = loss_func(pred, y)
         print (loss)
         #loss, acc = evaluation(vgg, loss_func, x_eval_train, y_eval_train)
