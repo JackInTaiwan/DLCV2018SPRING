@@ -34,6 +34,7 @@ def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+    x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
 
     data_set = TensorDataset(
         data_tensor=x_train,
@@ -46,6 +47,9 @@ def data_loader(limit) :
         shuffle=True,
         drop_last=True,
     )
+
+    print ("|Loaded Data: {}". format(x_train.shape))
+
     return data_loader
 
 
