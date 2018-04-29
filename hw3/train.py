@@ -16,6 +16,7 @@ except :
 
 
 
+
 """ Parameters """
 AVAILABLA_SIZE = None
 EPOCH = 50
@@ -26,7 +27,7 @@ LR_GAMMA = 0.9
 MOMENTUM = 0.5
 
 EVAL_SIZE = 100
-RECORD_MODEL_PERIOD = 10
+RECORD_MODEL_PERIOD = 1
 
 X_TRAIN_FP = "./data/x_train.npy"
 Y_TRAIN_FP = "./data/y_train.npy"
@@ -34,6 +35,7 @@ Y_TRAIN_FP = "./data/y_train.npy"
 RECORD_FP = "./record/model_fcn.json"
 
 MODEL_ROOT = "./models"
+
 
 
 
@@ -70,6 +72,7 @@ def data_loader(limit) :
 
 
 
+
 """ Model Setup """
 ### Model Initiation
 fcn = FCN()
@@ -83,6 +86,7 @@ lr_schedule = StepLR(optim, step_size=1, gamma=0.9)
 
 
 
+
 """ Model Training """
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     for epoch in range(EPOCH):
@@ -90,6 +94,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
 
         ### Training
         lr_schedule.step()
+
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
@@ -115,24 +120,27 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         if epoch % RECORD_MODEL_PERIOD == 0:
             tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}.pkl".format(model_index)))
             record_data = dict()
-            if epoch == 0 :
-                record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
-                record_data["data_size"] = AVAILABLA_SIZE
-                record_data["batch_size"] = BATCHSIZE
-                record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
-                record_data["lr_init"] = LR
-                record_data["lr"] = optim.param_groups[0]["lr"]
-                record_data["record_epoch"] = RECORD_MODEL_PERIOD
-                record_data["loss"] = loss
-                record_data["acc"] = acc
 
-            else :
-                record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
-                record_data["lr"] = optim.param_groups[0]["lr"]
-                record_data["loss"] = loss
-                record_data["acc"] = acc
 
-            record(RECORD_FP, record_data)
+        ### Record
+        if epoch == 0 :
+            record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+            record_data["data_size"] = AVAILABLA_SIZE
+            record_data["batch_size"] = BATCHSIZE
+            record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
+            record_data["lr_init"] = LR
+            record_data["lr"] = optim.param_groups[0]["lr"]
+            record_data["record_epoch"] = RECORD_MODEL_PERIOD
+            record_data["loss"] = loss
+            record_data["acc"] = acc
+        else :
+            record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+            record_data["lr"] = optim.param_groups[0]["lr"]
+            record_data["loss"] = loss
+            record_data["acc"] = acc
+
+        record(RECORD_FP, record_data)
+
 
 
 
