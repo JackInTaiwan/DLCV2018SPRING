@@ -96,8 +96,6 @@ def train(data_loader, model_index) :
         ### Evaluation
         #x_eval_train = Variable(x_train[:EVAL_SIZE]).type(tor.FloatTensor).cuda()
         #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
-        print (pred[0])
-        print (y[0])
         loss = loss_func(pred, y)
         print ("Loss: {}".format(loss))
 
