@@ -3,7 +3,9 @@ from .data_preprocess import (
 )
 from .recorder import (
     console,
+    record,
 )
 from .train_tools import (
     load_data,
+    evaluate,
 )

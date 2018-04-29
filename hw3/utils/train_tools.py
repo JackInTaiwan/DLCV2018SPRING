@@ -9,3 +9,17 @@ def load_data(x_fp, y_fp) :
 
     return x, y, x_size
 
+
+
+def evaluate(model, x_var, y_var) :
+    import cv2
+    import torch as tor
+
+    pred = model(x_var)
+    pred = tor.max(pred, 1)[1].cuda()
+
+    correct = int((pred == y_var).data.sum())
+    total = int(y_var.size(0))
+    acc = correct / total
+
+    return acc
