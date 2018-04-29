@@ -13,3 +13,4 @@ note*.py
 __pycache__/
 hw3-train-validation/
 data/
+output/

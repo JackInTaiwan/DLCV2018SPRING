@@ -98,8 +98,9 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
 
-            optim.zero_grad()
+            #optim.zero_grad()
             pred = fcn(x)
+            optim.zero_grad()
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
