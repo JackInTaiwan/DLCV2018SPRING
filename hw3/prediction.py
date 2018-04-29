@@ -25,14 +25,17 @@ def prediction(model_fp, input_fp, output_fp, limit) :
 
     for i in range(dir_size) :
         if i < limit :
-            file_name = "{0:>4}_sat.jpg".format(i)
+            file_name = os.path.join(input_fp, "{:0>4}_sat.jpg".format(i))
             img = plt.imread(file_name)
-            img = tor.FloatTensor(np.array(img)).cuda()
-            #img_var = Variable(img).cuda()
-            pred_img = model(img)
-            #pred_img = model(img_var)
-            pred_img = pred_img.cpu().numpy()
+            img = np.moveaxis(img, 2, 0)
+            img = tor.FloatTensor(np.array([img])).cuda()
+            img_var = Variable(img).cuda()
+            #pred_img = model(img)
+            pred_img = model(img_var)
+            pred_img = pred_img.cpu().data.numpy()[0]
+            pred_img = np.moveaxis(pred_img, 0, 2)
             print (pred_img)
+            print (type(pred_img))
             scipy.misc.imsave(os.path.join(output_fp, "{0:>4}_mask.png".format(i)), pred_img)
 
         else :
