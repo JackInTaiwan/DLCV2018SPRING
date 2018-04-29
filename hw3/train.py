@@ -2,6 +2,7 @@ import cv2
 import os
 import torch as tor
 import numpy as np
+import time
 from argparse import ArgumentParser
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
@@ -25,8 +26,7 @@ LR = 0.0001
 LR_STEPSIZE = 20
 LR_GAMMA = 0.9
 MOMENTUM = 0.5
-
-EVAL_SIZE = 100
+EVAL_SIZE = 8
 RECORD_MODEL_PERIOD = 1
 
 X_TRAIN_FP = "./data/x_train.npy"
@@ -53,7 +53,7 @@ def data_loader(limit) :
     y_train = y_train.astype(np.int16)
 
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
-    x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[EVAL_SIZE]
+    x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
         data_tensor=x_train,
@@ -107,13 +107,12 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
 
 
         ### Evaluation
-        x_eval_train = Variable(x_eval_train)
-        y_eval_train = Variable(y_eval_train)
-
+        x_eval_train_var = Variable(x_eval_train).type(tor.FloatTensor).cuda()
+        y_eval_train_var = Variable(y_eval_train).cuda()
         loss = loss_func(pred, y)
-        acc = evaluate(fcn, x_eval_train, y_eval_train)
+        acc = evaluate(fcn, x_eval_train_var, y_eval_train_var)
 
-        print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
+        print ("|Loss: {:<8} |Acc: {:<8}".format(float(loss.data), acc))
 
 
         ### Save model

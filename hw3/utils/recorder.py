@@ -10,7 +10,8 @@ def record(record_fp, datum) :
     model_name = datum["model_name"]
 
     with open(record_fp, "r") as f:
-        data = json.loads(f)
+        data = json.load(f)
+    data = json.loads(data)
 
     for item in data :
         if item["model_name"] == model_name :
