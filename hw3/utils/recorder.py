@@ -14,9 +14,7 @@ def record(record_fp, datum) :
     data = json.loads(data)
 
     for item in data :
-        print (model_name)
         if item["model_name"] == model_name :
-            print ("use!!!")
             item["lr"].append(datum["lr"])
             item["loss"].append(datum["loss"])
             item["acc"].append(datum["acc"])
@@ -36,5 +34,5 @@ def record(record_fp, datum) :
         data.append(new_datum)
 
     with open(record_fp, "w") as f :
-        data_json = json.dump(data)
-        json.dumps(data_json, f)
+        data_json = json.dumps(data)
+        json.dump(data_json, f)
