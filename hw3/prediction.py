@@ -23,7 +23,7 @@ def img_recovery(img) :
     pix = [[0, 0, 0], [0, 255, 0], [255, 255, 0], [0, 0, 255], [255, 0, 255], [0, 255, 255], [255, 255, 255]]
     pix = np.array(pix).astype(np.int16)
 
-    output_img = np.zeros((img.shap[0], img.shape[1], 3))
+    output_img = np.zeros((img.shape[0], img.shape[1], 3))
     for i in range(output_img.shape[0]) :
         for j in range(output_img.shape[1]) :
             output_img[i][j] = pix[int(img[i][j])]
@@ -43,18 +43,18 @@ def prediction(model_fp, input_fp, output_fp, limit) :
     for i in range(dir_size) :
         if i < limit :
             file_name = os.path.join(input_fp, "{:0>4}_sat.jpg".format(i))
-            img = plt.imread(file_name)
+            img = plt.imread(file_name) / 255.
+            #img = plt.imread(file_name)
             img = np.moveaxis(img, 2, 0)
-            img = tor.FloatTensor(np.array([img])).cuda()
+            img = tor.FloatTensor(np.array([img]))
             img_var = Variable(img).cuda()
             pred_img = model(img_var)
-            pred_img = tor.max(pred_img, 1)[1]
-            pred_img = pred_img.cpu().data.numpy()[0]
-            output_img = img_recovery(pred_img)
-            pred_img = np.moveaxis(output_img, 0, 2)
             print (pred_img)
-            print (type(pred_img))
-            scipy.misc.imsave(os.path.join(output_fp, "{0:>4}_mask.png".format(i)), pred_img)
+            pred_img = tor.max(pred_img, 1)[1]
+            pred_img = pred_img.cpu().data.numpy()
+            pred_img = np.moveaxis(pred_img, 0, 2)
+            output_img = img_recovery(pred_img)
+            scipy.misc.imsave(os.path.join(output_fp, "{:0>4}_mask.png".format(i)), output_img)
 
         else :
             break
