@@ -20,7 +20,7 @@ except :
 """ Parameters """
 AVAILABLA_SIZE = None
 EPOCH = 50
-BATCHSIZE = 16
+BATCHSIZE = 4
 LR = 0.0001
 LR_STEPSIZE = 20
 LR_GAMMA = 0.9
@@ -119,10 +119,10 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
             tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}.pkl".format(model_index)))
-            record_data = dict()
 
 
         ### Record
+        record_data = dict()
         if epoch == 0 :
             record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
             record_data["data_size"] = AVAILABLA_SIZE

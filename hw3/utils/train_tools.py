@@ -15,7 +15,6 @@ def evaluate(model, x_var, y_var) :
     import cv2
     import torch as tor
 
-    x_var.cuda()
     y_var.cuda()
     pred = model(x_var)
 
