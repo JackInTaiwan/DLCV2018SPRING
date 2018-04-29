@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="180">
-              <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
+            <state relative-caret-position="240">
+              <caret line="137" column="66" lean-forward="false" selection-start-line="137" selection-start-column="66" selection-end-line="137" selection-end-column="66" />
               <folding />
             </state>
           </provider>
@@ -37,14 +37,14 @@
       <file leaf-file-name="recorder.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../utils/recorder.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="720">
+            <state relative-caret-position="619">
               <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_tools.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train_tools.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../utils/train_tools.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="180">
@@ -113,11 +113,11 @@
         <option value="$PROJECT_DIR$/../../../train.py" />
         <option value="$PROJECT_DIR$/../utils/__init__.py" />
         <option value="$PROJECT_DIR$/../notes_2.py" />
-        <option value="$PROJECT_DIR$/../train.py" />
         <option value="$PROJECT_DIR$/../notes.py" />
         <option value="$PROJECT_DIR$/../record/model_fcn.json" />
         <option value="$PROJECT_DIR$/../utils/recorder.py" />
         <option value="$PROJECT_DIR$/../utils/train_tools.py" />
+        <option value="$PROJECT_DIR$/../train.py" />
       </list>
     </option>
   </component>
@@ -489,14 +489,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="113" column="0" lean-forward="true" selection-start-line="113" selection-start-column="0" selection-end-line="113" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../record/model_fcn.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -515,18 +507,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../utils/train_tools.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="180">
+          <caret line="21" column="60" lean-forward="false" selection-start-line="21" selection-start-column="60" selection-end-line="21" selection-end-column="60" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/../utils/recorder.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="720">
+        <state relative-caret-position="619">
           <caret line="36" column="17" lean-forward="true" selection-start-line="36" selection-start-column="17" selection-end-line="36" selection-end-column="17" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../utils/train_tools.py">
+    <entry file="file://$PROJECT_DIR$/../train.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="180">
-          <caret line="21" column="60" lean-forward="false" selection-start-line="21" selection-start-column="60" selection-end-line="21" selection-end-column="60" />
+        <state relative-caret-position="240">
+          <caret line="137" column="66" lean-forward="false" selection-start-line="137" selection-start-column="66" selection-end-line="137" selection-end-column="66" />
           <folding />
         </state>
       </provider>
