@@ -110,6 +110,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         x_eval_train_var = Variable(x_eval_train).type(tor.FloatTensor).cuda()
         y_eval_train_var = Variable(y_eval_train).cuda()
         loss = loss_func(pred, y)
+        loss = float(loss.data)
         acc = evaluate(fcn, x_eval_train_var, y_eval_train_var)
 
         print ("|Loss: {:<8} |Acc: {:<8}".format(float(loss.data), acc))
@@ -127,14 +128,14 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             record_data["data_size"] = AVAILABLA_SIZE
             record_data["batch_size"] = BATCHSIZE
             record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
-            record_data["lr_init"] = LR
-            record_data["lr"] = optim.param_groups[0]["lr"]
+            record_data["lr_init"] = float(optim.param_groups[0]["lr"])
+            record_data["lr"] = float(optim.param_groups[0]["lr"])
             record_data["record_epoch"] = RECORD_MODEL_PERIOD
             record_data["loss"] = loss
             record_data["acc"] = acc
         else :
             record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
-            record_data["lr"] = optim.param_groups[0]["lr"]
+            record_data["lr"] = float(optim.param_groups[0]["lr"])
             record_data["loss"] = loss
             record_data["acc"] = acc
 
