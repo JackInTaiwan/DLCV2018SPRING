@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbf98915-9e10-4aa4-a05f-b0aa0bf61a75" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.idea/inspectionProfiles/profiles_settings.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/DLCV2018SPRING.iml" afterPath="$PROJECT_DIR$/.idea/DLCV2018SPRING.iml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/read_record.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,13 +15,18 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/hw3/train.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="100">
               <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
+                <marker date="1525018290418" expanded="true" signature="1634:3715" ph="..." />
+                <marker date="1525018290418" expanded="true" signature="1999:3715" ph="..." />
+                <marker date="1525018290418" expanded="true" signature="2172:2455" ph="..." />
+                <marker date="1525018290418" expanded="true" signature="2914:3438" ph="..." />
+                <marker date="1525018290418" expanded="true" signature="3453:3675" ph="..." />
               </folding>
             </state>
           </provider>
@@ -36,6 +39,18 @@
               <caret line="20" column="45" lean-forward="false" selection-start-line="20" selection-start-column="45" selection-end-line="20" selection-end-column="45" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="read_record.py" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/read_record.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="320">
+              <caret line="16" column="23" lean-forward="false" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
+              <folding>
+                <element signature="e#0#11#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -57,8 +72,9 @@
     <option name="CHANGED_PATHS">
       <list>
         <option value="$PROJECT_DIR$/hw3/notes.py" />
-        <option value="$PROJECT_DIR$/hw3/prediction.py" />
         <option value="$PROJECT_DIR$/hw3/train.py" />
+        <option value="$PROJECT_DIR$/hw3/prediction.py" />
+        <option value="$PROJECT_DIR$/read_record.py" />
       </list>
     </option>
   </component>
@@ -466,6 +482,21 @@
         <state />
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/hw3/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="100">
+          <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <marker date="1525018290418" expanded="true" signature="1634:3715" ph="..." />
+            <marker date="1525018290418" expanded="true" signature="1999:3715" ph="..." />
+            <marker date="1525018290418" expanded="true" signature="2172:2455" ph="..." />
+            <marker date="1525018290418" expanded="true" signature="2914:3438" ph="..." />
+            <marker date="1525018290418" expanded="true" signature="3453:3675" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/hw3/prediction.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-463">
@@ -476,12 +507,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/hw3/train.py">
+    <entry file="file://$PROJECT_DIR$/read_record.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="95" column="0" lean-forward="true" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
+        <state relative-caret-position="320">
+          <caret line="16" column="23" lean-forward="false" selection-start-line="16" selection-start-column="23" selection-end-line="16" selection-end-column="23" />
           <folding>
-            <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#0#11#0" expanded="true" />
           </folding>
         </state>
       </provider>
