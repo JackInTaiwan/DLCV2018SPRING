@@ -17,7 +17,6 @@ def evaluate(model, x_var, y_var) :
 
     pred = model(x_var)
     pred = tor.max(pred, 1)[1].cuda()
-    print (y_var.size())
     correct = int((pred == y_var).data.sum())
     total = int(y_var.size(0) * y_var.size(1) * y_var.size(2))
     acc = correct / total
