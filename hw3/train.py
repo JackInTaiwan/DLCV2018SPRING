@@ -153,7 +153,6 @@ if __name__ == "__main__" :
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
-    global LR
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
     ### Load Data
