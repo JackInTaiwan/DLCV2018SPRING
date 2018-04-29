@@ -23,9 +23,10 @@ def record(record_fp, datum) :
         new_datum["model_name"] = model_name
         new_datum["data_size"] = datum["data_size"]
         new_datum["batch_size"] = datum["batch_size"]
+        new_datum["decay"] = datum["decay"]
         new_datum["lr_init"] = datum["lr_init"]
-        new_datum["record_epoch"] = datum["record_epoch"]
         new_datum["lr"] = [datum["lr"]]
+        new_datum["record_epoch"] = datum["record_epoch"]
         new_datum["loss"] = [datum["loss"]]
         new_datum["acc"] = [datum["acc"]]
         data.append(new_datum)

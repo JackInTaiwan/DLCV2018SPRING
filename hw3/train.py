@@ -9,10 +9,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 try :
     from model import FCN
-    from utils import load_data, console, record
+    from utils import load_data, console, record, evaluate
 except :
     from .model import FCN
-    from .utils import load_data, console, record
+    from .utils import load_data, console, record, evaluate
 
 
 
@@ -21,6 +21,8 @@ AVAILABLA_SIZE = None
 EPOCH = 50
 BATCHSIZE = 16
 LR = 0.0001
+LR_STEPSIZE = 20
+LR_GAMMA = 0.9
 MOMENTUM = 0.5
 
 EVAL_SIZE = 100
@@ -38,14 +40,18 @@ MODEL_ROOT = "./models"
 """ Data Setting """
 def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
+
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+
     AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
     x_train = np.moveaxis(x_train, 3, 1)
     y_train = y_train.astype(np.int16)
+
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
+    x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[EVAL_SIZE]
 
     data_set = TensorDataset(
         data_tensor=x_train,
@@ -60,7 +66,7 @@ def data_loader(limit) :
     )
 
 
-    return data_loader
+    return data_loader, x_eval_train, y_eval_train
 
 
 
@@ -78,7 +84,7 @@ lr_schedule = StepLR(optim, step_size=1, gamma=0.9)
 
 
 """ Model Training """
-def train(data_loader, model_index) :
+def train(data_loader, model_index, x_eval_train, y_eval_train) :
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
@@ -96,12 +102,13 @@ def train(data_loader, model_index) :
 
 
         ### Evaluation
-        #x_eval_train = Variable(x_train[:EVAL_SIZE]).type(tor.FloatTensor).cuda()
-        #y_eval_train = Variable(y_train[:EVAL_SIZE]).type(tor.LongTensor).cuda()
+        x_eval_train = Variable(x_eval_train)
+        y_eval_train = Variable(y_eval_train)
 
         loss = loss_func(pred, y)
-        acc = 0
-        print ("Loss: {}".format(loss))
+        acc = evaluate(fcn, x_eval_train, y_eval_train)
+
+        print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
 
         ### Save model
@@ -112,9 +119,10 @@ def train(data_loader, model_index) :
                 record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
                 record_data["data_size"] = AVAILABLA_SIZE
                 record_data["batch_size"] = BATCHSIZE
+                record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
                 record_data["lr_init"] = LR
-                record_data["record_epoch"] = RECORD_MODEL_PERIOD
                 record_data["lr"] = optim.param_groups[0]["lr"]
+                record_data["record_epoch"] = RECORD_MODEL_PERIOD
                 record_data["loss"] = loss
                 record_data["acc"] = acc
 
@@ -141,8 +149,8 @@ if __name__ == "__main__" :
 
     ### Load Data
     console("Load Data")
-    data_loader = data_loader(limit)
+    data_loader, x_eval_train, y_eval_train = data_loader(limit)
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index)
+    train(data_loader, model_index, x_eval_train, y_eval_train)

@@ -7,4 +7,5 @@ from .recorder import (
 )
 from .train_tools import (
     load_data,
+    evaluate,
 )
