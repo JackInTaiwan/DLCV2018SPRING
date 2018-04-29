@@ -31,3 +31,7 @@ def record(record_fp, datum) :
         new_datum["loss"] = [datum["loss"]]
         new_datum["acc"] = [datum["acc"]]
         data.append(new_datum)
+
+    with open(record_fp, "w") as f :
+        data_json = json.dump(data)
+        json.dumps(data_json, f)
