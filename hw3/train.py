@@ -23,8 +23,8 @@ AVAILABLA_SIZE = None
 EPOCH = 50
 BATCHSIZE = 4
 LR = 0.0001
-LR_STEPSIZE = 20
-LR_GAMMA = 0.9
+LR_STEPSIZE = 1
+LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 8
 RECORD_MODEL_PERIOD = 1
@@ -73,22 +73,20 @@ def data_loader(limit) :
 
 
 
-""" Model Setup """
-### Model Initiation
-fcn = FCN()
-fcn.vgg16_init()
-fcn.cuda()
-
-loss_func = tor.nn.CrossEntropyLoss()
-optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
-#optim = tor.optim.Adam(vgg.parameters(), lr=LR)
-lr_schedule = StepLR(optim, step_size=1, gamma=0.9)
-
-
-
-
 """ Model Training """
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
+    ### Model Initiation
+    fcn = FCN()
+    fcn.vgg16_init()
+    fcn.cuda()
+
+    loss_func = tor.nn.CrossEntropyLoss()
+    optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
+    # optim = tor.optim.Adam(vgg.parameters(), lr=LR)
+    lr_schedule = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
+
+
+    ### Training
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
@@ -149,11 +147,13 @@ if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-l", action="store", type=int, default=False, help="limitation of data for training")
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
-    parser.add_argument("-i", action="store", type=int, required=True)
+    parser.add_argument("-i", action="store", type=int, required=True, help="model index")
+    parser.add_argument("-lr", action="store", type=float, default=False, help="learning reate")
 
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
+    LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
     ### Load Data
     console("Load Data")
