@@ -113,7 +113,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         loss = float(loss.data)
         acc = evaluate(fcn, x_eval_train_var, y_eval_train_var)
 
-        print ("|Loss: {:<8} |Acc: {:<8}".format(float(loss.data), acc))
+        print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
 
         ### Save model
