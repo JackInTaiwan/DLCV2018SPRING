@@ -46,6 +46,7 @@ def data_loader(limit) :
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
 
+    global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
@@ -105,11 +106,10 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
 
 
         ### Evaluation
-        x_eval_train_var = Variable(x_eval_train).type(tor.FloatTensor).cuda()
-        y_eval_train_var = Variable(y_eval_train).cuda()
+
         loss = loss_func(pred, y)
         loss = float(loss.data)
-        acc = evaluate(fcn, x_eval_train_var, y_eval_train_var)
+        acc = evaluate(fcn, x_eval_train, y_eval_train)
 
         print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
@@ -153,6 +153,7 @@ if __name__ == "__main__" :
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
+    global LR
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
     ### Load Data

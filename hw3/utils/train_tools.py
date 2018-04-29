@@ -11,15 +11,18 @@ def load_data(x_fp, y_fp) :
 
 
 
-def evaluate(model, x_var, y_var) :
+def evaluate(model, x_eval, y_eval) :
     import cv2
     import torch as tor
+    from torch.autograd import Variable
 
-    pred = model(x_var)
+    x_eval_var = Variable(x_eval).type(tor.FloatTensor).cuda()
+    y_eval_var = Variable(y_eval).cuda()
+    pred = model(x_eval_var)
     pred = tor.max(pred, 1)[1].cuda()
 
-    correct = int((pred == y_var).data.sum())
-    total = int(y_var.size(0) * y_var.size(1) * y_var.size(2))
-    acc = correct / total
+    correct = int((pred == y_eval_var).data.sum())
+    total = int(y_eval_var.size(0) * y_eval_var.size(1) * y_eval_var.size(2))
+    acc = round(correct / total, 5)
 
     return acc
