@@ -20,7 +20,7 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 20
+EPOCH = 10
 BATCHSIZE = 4
 LR = 0.0001
 LR_STEPSIZE = 1
@@ -81,8 +81,9 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     fcn.all_init()
     fcn.vgg16_init()
     fcn.cuda()
+    w = Variable(tor.FloatTensor(np.array([5, 5, 2, 5, 5, 5, 5]))).type(tor.FloatTensor).cuda()
+    loss_func = tor.nn.CrossEntropyLoss(weight=w)
 
-    loss_func = tor.nn.CrossEntropyLoss()
     optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     # optim = tor.optim.Adam(vgg.parameters(), lr=LR)
     lr_schedule = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
