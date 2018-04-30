@@ -98,9 +98,10 @@ class FCN(nn.Module):
         b_6_conv_1 = self.b_6_conv_1(b_5_pool_1)
         b_6_conv_2 = self.b_6_conv_2(b_6_conv_1)
         b_7_tran_1 = self.b_7_trans_1(b_6_conv_2)
-        b_8_softmax_1 = self.b_8_softmax_1(b_7_tran_1)
+        #b_8_softmax_1 = self.b_8_softmax_1(b_7_tran_1)
 
-        return b_8_softmax_1
+        #return b_8_softmax_1
+        return b_7_tran_1
 
 
     def params_init(self, m) :
