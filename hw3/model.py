@@ -103,13 +103,14 @@ class FCN(nn.Module):
         #return b_8_softmax_1
         return b_7_tran_1
 
-
     def params_init(self, m) :
         classname = m.__class__.__name__
         if classname.lower() == "linear" :
+            print ("updata linear")
             tor.nn.init.normal(m.weight, 0, 0.01)
             tor.nn.init.normal(m.bias, 0, 0.01)
         elif classname.find("Conv") != -1 :
+            print ("updata conv")
             m.weight.data.normal_(0, 0.01)
 
 

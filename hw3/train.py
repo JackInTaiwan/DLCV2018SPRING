@@ -20,7 +20,7 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 50
+EPOCH = 20
 BATCHSIZE = 4
 LR = 0.0001
 LR_STEPSIZE = 1
@@ -50,7 +50,7 @@ def data_loader(limit) :
     AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
-    x_train = np.moveaxis(x_train, 3, 1)
+    x_train = np.moveaxis(x_train, 3, 1) / 255.
     y_train = y_train.astype(np.int16)
 
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
@@ -78,6 +78,7 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
+    fcn.all_init()
     fcn.vgg16_init()
     fcn.cuda()
 
@@ -97,14 +98,12 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
-
-            #optim.zero_grad()
-            pred = fcn(x)
             optim.zero_grad()
+            pred = fcn(x)
+            #optim.zero_grad()
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
-
 
         ### Evaluation
 
@@ -117,7 +116,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
 
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}.pkl".format(model_index)))
+            tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}_{}.pkl".format(model_index, epoch)))
 
 
         ### Record
