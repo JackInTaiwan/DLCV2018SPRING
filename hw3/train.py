@@ -20,7 +20,7 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 10
+EPOCH = 20
 BATCHSIZE = 4
 LR = 0.0001
 LR_STEPSIZE = 1
@@ -78,6 +78,7 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
+    fcn.all_init()
     fcn.vgg16_init()
     fcn.cuda()
 
@@ -97,9 +98,9 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
-            #optim.zero_grad()
-            pred = fcn(x)
             optim.zero_grad()
+            pred = fcn(x)
+            #optim.zero_grad()
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
