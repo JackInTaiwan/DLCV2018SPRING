@@ -106,12 +106,10 @@ class FCN(nn.Module):
     def params_init(self, m) :
         classname = m.__class__.__name__
         if classname.lower() == "linear" :
-            print ("updata linear")
-            tor.nn.init.normal(m.weight, 0, 0.01)
-            tor.nn.init.normal(m.bias, 0, 0.01)
+            tor.nn.init.normal(m.weight, 0, 0.001)
+            tor.nn.init.normal(m.bias, 0, 0.001)
         elif classname.find("Conv") != -1 :
-            print ("updata conv")
-            m.weight.data.normal_(0, 0.01)
+            m.weight.data.normal_(0.005, 0.0001)
 
 
     def all_init(self) :
