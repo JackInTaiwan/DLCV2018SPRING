@@ -41,7 +41,7 @@ class FCN(nn.Module):
     def __init__(self):
         super(FCN, self).__init__()
 
-        channels = np.array([3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9])
+        channels = np.array([3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10])
         channels = [int(num) for num in channels]    # transform type
 
         # block 1
@@ -68,12 +68,13 @@ class FCN(nn.Module):
         self.b_5_conv_3 = self.conv(channels[12], channels[13], 3, 1)
         self.b_5_pool_1 = nn.MaxPool2d(kernel_size=2)
         # block 6
-        self.b_6_conv_1 = self.conv(channels[13], channels[13], 7, 1)
-        self.b_6_conv_2 = self.conv(channels[13], 7, 1, 1)
+        self.b_6_conv_1 = self.conv(channels[13], channels[14], 7, 1)
+        self.b_6_conv_2 = self.conv(channels[14], channels[14], 1, 1)
+        self.b_6_conv_3 = self.conv(channels[14], 7, 1, 1)
         # block 7
-        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=62, stride=30) # f.m. size = (16, 16)
+        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=137, stride=25) # f.m. size = (16, 16)
         # block 8
-        self.b_8_softmax_1 = nn.Softmax(dim=1)
+        #self.b_8_softmax_1 = nn.Softmax(dim=1)
 
 
     def forward(self, x):
@@ -97,7 +98,8 @@ class FCN(nn.Module):
         b_5_pool_1 = self.b_5_pool_1(b_5_conv_3)
         b_6_conv_1 = self.b_6_conv_1(b_5_pool_1)
         b_6_conv_2 = self.b_6_conv_2(b_6_conv_1)
-        b_7_tran_1 = self.b_7_trans_1(b_6_conv_2)
+        b_6_conv_3 = self.b_6_conv_3(b_6_conv_2)
+        b_7_tran_1 = self.b_7_trans_1(b_6_conv_3)
         #b_8_softmax_1 = self.b_8_softmax_1(b_7_tran_1)
 
         #return b_8_softmax_1
@@ -109,7 +111,7 @@ class FCN(nn.Module):
             tor.nn.init.normal(m.weight, 0, 0.001)
             tor.nn.init.normal(m.bias, 0, 0.001)
         elif classname.find("Conv") != -1 :
-            m.weight.data.normal_(0.005, 0.0001)
+            m.weight.data.normal_(0.001, 0.00001)
 
 
     def all_init(self) :

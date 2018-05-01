@@ -43,7 +43,7 @@ def prediction(model_fp, input_fp, output_fp, limit) :
     for i in range(dir_size) :
         if i < limit :
             file_name = os.path.join(input_fp, "{:0>4}_sat.jpg".format(i))
-            img = plt.imread(file_name) / 255.
+            img = plt.imread(file_name)
             #img = plt.imread(file_name)
             img = np.moveaxis(img, 2, 0)
             img = tor.FloatTensor(np.array([img]))
