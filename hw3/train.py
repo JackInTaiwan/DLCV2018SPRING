@@ -20,8 +20,8 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 10
-BATCHSIZE = 4
+EPOCH = 15
+BATCHSIZE = 10
 LR = 0.0001
 LR_STEPSIZE = 1
 LR_GAMMA = 0.95
@@ -50,7 +50,7 @@ def data_loader(limit) :
     AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
-    x_train = np.moveaxis(x_train, 3, 1) / 255.
+    x_train = np.moveaxis(x_train, 3, 1)
     y_train = y_train.astype(np.int16)
 
     x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
@@ -78,14 +78,14 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
-    fcn.all_init()
+    #fcn.all_init()
     fcn.vgg16_init()
     fcn.cuda()
-    w = Variable(tor.FloatTensor(np.array([5, 5, 2, 5, 5, 5, 5]))).type(tor.FloatTensor).cuda()
-    loss_func = tor.nn.CrossEntropyLoss(weight=w)
-
-    optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
-    # optim = tor.optim.Adam(vgg.parameters(), lr=LR)
+    #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
+    #loss_func = tor.nn.CrossEntropyLoss(weight=w)
+    loss_func = tor.nn.CrossEntropyLoss()
+    #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
+    optim = tor.optim.Adam(fcn.parameters(), lr=LR)
     lr_schedule = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
 
@@ -102,10 +102,11 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim.zero_grad()
             pred = fcn(x)
             #optim.zero_grad()
+            #print (y)
             loss = loss_func(pred, y)
             loss.backward()
             optim.step()
-
+        print (pred[:3])
         ### Evaluation
 
         loss = loss_func(pred, y)
