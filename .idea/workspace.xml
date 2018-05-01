@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbf98915-9e10-4aa4-a05f-b0aa0bf61a75" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/model.py" afterPath="$PROJECT_DIR$/../hw3/model.py" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/nohup.out" afterPath="$PROJECT_DIR$/../hw3/nohup.out" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/prediction.py" afterPath="$PROJECT_DIR$/../hw3/prediction.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.idea/workspace.xml" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/train.py" afterPath="$PROJECT_DIR$/../hw3/train.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,21 +15,14 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../hw3/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="100">
-              <caret line="78" column="19" lean-forward="false" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
+            <state relative-caret-position="220">
+              <caret line="131" column="22" lean-forward="true" selection-start-line="131" selection-start-column="22" selection-end-line="131" selection-end-column="22" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1525169788527" expanded="true" signature="1635:4083" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="1878:2025" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="2312:4083" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="2485:2790" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="2658:2699" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="3205:4083" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="3282:3806" ph="..." />
-                <marker date="1525169788527" expanded="true" signature="3821:4043" ph="..." />
+                <marker date="1525170118275" expanded="true" signature="3916:4794" ph="..." />
               </folding>
             </state>
           </provider>
@@ -49,11 +40,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../hw3/model.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="175">
-              <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+              <caret line="131" column="0" lean-forward="false" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -146,10 +137,10 @@
         <option value="$PROJECT_DIR$/../read_record.py" />
         <option value="$PROJECT_DIR$/../hw3/notes_2.py" />
         <option value="$PROJECT_DIR$/../../untitled/test_1.py" />
-        <option value="$PROJECT_DIR$/../hw3/train.py" />
         <option value="$PROJECT_DIR$/../hw3/train_test.py" />
         <option value="$PROJECT_DIR$/../hw3/notes.py" />
         <option value="$PROJECT_DIR$/../hw3/model.py" />
+        <option value="$PROJECT_DIR$/../hw3/train.py" />
       </list>
     </option>
   </component>
@@ -702,24 +693,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../hw3/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="100">
-          <caret line="78" column="19" lean-forward="false" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
-          <folding>
-            <element signature="e#0#10#0" expanded="true" />
-            <marker date="1525169788527" expanded="true" signature="1635:4083" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="1878:2025" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="2312:4083" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="2485:2790" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="2658:2699" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="3205:4083" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="3282:3806" ph="..." />
-            <marker date="1525169788527" expanded="true" signature="3821:4043" ph="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../hw3/train_test.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="159">
@@ -753,8 +726,19 @@
     <entry file="file://$PROJECT_DIR$/../hw3/model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
-          <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+          <caret line="131" column="0" lean-forward="false" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../hw3/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="131" column="22" lean-forward="true" selection-start-line="131" selection-start-column="22" selection-end-line="131" selection-end-column="22" />
+          <folding>
+            <element signature="e#0#10#0" expanded="true" />
+            <marker date="1525170118275" expanded="true" signature="3916:4794" ph="..." />
+          </folding>
         </state>
       </provider>
     </entry>

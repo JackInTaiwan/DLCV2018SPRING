@@ -3,6 +3,7 @@ import os
 import torch as tor
 import numpy as np
 import time
+import torch.nn.functional as F
 from argparse import ArgumentParser
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
@@ -36,6 +37,27 @@ RECORD_FP = "./record/model_fcn.json"
 
 MODEL_ROOT = "./models"
 
+
+
+""" Loss """
+def cross_entropy2d(input, target, weight=None, size_average=True):
+    # input: (n, c, h, w), target: (n, h, w)
+    n, c, h, w = input.size()
+    # log_p: (n, c, h, w)
+    # >=0.3
+    log_p = F.log_softmax(input, dim=1)
+
+    # log_p: (n*h*w, c)
+    log_p = log_p.transpose(1, 2).transpose(2, 3).contiguous()
+    log_p = log_p[target.view(n, h, w, 1).repeat(1, 1, 1, c) >= 0]
+    log_p = log_p.view(-1, c)
+    # target: (n*h*w,)
+    mask = target >= 0
+    target = target[mask]
+    loss = F.nll_loss(log_p, target, weight=weight, size_average=False)
+    if size_average:
+        loss /= mask.data.sum()
+    return loss
 
 
 
@@ -108,7 +130,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             pred = fcn(x)
             #optim.zero_grad()
             #print (y)
-            loss = loss_func(pred, y)
+            #loss = loss_func(pred, y)
+            loss = cross_entropy2d(pred, y)
             loss.backward()
             optim.step()
         print (pred[:3])
