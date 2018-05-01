@@ -2,8 +2,9 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fbf98915-9e10-4aa4-a05f-b0aa0bf61a75" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../.idea/workspace.xml" afterPath="$PROJECT_DIR$/../.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/model.py" afterPath="$PROJECT_DIR$/../hw3/model.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/nohup.out" afterPath="$PROJECT_DIR$/../hw3/nohup.out" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/prediction.py" afterPath="$PROJECT_DIR$/../hw3/prediction.py" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/../hw3/train.py" afterPath="$PROJECT_DIR$/../hw3/train.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -23,7 +24,14 @@
               <caret line="78" column="19" lean-forward="false" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
-                <marker date="1525159279995" expanded="true" signature="3064:3942" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="1635:4083" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="1878:2025" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="2312:4083" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="2485:2790" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="2658:2699" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="3205:4083" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="3282:3806" ph="..." />
+                <marker date="1525169788527" expanded="true" signature="3821:4043" ph="..." />
               </folding>
             </state>
           </provider>
@@ -41,11 +49,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="model.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="model.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../hw3/model.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="108" column="3" lean-forward="false" selection-start-line="108" selection-start-column="3" selection-end-line="108" selection-end-column="3" />
+            <state relative-caret-position="175">
+              <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -101,11 +109,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="notes.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="notes.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../hw3/notes.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="180">
-              <caret line="9" column="6" lean-forward="true" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+              <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
               <folding>
                 <element signature="e#0#11#0" expanded="true" />
               </folding>
@@ -139,17 +147,17 @@
         <option value="$PROJECT_DIR$/../hw3/notes_2.py" />
         <option value="$PROJECT_DIR$/../../untitled/test_1.py" />
         <option value="$PROJECT_DIR$/../hw3/train.py" />
-        <option value="$PROJECT_DIR$/../hw3/model.py" />
         <option value="$PROJECT_DIR$/../hw3/train_test.py" />
         <option value="$PROJECT_DIR$/../hw3/notes.py" />
+        <option value="$PROJECT_DIR$/../hw3/model.py" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="52" />
-    <option name="y" value="-11" />
-    <option name="width" value="1315" />
-    <option name="height" value="780" />
+    <option name="x" value="53" />
+    <option name="y" value="-4" />
+    <option name="width" value="1313" />
+    <option name="height" value="772" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -402,18 +410,19 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="52" y="-11" width="1315" height="780" extended-state="6" />
+    <frame x="53" y="-4" width="1313" height="772" extended-state="6" />
     <editor active="true" />
     <layout>
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="11" side_tool="false" content_ui="tabs" />
       <window_info id="DB Browser" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="DB Execution Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="true" content_ui="tabs" />
-      <window_info id="Run" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.4876161" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5163934" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3637771" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.34210527" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2573007" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3295082" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="8" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="true" content_ui="tabs" />
@@ -423,7 +432,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="10" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="3" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
@@ -563,9 +571,9 @@
           <caret line="20" column="45" lean-forward="false" selection-start-line="20" selection-start-column="45" selection-end-line="20" selection-end-column="45" />
           <folding>
             <element signature="e#0#9#0" expanded="true" />
-            <marker date="1525157616284" expanded="true" signature="821:1722" ph="..." />
-            <marker date="1525157616284" expanded="true" signature="1021:1722" ph="..." />
-            <marker date="1525157616284" expanded="true" signature="1044:1688" ph="..." />
+            <marker date="1525169788513" expanded="true" signature="821:1785" ph="..." />
+            <marker date="1525169788513" expanded="true" signature="1021:1785" ph="..." />
+            <marker date="1525169788513" expanded="true" signature="1044:1751" ph="..." />
           </folding>
         </state>
       </provider>
@@ -700,16 +708,15 @@
           <caret line="78" column="19" lean-forward="false" selection-start-line="78" selection-start-column="19" selection-end-line="78" selection-end-column="19" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
-            <marker date="1525159279995" expanded="true" signature="3064:3942" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="1635:4083" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="1878:2025" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="2312:4083" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="2485:2790" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="2658:2699" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="3205:4083" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="3282:3806" ph="..." />
+            <marker date="1525169788527" expanded="true" signature="3821:4043" ph="..." />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/../hw3/model.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="108" column="3" lean-forward="false" selection-start-line="108" selection-start-column="3" selection-end-line="108" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -736,10 +743,18 @@
     <entry file="file://$PROJECT_DIR$/../hw3/notes.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="180">
-          <caret line="9" column="6" lean-forward="true" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
+          <caret line="9" column="6" lean-forward="false" selection-start-line="9" selection-start-column="6" selection-end-line="9" selection-end-column="6" />
           <folding>
             <element signature="e#0#11#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../hw3/model.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="131" column="0" lean-forward="true" selection-start-line="131" selection-start-column="0" selection-end-line="131" selection-end-column="0" />
+          <folding />
         </state>
       </provider>
     </entry>

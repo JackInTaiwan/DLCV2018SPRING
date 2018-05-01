@@ -40,6 +40,7 @@ class FCN(nn.Module):
 
     def __init__(self):
         super(FCN, self).__init__()
+        self.index = 0
 
         channels = np.array([3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10])
         channels = [int(num) for num in channels]    # transform type
@@ -110,8 +111,10 @@ class FCN(nn.Module):
         if classname.lower() == "linear" :
             tor.nn.init.normal(m.weight, 0, 0.001)
             tor.nn.init.normal(m.bias, 0, 0.001)
-        elif classname.find("Conv") != -1 :
-            m.weight.data.normal_(0.001, 0.00001)
+        elif classname.find("Conv") != -1 and self.index >=44 :
+            m.weight.data.normal_(0.01, 0.001)
+            m.bias.data.normal_(0.01, 0.001)
+        self.index += 1
 
 
     def all_init(self) :
@@ -120,19 +123,18 @@ class FCN(nn.Module):
 
     def vgg16_init(self) :
         import h5py
-
         layers = list(self.state_dict().keys())
         index = 0
 
         data = h5py.File(VGG16_PRETRAINED_FP)
-
+        print (list(data.keys()))
         for layer in list(data.keys())[:-4] :
-            print (layer)
+
             for ele in data[layer].keys() :
                 weights = np.array(data[layer][ele])
                 weights = tor.FloatTensor(weights)
                 self.state_dict()[layers[index]].copy_(weights)
-                #print (layers[index])
+                print (layers[index])
                 index += 1
 
 
