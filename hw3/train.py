@@ -81,6 +81,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     fcn.all_init()
     fcn.vgg16_init()
     fcn.cuda()
+    fcn.load_state_dict()
     w = Variable(tor.FloatTensor(np.array([5, 5, 2, 5, 5, 5, 5]))).type(tor.FloatTensor).cuda()
     loss_func = tor.nn.CrossEntropyLoss(weight=w)
 

@@ -68,10 +68,10 @@ class FCN(nn.Module):
         self.b_5_conv_3 = self.conv(channels[12], channels[13], 3, 1)
         self.b_5_pool_1 = nn.MaxPool2d(kernel_size=2)
         # block 6
-        self.b_6_conv_1 = self.conv(channels[13], channels[13], 3, 1)
-        self.b_6_conv_2 = self.conv(channels[13], channels[13], 3, 1)
+        self.b_6_conv_1 = self.conv(channels[13], channels[13], 7, 1)
+        self.b_6_conv_2 = self.conv(channels[13], 7, 1, 1)
         # block 7
-        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=channels[13], out_channels=7, kernel_size=62, stride=30) # f.m. size = (16, 16)
+        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=62, stride=30) # f.m. size = (16, 16)
         # block 8
         self.b_8_softmax_1 = nn.Softmax(dim=1)
 
@@ -131,3 +131,7 @@ class FCN(nn.Module):
                 self.state_dict()[layers[index]].copy_(weights)
                 #print (layers[index])
                 index += 1
+
+
+    def fix(self) :
+        self.parameters()
