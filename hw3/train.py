@@ -78,8 +78,12 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
-    #fcn.all_init()
-    fcn.vgg16_init()
+    #fcn.vgg16_init()
+    d = tor.load("models/vgg16_pretrained.pkl")
+    fcn.load_state_dict(d)
+    fcn.all_init()
+    for item in list(fcn.parameters())[:3] :
+        print (item)
     fcn.cuda()
     #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
