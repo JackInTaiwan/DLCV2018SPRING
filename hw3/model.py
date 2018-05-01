@@ -127,6 +127,7 @@ class FCN(nn.Module):
         data = h5py.File(VGG16_PRETRAINED_FP)
 
         for layer in list(data.keys())[:-4] :
+            print (layer)
             for ele in data[layer].keys() :
                 weights = np.array(data[layer][ele])
                 weights = tor.FloatTensor(weights)
