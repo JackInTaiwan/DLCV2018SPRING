@@ -1,6 +1,8 @@
 ### Files
 note*.py
 *.zip
+*.tar*
+*.gz
 *.h5
 *.pkl
 *.png
@@ -12,7 +14,7 @@ note*.py
 ### Dirs
 __pycache__/
 hw3-train-validation/
+hw4_data/
 data/
 output/
 models/
-record/

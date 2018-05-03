@@ -27,7 +27,7 @@ LR = 0.0001
 LR_STEPSIZE = 1
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
-EVAL_SIZE = 8
+EVAL_SIZE = 100
 RECORD_MODEL_PERIOD = 1
 
 X_TRAIN_FP = "./data/x_train.npy"
@@ -103,9 +103,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     #fcn.vgg16_init()
     d = tor.load("models/vgg16_pretrained.pkl")
     fcn.load_state_dict(d)
-    fcn.all_init()
-    for item in list(fcn.parameters())[:3] :
-        print (item)
+    #fcn.all_init()
+
     fcn.cuda()
     #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
@@ -113,7 +112,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim = tor.optim.Adam(fcn.parameters(), lr=LR)
 
-    lr_schedule = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
+    #lr_schedule = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
 
     ### Training
@@ -121,23 +120,20 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
         ### Training
-        lr_schedule.step()
+        #lr_schedule.step()
 
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
             optim.zero_grad()
             pred = fcn(x)
-            #optim.zero_grad()
-            #print (y)
-            #loss = loss_func(pred, y)
-            loss = cross_entropy2d(pred, y)
+            loss = loss_func(pred, y)
             loss.backward()
             optim.step()
         print (pred[:3])
         ### Evaluation
 
-        loss = loss_func(pred, y)
+        #loss = loss_func(pred, y)
         loss = float(loss.data)
         acc = evaluate(fcn, x_eval_train, y_eval_train)
 
