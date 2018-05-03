@@ -39,6 +39,16 @@ MODEL_ROOT = "./models"
 
 
 
+""" Convert labels """
+def convert_labels(y) :
+    y_o = np.zeros((y.shape[0], 7, y.shape[1], y.shape[2]))
+    for i, layer in enumerate(y):
+        for p in range(layer.shape[0]):
+            for q in range(layer.shape[1]):
+                y_o[i][int(layer[p][q])][p][q] = 1
+    return y_o
+
+
 """ Loss """
 def cross_entropy2d(input, target, weight=None, size_average=True):
     # input: (n, c, h, w), target: (n, h, w)
@@ -68,6 +78,7 @@ def data_loader(limit) :
 
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+    y_train = convert_labels(y_train)
 
     global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
@@ -108,7 +119,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     fcn.cuda()
     #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
-    loss_func = tor.nn.CrossEntropyLoss()
+    #loss_func = tor.nn.CrossEntropyLoss()
+    loss_func = tor.nn.MSELoss()
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim1 = tor.optim.Adam(fcn.b_6_conv_1.parameters(), lr=LR) 
     optim2 = tor.optim.Adam(fcn.b_6_conv_2.parameters(), lr=LR)
@@ -143,6 +155,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         ### Evaluation
         loss = float(loss.data)      
         acc = evaluate(fcn, x_eval_train, y_eval_train)
+
         print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
 
