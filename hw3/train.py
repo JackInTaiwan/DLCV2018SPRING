@@ -39,6 +39,16 @@ MODEL_ROOT = "./models"
 
 
 
+""" Convert labels """
+def convert_labels(y) :
+    y_o = np.zeros((y.shape[0], 7, y.shape[1], y.shape[2]))
+    for i, layer in enumerate(y):
+        for p in range(layer.shape[0]):
+            for q in range(layer.shape[1]):
+                y_o[i][int(layer[p][q])][p][q] = 1
+    return y_o
+
+
 """ Loss """
 def cross_entropy2d(input, target, weight=None, size_average=True):
     # input: (n, c, h, w), target: (n, h, w)
@@ -68,6 +78,7 @@ def data_loader(limit) :
 
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
+    y_train = convert_labels(y_train)
 
     global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
