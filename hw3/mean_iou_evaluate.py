@@ -12,9 +12,11 @@ def read_masks(filepath):
     n_masks = len(file_list)
     masks = np.empty((n_masks, 512, 512))
 
-    for i, file in enumerate(file_list):
+    for i, file in enumerate(file_list[:1]):
         mask = scipy.misc.imread(os.path.join(filepath, file))
+
         mask = (mask >= 128).astype(int)
+        print(mask)
         mask = 4 * mask[:, :, 0] + 2 * mask[:, :, 1] + mask[:, :, 2]
         masks[i, mask == 3] = 0  # (Cyan: 011) Urban land 
         masks[i, mask == 6] = 1  # (Yellow: 110) Agriculture land 

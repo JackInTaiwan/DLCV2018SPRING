@@ -27,7 +27,7 @@ LR = 0.0001
 LR_STEPSIZE = 1
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
-EVAL_SIZE = 8
+EVAL_SIZE = 100
 RECORD_MODEL_PERIOD = 1
 
 X_TRAIN_FP = "./data/x_train.npy"
@@ -105,27 +105,19 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     d = tor.load("models/vgg16_pretrained.pkl")
     fcn.load_state_dict(d)
     #fcn.all_init()
-    #for item in list(fcn.parameters()) :
-    #    print (item)
     fcn.cuda()
     #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
     loss_func = tor.nn.CrossEntropyLoss()
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
-    #optim = tor.optim.Adam(fcn.parameters(), lr=LR)
     optim1 = tor.optim.Adam(fcn.b_6_conv_1.parameters(), lr=LR) 
     optim2 = tor.optim.Adam(fcn.b_6_conv_2.parameters(), lr=LR)
     optim3 = tor.optim.Adam(fcn.b_6_conv_3.parameters(), lr=LR) 
-    optim4 = tor.optim.Adam(fcn.b_7_trans_1.parameters(), lr=LR)
-    lr_schedule = StepLR(optim1, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
-
-    
     ### Training
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
         ### Training
-        lr_schedule.step()
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
@@ -136,7 +128,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim4.zero_grad()
             #print (y)
             #loss = loss_func(pred, y)
-            loss = cross_entropy2d(pred, y)
+            #loss = cross_entropy2d(pred, y)
+            loss = loss_func(pred, y)
             loss.backward()
             optim1.step()
             optim2.step()
@@ -145,9 +138,6 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         print (pred[:3])
         ### Evaluation
      
-        loss = loss_func(pred, y)
-        loss = float(loss.data)
-        acc = evaluate(fcn, x_eval_train, y_eval_train)
 
         print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
