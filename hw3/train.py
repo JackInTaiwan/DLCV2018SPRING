@@ -113,7 +113,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     optim1 = tor.optim.Adam(fcn.b_6_conv_1.parameters(), lr=LR) 
     optim2 = tor.optim.Adam(fcn.b_6_conv_2.parameters(), lr=LR)
     optim3 = tor.optim.Adam(fcn.b_6_conv_3.parameters(), lr=LR) 
-    optim4 = tor.optim.Adam(fcn.b_6_trans_1.parameters(), lr=LR)
+    optim4 = tor.optim.Adam(fcn.b_7_trans_1.parameters(), lr=LR)
     optim = tor.optim.Adam(fcn.parameters(), lr=LR)
     ### Training
     for epoch in range(EPOCH):
@@ -138,10 +138,11 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim2.step()
             optim3.step()
             optim4.step()
-        print (pred[:3])
+        print (pred)
+        print (tor.max(pred[:3], 1)[1])
         ### Evaluation
-     
-
+        loss = float(loss.data)      
+        acc = evaluate(fcn, x_eval_train, y_eval_train)
         print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
 
