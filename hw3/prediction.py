@@ -44,7 +44,6 @@ def prediction(model_fp, input_fp, output_fp, limit) :
         if i < limit :
             file_name = os.path.join(input_fp, "{:0>4}_sat.jpg".format(i))
             img = plt.imread(file_name)
-            #img = plt.imread(file_name)
             img = np.moveaxis(img, 2, 0)
             img = tor.FloatTensor(np.array([img]))
             img_var = Variable(img).type(tor.FloatTensor).cuda()
