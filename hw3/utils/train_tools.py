@@ -22,10 +22,7 @@ def evaluate(model, x_eval, y_eval) :
     for i in range(int(x_eval_var.size(0))) :
         pred = model(x_eval_var[i: i+1])
         pred = tor.max(pred, 1)[1].cuda()
-        if 20 < i <25 :
-            pred = pred
-            print (pred.cpu().data.numpy())
-        correct += int((pred == y_eval_var[i:i+1]).data.sum())
+        correct += int((pred == tor.max(y_eval_var[i:i+1],1)[1]).data.sum())
 
     total = int(y_eval_var.size(0) * y_eval_var.size(1) * y_eval_var.size(2))
     acc = round(correct / total, 5)

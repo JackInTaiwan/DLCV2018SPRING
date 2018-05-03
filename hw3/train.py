@@ -49,30 +49,7 @@ def convert_labels(y) :
     return y_o
 
 
-""" Loss """
-def cross_entropy2d(input, target, weight=None, size_average=True):
-    # input: (n, c, h, w), target: (n, h, w)
-    n, c, h, w = input.size()
-    # log_p: (n, c, h, w)
-    # >=0.3
-    log_p = F.log_softmax(input, dim=1)
-
-    # log_p: (n*h*w, c)
-    log_p = log_p.transpose(1, 2).transpose(2, 3).contiguous()
-    log_p = log_p[target.view(n, h, w, 1).repeat(1, 1, 1, c) >= 0]
-    log_p = log_p.view(-1, c)
-    # target: (n*h*w,)
-    mask = target >= 0
-    target = target[mask]
-    loss = F.nll_loss(log_p, target, weight=weight, size_average=False)
-    if size_average:
-        loss /= mask.data.sum()
-    return loss
-
-
-
-""" 
-Data Setting """
+""" Data Setting """
 def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
 
@@ -87,7 +64,7 @@ def data_loader(limit) :
     x_train = np.moveaxis(x_train, 3, 1)
     y_train = y_train.astype(np.int16)
 
-    x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
+    x_train, y_train = tor.FloatTensor(x_train), tor.FloatTensor(y_train)
     x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -112,12 +89,9 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
-    #fcn.vgg16_init()
     d = tor.load("models/vgg16_pretrained.pkl")
     fcn.load_state_dict(d)
-    #fcn.all_init()
     fcn.cuda()
-    #w = Variable(tor.FloatTensor(np.array([1000, 5, 1, 15, 7, 6, 8]))).type(tor.FloatTensor).cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
     #loss_func = tor.nn.CrossEntropyLoss()
     loss_func = tor.nn.MSELoss()
@@ -135,15 +109,14 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
             y = Variable(y_batch).cuda()
+            
             pred = fcn(x)
             optim1.zero_grad()
             optim2.zero_grad()
             optim3.zero_grad()
             optim4.zero_grad()
             optim.zero_grad()
-            #print (y)
             #loss = loss_func(pred, y)
-            #loss = cross_entropy2d(pred, y)
             loss = loss_func(pred, y)
             loss.backward()
             optim1.step()
