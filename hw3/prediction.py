@@ -49,9 +49,7 @@ def prediction(model_fp, input_fp, output_fp, limit) :
             img = tor.FloatTensor(np.array([img]))
             img_var = Variable(img).type(tor.FloatTensor).cuda()
             pred_img = model(img_var)
-            print (str(pred_img))
             pred_img = tor.max(pred_img, 1)[1]
-            print (pred_img)
             pred_img = pred_img.cpu().data.numpy()
             pred_img = np.moveaxis(pred_img, 0, 2)
             output_img = img_recovery(pred_img)

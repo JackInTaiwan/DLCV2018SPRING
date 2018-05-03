@@ -112,8 +112,8 @@ class FCN(nn.Module):
             tor.nn.init.normal(m.weight, 0, 0.001)
             tor.nn.init.normal(m.bias, 0, 0.001)
         elif classname.find("Conv") != -1 and self.index >=44 :
-            m.weight.data.normal_(0.01, 0.001)
-            m.bias.data.normal_(0.01, 0.001)
+            m.weight.data.normal_(0.00, 0.001)
+            m.bias.data.normal_(0.00, 0.001)
         self.index += 1
 
 
