@@ -84,10 +84,10 @@ def data_loader(limit) :
     AVAILABLA_SIZE = str(x_train.shape)
 
     # Move axis in data for Pytorch
-    x_train = np.moveaxis(x_train, 3, 1)
+    #x_train = np.moveaxis(x_train, 3, 1)
     y_train = y_train.astype(np.int16)
 
-    x_train, y_train = tor.FloatTensor(x_train), tor.LongTensor(y_train)
+    x_train, y_train = tor.FloatTensor(x_train).permute(0,3,2,1), tor.LongTensor(y_train)
     x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
