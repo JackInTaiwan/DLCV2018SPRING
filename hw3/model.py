@@ -135,6 +135,9 @@ class FCN(nn.Module):
             for ele in data[layer].keys() :
                 weights = np.array(data[layer][ele])
                 weights = tor.FloatTensor(weights)
+                if "_b_" not in ele :
+                    print ("use", ele,)
+                    weights = weights.permute(3, 2, 1, 0)
                 self.state_dict()[layers[index]].copy_(weights)
                 print (layers[index])
                 index += 1

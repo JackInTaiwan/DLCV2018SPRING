@@ -90,6 +90,10 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
+    fcn.vgg16_init()
+    print (fcn.b_1_conv_1[0].weight.data.size())
+    tor.save(fcn.state_dict(), "vgg16_pretrained.pkl")
+    """
     d = tor.load("models/vgg16_pretrained.pkl")
     fcn.load_state_dict(d)
     fcn.cuda()
@@ -157,7 +161,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             record_data["acc"] = acc
 
         record(RECORD_FP, record_data)
-
+    """
 
 
 
