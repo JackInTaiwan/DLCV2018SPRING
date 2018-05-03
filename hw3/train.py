@@ -140,7 +140,6 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim4.step()
         print (pred[:3])
         ### Evaluation
-     
 
         print ("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
 
