@@ -97,10 +97,10 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
     #print (fcn.state_dict().items())
     #tor.save(fcn.state_dict(), "vgg16_pretrained.pkl")
 
-    d = tor.load("vgg16_pretrained.pkl")
+    d = tor.load("./models/vgg16_pretrained.pkl")
     #fcn.load_state_dict(d)
     fcn.vgg16_load(d)
-    """
+
     fcn.cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
     #loss_func = tor.nn.CrossEntropyLoss()
@@ -133,8 +133,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim2.step()
             optim3.step()
             optim4.step()
-        print (pred)
-        print (tor.max(pred[:3], 1)[1])
+        print (pred[:5])
+        print (tor.max(pred[:5], 1)[1])
         ### Evaluation
         loss = float(loss.data)      
         acc = evaluate(fcn, x_eval_train, y_eval_train)
@@ -166,7 +166,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             record_data["acc"] = acc
 
         record(RECORD_FP, record_data)
-    """
+
 
 
 
