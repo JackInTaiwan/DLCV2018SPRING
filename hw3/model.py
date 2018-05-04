@@ -12,12 +12,13 @@ VGG16_PRETRAINED_FP = "./models/vgg16_pretrained.h5"
 
 """ Module Build """
 class FCN(nn.Module):
-    def conv(self, in_channels, out_channels, kernel_size, stride):
+    def conv(self, in_channels, out_channels, kernel_size, stride, bias=True):
         conv = nn.Sequential(
             nn.Conv2d(
                 in_channels=in_channels,
                 out_channels=out_channels,
                 kernel_size=kernel_size,
+                bias=bias,
                 stride=stride,
                 padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
             ),
@@ -73,7 +74,7 @@ class FCN(nn.Module):
         self.b_6_conv_2 = self.conv(channels[14], channels[14], 1, 1)
         self.b_6_conv_3 = self.conv(channels[14], 7, 1, 1)
         # block 7
-        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=137, stride=25) # f.m. size = (16, 16)
+        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=137, stride=25, bias=False) # f.m. size = (16, 16)
         # block 8
         #self.b_8_softmax_1 = nn.Softmax(dim=1)
         self.sigmoid = tor.nn.Sigmoid()
@@ -108,6 +109,7 @@ class FCN(nn.Module):
         #return b_7_tran_1
         return out
 
+
     def params_init(self, m) :
         classname = m.__class__.__name__
         if classname.lower() == "linear" :
@@ -119,8 +121,20 @@ class FCN(nn.Module):
         self.index += 1
 
 
+    def params_permute(self, m) :
+        classname = m.__class__.__name__
+        if classname.find("Conv") != -1 and self.index < 44:
+            m.weight.data.copy_(m.weight.data.permute(1, 0, 3, 2))
+
+        self.index += 1
+
+
     def all_init(self) :
         self.apply(self.params_init)
+
+
+    def all_permute(self) :
+        self.apply(self.params_permute)
 
 
     def vgg16_init(self) :
@@ -129,19 +143,18 @@ class FCN(nn.Module):
         index = 0
 
         data = h5py.File(VGG16_PRETRAINED_FP)
-        print (list(data.keys()))
         for layer in list(data.keys())[:-4] :
 
             for ele in data[layer].keys() :
                 weights = np.array(data[layer][ele])
                 weights = tor.FloatTensor(weights)
                 if "_b_" not in ele :
-                    print ("use", ele,)
                     weights = weights.permute(3, 2, 1, 0)
-                self.state_dict()[layers[index]].copy_(weights)
                 print (layers[index])
+                self.state_dict()[layers[index]].copy_(weights)
                 index += 1
 
 
-    def fix(self) :
-        self.parameters()
+    def vgg16_load(self, state_dict) :
+        for item in list(state_dict)[:-1] :
+            self.state_dict()[item].copy_(state_dict[item])
