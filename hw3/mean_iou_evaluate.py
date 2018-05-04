@@ -32,6 +32,7 @@ def mean_iou_score(pred, labels):
     Compute mean IoU score over 6 classes
     '''
     mean_iou = 0
+    print (pred.shape, labels.shape)
     for i in range(10) :
         print (pred[i])
     for i in range(6):
