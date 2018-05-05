@@ -28,7 +28,7 @@ MOMENTUM = 0.5
 EVAL_SIZE = 100
 RECORD_MODEL_PERIOD = 1
 
-LAMBDA = 10 ** -5
+KLD_LAMBDA = 10 ** -5
 
 TRAIN_DATA_FP = "./data/train_data.npy"
 
@@ -50,6 +50,7 @@ def data_loader(limit):
     global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
 
+    x_train /= 255.
     x_train = tor.FloatTensor(x_train).permute(0, 3, 2, 1)
 
     x_eval_train = x_train[:EVAL_SIZE]
@@ -95,7 +96,7 @@ def train(data_loader, model_index, x_eval_train):
 
             out, KLD = ave(x)
 
-            loss = loss_func(out, y) + KLD
+            loss = loss_func(out, y) +  KLD_LAMBDA * KLD
 
             loss.backward()
             optim.step()
