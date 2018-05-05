@@ -20,7 +20,7 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 15
+EPOCH = 10
 BATCHSIZE = 64
 LR = 0.0001
 LR_STEPSIZE = 1
