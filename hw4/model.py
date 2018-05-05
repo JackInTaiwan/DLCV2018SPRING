@@ -58,6 +58,7 @@ class AVE(nn.Module):
         # decode
         self.de_fc_1 = self.fc(fc_channels[2], fc_channels[3])
         self.de_fc_2 = self.fc(fc_channels[3], fc_channels[4])
+        self.out = tor.nn.Sigmoid()
 
 
     def encode(self, x) :
@@ -82,10 +83,11 @@ class AVE(nn.Module):
 
         x = self.de_fc_1(x)
         x = self.de_fc_2(x)
+        out = self.out(x)
 
-        output = x.view(-1, 3, 64, 64)
+        out = x.view(-1, 3, 64, 64)
 
-        return output
+        return out
 
 
     def forward(self, x):
