@@ -85,7 +85,7 @@ class AVE(nn.Module):
         x = self.de_fc_2(x)
         out = self.out(x)
 
-        out = x.view(-1, 3, 64, 64)
+        out = out.view(-1, 3, 64, 64)
 
         return out
 
