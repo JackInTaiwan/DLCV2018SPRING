@@ -19,8 +19,8 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 5
-BATCHSIZE = 10
+EPOCH = 15
+BATCHSIZE = 64
 LR = 0.0001
 LR_STEPSIZE = 1
 LR_GAMMA = 0.1
@@ -51,7 +51,7 @@ def data_loader(limit):
     AVAILABLA_SIZE = str(x_train.shape)
 
     x_train /= 255.
-    x_train = tor.FloatTensor(x_train).permute(0, 3, 2, 1)
+    x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
 
     x_eval_train = x_train[:EVAL_SIZE]
 

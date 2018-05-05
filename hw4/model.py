@@ -2,6 +2,8 @@ import cv2
 import torch as tor
 import torch.nn as nn
 import numpy as np
+from torch.autograd import Variable
+
 
 
 
@@ -65,6 +67,7 @@ class AVE(nn.Module):
         x = self.en_conv_1(x)
         x = self.en_conv_2(x)
         x = self.en_pool_1(x)
+        x = x.view(x.size(0), -1)
         x = self.en_fc_1(x)
 
         ls = self.ls_fc_1(x)
@@ -77,7 +80,9 @@ class AVE(nn.Module):
 
     def decode(self, ls, logvar, training=True) :
         if training :
-            x = ls + tor.randn() * (logvar * 0.5).exp()
+            ex = (logvar * 0.5).exp()
+            noise = Variable(tor.randn(tuple(logvar.size()))).cuda()
+            x = ls + noise.mul(ex)
         else :
             x = ls
 
@@ -85,7 +90,7 @@ class AVE(nn.Module):
         x = self.de_fc_2(x)
         out = self.out(x)
 
-        out = x.view(-1, 3, 64, 64)
+        out = out.view(-1, 3, 64, 64)
 
         return out
 
