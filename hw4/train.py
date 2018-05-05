@@ -1,3 +1,4 @@
+import os
 import cv2
 import numpy as np
 import torch as tor
@@ -9,10 +10,10 @@ from torch.utils.data import DataLoader, TensorDataset
 
 try :
     from model import AVE
-    from utils import load_data, console
+    from utils import load_data, console, save_pic
 except :
     from .model import AVE
-    from .utils import load_data, console
+    from .utils import load_data, console, save_pic
 
 
 
@@ -110,20 +111,25 @@ def train(data_loader, model_index, x_eval_train):
         #print("|Loss: {:<8} |Acc: {:<8}".format(loss, acc))
         print("|Loss: {:<8}".format(loss))
 
-        """
+
+        ### Save output pictures
+        save_pic("output", ave, 3)
+
+
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(fcn.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}_{}.pkl".format(model_index, epoch)))
+            tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}_{}.pkl".format(model_index, epoch)))
         
         ### Record
+        """
         record_data = dict()
         if epoch == 0:
             record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
             record_data["data_size"] = AVAILABLA_SIZE
             record_data["batch_size"] = BATCHSIZE
             record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
-            record_data["lr_init"] = float(optim1.param_groups[0]["lr"])
-            record_data["lr"] = float(optim1.param_groups[0]["lr"])
+            record_data["lr_init"] = float(optim.param_groups[0]["lr"])
+            record_data["lr"] = float(optim.param_groups[0]["lr"])
             record_data["record_epoch"] = RECORD_MODEL_PERIOD
             record_data["loss"] = loss
             record_data["acc"] = acc
