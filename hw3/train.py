@@ -21,8 +21,8 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 15
-BATCHSIZE = 10
+EPOCH = 5
+BATCHSIZE = 15
 LR = 0.0001
 LR_STEPSIZE = 1
 LR_GAMMA = 0.95
@@ -52,10 +52,10 @@ def convert_labels(y) :
 """ Data Setting """
 def data_loader(limit) :
     x_train, y_train, x_size = load_data(X_TRAIN_FP, Y_TRAIN_FP)
-
+    print (x_train.shape)
     if limit :
         x_train, y_train = x_train[:limit], y_train[:limit]
-    y_train = convert_labels(y_train)
+    #y_train = convert_labels(y_train)
 
     global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
@@ -64,8 +64,8 @@ def data_loader(limit) :
     #x_train = np.moveaxis(x_train, 3, 1)
     y_train = y_train.astype(np.int16)
 
-    x_train, y_train = tor.FloatTensor(x_train).permute(0,3,2,1), tor.LongTensor(y_train)
-
+    x_train, y_train = tor.FloatTensor(x_train).permute(0,3,2,1), tor.FloatTensor(y_train)
+    
     x_eval_train, y_eval_train = x_train[:EVAL_SIZE], y_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -90,23 +90,19 @@ def data_loader(limit) :
 def train(data_loader, model_index, x_eval_train, y_eval_train) :
     ### Model Initiation
     fcn = FCN()
-    #fcn.vgg16_init()
     #print (fcn.b_1_conv_1[0].weight.data)
-    #fcn.all_permute()
-    #print(fcn.b_1_conv_1[0].weight.data)
-    #print (fcn.state_dict().items())
-    #tor.save(fcn.state_dict(), "vgg16_pretrained.pkl")
 
     d = tor.load("./models/vgg16_pretrained.pkl")
-    #fcn.load_state_dict(d)
     fcn.vgg16_load(d)
-
+    #d = tor.load("./models/fcn_model_1_1.pkl")
+    #fcn.load_state_dict(d)
     fcn.cuda()
     #loss_func = tor.nn.CrossEntropyLoss(weight=w)
-    #loss_func = tor.nn.CrossEntropyLoss()
-    loss_func = tor.nn.MSELoss()
+    loss_func = tor.nn.CrossEntropyLoss()
+    #loss_func = tor.nn.MSELoss()
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim1 = tor.optim.Adam(fcn.b_6_conv_1.parameters(), lr=LR) 
+    
     optim2 = tor.optim.Adam(fcn.b_6_conv_2.parameters(), lr=LR)
     optim3 = tor.optim.Adam(fcn.b_6_conv_3.parameters(), lr=LR) 
     optim4 = tor.optim.Adam(fcn.b_7_trans_1.parameters(), lr=LR)
@@ -118,7 +114,7 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
         ### Training
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).type(tor.FloatTensor).cuda()
-            y = Variable(y_batch).cuda()
+            y = Variable(y_batch).type(tor.LongTensor).cuda()
             
             pred = fcn(x)
             optim1.zero_grad()
@@ -126,14 +122,13 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             optim3.zero_grad()
             optim4.zero_grad()
             optim.zero_grad()
-            #loss = loss_func(pred, y)
             loss = loss_func(pred, y)
             loss.backward()
             optim1.step()
             optim2.step()
             optim3.step()
             optim4.step()
-        print (pred[:5])
+        print (pred[:2])
         print (tor.max(pred[:5], 1)[1])
         ### Evaluation
         loss = float(loss.data)      
@@ -166,8 +161,8 @@ def train(data_loader, model_index, x_eval_train, y_eval_train) :
             record_data["acc"] = acc
 
         record(RECORD_FP, record_data)
-
-
+        
+ 
 
 
 """ Main """

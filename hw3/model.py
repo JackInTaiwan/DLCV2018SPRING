@@ -22,7 +22,7 @@ class FCN(nn.Module):
                 stride=stride,
                 padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
             ),
-            nn.ReLU(),
+            nn.ReLU(inplace=True),
         )
         return conv
 
@@ -71,10 +71,12 @@ class FCN(nn.Module):
         self.b_5_pool_1 = nn.MaxPool2d(kernel_size=2)
         # block 6
         self.b_6_conv_1 = self.conv(channels[13], channels[14], 7, 1)
+        #self.b_6_drop_1 = tor.nn.Drop2d(p=0.5)
         self.b_6_conv_2 = self.conv(channels[14], channels[14], 1, 1)
+        #self.b_6_drop_2 = tor.nn.Drop2d(p=0.5)
         self.b_6_conv_3 = self.conv(channels[14], 7, 1, 1)
         # block 7
-        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=137, stride=25, bias=False) # f.m. size = (16, 16)
+        self.b_7_trans_1 = nn.ConvTranspose2d(in_channels=7, out_channels=7, kernel_size=62, stride=30, bias=False) # f.m. size = (16, 16)
         # block 8
         #self.b_8_softmax_1 = nn.Softmax(dim=1)
         self.sigmoid = tor.nn.Sigmoid()
@@ -99,15 +101,17 @@ class FCN(nn.Module):
         b_5_conv_3 = self.b_5_conv_3(b_5_conv_2)
         b_5_pool_1 = self.b_5_pool_1(b_5_conv_3)
         b_6_conv_1 = self.b_6_conv_1(b_5_pool_1)
+        #b_6_drop_1 = self.b_6_drop_1(b_6_conv_1)
         b_6_conv_2 = self.b_6_conv_2(b_6_conv_1)
+        #b_6_drop_2 = self.b_6_drop_2(b_6_conv_2)
         b_6_conv_3 = self.b_6_conv_3(b_6_conv_2)
         b_7_tran_1 = self.b_7_trans_1(b_6_conv_3)
         #b_8_softmax_1 = self.b_8_softmax_1(b_7_tran_1)
-        out = self.sigmoid(b_7_tran_1)
+        #out = self.sigmoid(b_7_tran_1)
 
         #return b_8_softmax_1
-        #return b_7_tran_1
-        return out
+        return b_7_tran_1
+        #return out
 
 
     def params_init(self, m) :
@@ -116,8 +120,8 @@ class FCN(nn.Module):
             tor.nn.init.normal(m.weight, 0, 0.001)
             tor.nn.init.normal(m.bias, 0, 0.001)
         elif classname.find("Conv") != -1 and self.index >=44 :
-            m.weight.data.normal_(0.00, 1)
-            m.bias.data.normal_(0.00, 1)
+            m.weight.data.normal_(0.00, 0.001)
+            m.bias.data.normal_(0.00, 0.001)
         self.index += 1
 
 
@@ -156,5 +160,5 @@ class FCN(nn.Module):
 
 
     def vgg16_load(self, state_dict) :
-        for item in list(state_dict)[:-1] :
+        for item in list(state_dict)[:-2] :
             self.state_dict()[item].copy_(state_dict[item])
