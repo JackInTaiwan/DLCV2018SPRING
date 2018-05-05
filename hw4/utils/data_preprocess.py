@@ -26,7 +26,6 @@ def pic_to_npy(pic_dir_fp, output_fp, start, limit=float("inf")) :
                 print(output.shape)
                 output = np.vstack((output, np.array([img])))
 
-    output = np.moveaxis(output, 3, 1)
     np.save(output_fp, output)
 
     print(
