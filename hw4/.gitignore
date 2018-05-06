@@ -1,5 +1,6 @@
 ### Files
 note*.py
+*.bash
 *.zip
 *.tar*
 *.gz
@@ -17,3 +18,4 @@ hw3-train-validation/
 hw4_data/
 data/
 models/
+pictures/
