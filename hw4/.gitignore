@@ -9,6 +9,7 @@ note*.py
 *.png
 *.jpg
 *.txt
+*.out
 *.json
 *_test*.py
 

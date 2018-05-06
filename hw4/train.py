@@ -9,10 +9,10 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model import AVE
+    from model_2 import AVE
     from utils import load_data, console, save_pic, record
 except :
-    from .model import AVE
+    from .model_2 import AVE
     from .utils import load_data, console, save_pic, record
 
 
@@ -20,15 +20,15 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 50
-BATCHSIZE = 64
+EPOCH = 80
+BATCHSIZE = 32
 LR = 0.0001
-LR_STEPSIZE = 200
-LR_GAMMA = 0.98
+LR_STEPSIZE = 150
+LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
-RECORD_JSON_PERIOD = 20    # steps
-RECORD_MODEL_PERIOD = 1     # epochs
+RECORD_JSON_PERIOD = 10     # steps
+RECORD_MODEL_PERIOD = 5     # epochs
 
 KLD_LAMBDA = 10 ** -6
 
@@ -43,14 +43,14 @@ MODEL_ROOT = "./models"
 
 """ Data Setting """
 def data_loader(limit):
-    """
+    
     x_train_1, x_size_1 = load_data(TRAIN_DATA_FP[0])
     x_train_2, x_size_2 = load_data(TRAIN_DATA_FP[1])
     x_train_3, x_size_3 = load_data(TRAIN_DATA_FP[2])
     x_train = np.vstack((x_train_1, x_train_2, x_train_3))
     """
     x_train, x_size = load_data(TRAIN_DATA_FP[0])
-
+    """
     print(x_train.shape)
 
     if limit:
@@ -152,7 +152,7 @@ def train(data_loader, model_index, x_eval_train):
 
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "fcn_model_{}_{}.pkl".format(model_index, epoch)))
+            tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}_{}.pkl".format(model_index, epoch)))
         
 
 
