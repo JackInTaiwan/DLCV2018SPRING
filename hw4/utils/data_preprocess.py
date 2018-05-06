@@ -7,10 +7,10 @@ import matplotlib.pyplot as plt
 
 def pic_to_npy(pic_dir_fp, output_fp, start, limit=float("inf")) :
     output = np.array([])
-    total = len(os.listdir(pic_dir_fp)) / 2
+    total = len(os.listdir(pic_dir_fp))
 
     for index in range(int(total)):
-        if index >= limit:
+        if index + start >= limit or index + start >= total:
             break
 
         else:
