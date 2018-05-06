@@ -55,10 +55,12 @@ class AVE(nn.Module):
         # latent space
         self.ls_fc_1 = self.fc(fc_channels[1], fc_channels[2])
         self.ls_tanh = tor.nn.Tanh()
+        self.ls_sig = tor.nn.Sigmoid()
 
         # logvar
         self.lv_fc_1 = self.fc(fc_channels[1], fc_channels[2])
         self.lv_tanh = tor.nn.Tanh()
+        self.lv_sig = tor.nn.Sigmoid()
 
         # decode
         self.de_fc_1 = self.fc(fc_channels[2], fc_channels[3])
@@ -73,8 +75,10 @@ class AVE(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.en_fc_1(x)
 
-        ls = self.ls_sig(self.ls_fc_1(x))
-        logvar = self.lv_sig(self.lv_fc_1(x))
+        ls = self.ls_tanh(self.ls_fc_1(x))
+        logvar = self.lv_tanh(self.lv_fc_1(x))
+        #ls = self.ls_sig(self.ls_fc_1(x))
+        #logvar = self.lv_sig(self.lv_fc_1(x))
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
 

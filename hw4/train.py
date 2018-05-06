@@ -24,17 +24,17 @@ EPOCH = 50
 BATCHSIZE = 64
 LR = 0.0001
 LR_STEPSIZE = 200
-LR_GAMMA = 0.05
+LR_GAMMA = 0.98
 MOMENTUM = 0.5
 EVAL_SIZE = 100
-RECORD_JSON_PERIOD = 100    # steps
+RECORD_JSON_PERIOD = 20    # steps
 RECORD_MODEL_PERIOD = 1     # epochs
 
 KLD_LAMBDA = 10 ** -6
 
-TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy"]
+TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_fcn.json"
+RECORD_FP = "./record/model_ave.json"
 
 MODEL_ROOT = "./models"
 
@@ -43,10 +43,13 @@ MODEL_ROOT = "./models"
 
 """ Data Setting """
 def data_loader(limit):
-
+    """
     x_train_1, x_size_1 = load_data(TRAIN_DATA_FP[0])
     x_train_2, x_size_2 = load_data(TRAIN_DATA_FP[1])
-    x_train = np.vstack((x_train_1, x_train_2))
+    x_train_3, x_size_3 = load_data(TRAIN_DATA_FP[2])
+    x_train = np.vstack((x_train_1, x_train_2, x_train_3))
+    """
+    x_train, x_size = load_data(TRAIN_DATA_FP[0])
 
     print(x_train.shape)
 
