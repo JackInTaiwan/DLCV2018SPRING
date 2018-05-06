@@ -20,16 +20,16 @@ except :
 
 """ Parameters """
 AVAILABLA_SIZE = None
-EPOCH = 10
+EPOCH = 50
 BATCHSIZE = 64
 LR = 0.0001
 LR_STEPSIZE = 1
-LR_GAMMA = 0.1
+LR_GAMMA = 0.05
 MOMENTUM = 0.5
 EVAL_SIZE = 100
-RECORD_MODEL_PERIOD = 1
+RECORD_MODEL_PERIOD = 10
 
-KLD_LAMBDA = 10 ** -5
+KLD_LAMBDA = 10 ** -6
 
 TRAIN_DATA_FP = "./data/train_data.npy"
 
@@ -51,9 +51,7 @@ def data_loader(limit):
     global AVAILABLA_SIZE
     AVAILABLA_SIZE = str(x_train.shape)
 
-    x_train /= 255.
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
-
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -94,16 +92,16 @@ def train(data_loader, model_index, x_eval_train):
         for step, (x_batch, y_batch) in enumerate(data_loader):
             x = Variable(x_batch).cuda()
             y = Variable(y_batch).cuda()
-
             out, KLD = ave(x)
-
             loss = loss_func(out, y) +  KLD_LAMBDA * KLD
 
             loss.backward()
             optim.step()
-            lr_step.step()
+            #lr_step.step()
             optim.zero_grad()
-
+        #print (x_batch[:3])
+        #print (y_batch[:3])
+        print (out[:3])
         ### Evaluation
         loss = float(loss.data)
         #acc = evaluate(fcn, x_eval_train, y_eval_train)
