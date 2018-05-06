@@ -23,7 +23,7 @@ class AVE(nn.Module):
                 stride=stride,
                 padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
             ),
-            nn.ReLU(),
+            nn.ReLU(inplace=True),
         )
         return conv
 
@@ -31,7 +31,7 @@ class AVE(nn.Module):
     def fc(self, num_in, num_out) :
         fc = nn.Sequential(
             nn.Linear(num_in, num_out),
-            nn.ReLU()
+            nn.ReLU(inplace=True)
         )
         return fc
 
@@ -39,10 +39,11 @@ class AVE(nn.Module):
     def __init__(self):
         super(AVE, self).__init__()
         self.index = 0
+        self.training = True
 
-        conv_channels = np.array([3, 2 ** 8, 2 ** 9])
+        conv_channels = np.array([3, 2 ** 6, 2 ** 7])
         conv_channels = [int(num) for num in conv_channels]    # transform type
-        fc_channels = np.array([2 ** 9 * 32 * 32, 2 ** 9, 2 ** 9, 2 ** 10, 3 * 2 ** 12])
+        fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 9, 2 ** 8, 2 ** 7, 3 * 2 ** 12])
         fc_channels = [int(num) for num in fc_channels]  # transform type
 
         # block 1
@@ -53,9 +54,11 @@ class AVE(nn.Module):
 
         # latent space
         self.ls_fc_1 = self.fc(fc_channels[1], fc_channels[2])
+        self.ls_sig = tor.nn.Sigmoid()
 
         # logvar
         self.lv_fc_1 = self.fc(fc_channels[1], fc_channels[2])
+        self.lv_sig = tor.nn.Sigmoid()
 
         # decode
         self.de_fc_1 = self.fc(fc_channels[2], fc_channels[3])
@@ -70,16 +73,16 @@ class AVE(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.en_fc_1(x)
 
-        ls = self.ls_fc_1(x)
-        logvar = self.lv_fc_1(x)
+        ls = self.ls_sig(self.ls_fc_1(x))
+        logvar = self.lv_sig(self.lv_fc_1(x))
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
 
         return ls, logvar, KLD
 
 
-    def decode(self, ls, logvar, training=True) :
-        if training :
+    def decode(self, ls, logvar) :
+        if self.training :
             ex = (logvar * 0.5).exp()
             noise = Variable(tor.randn(tuple(logvar.size()))).cuda()
             x = ls + noise.mul(ex)

@@ -14,26 +14,29 @@ def load_data(x_fp) :
 def save_pic(save_fp, model, pic_n) :
     import cv2
     import os
+    import time
     import matplotlib.pyplot as plt
     import torch as tor
     from torch.autograd import Variable
 
     for i in range(pic_n) :
-        file = "{:0>5}.png".format(i)
-        file_fp = os.path.join("./hw4_data/train", file)
 
-        img = np.array([plt.imread(file_fp)]) / 255.
-
-        img_var = Variable(tor.FloatTensor(img))
+        f = "{:0>5}.png".format(i)
+        file_fp = os.path.join("./hw4_data/train", f)
+        img = np.array([plt.imread(file_fp)])
+        img_var = Variable(tor.FloatTensor(img)).cuda()
         img_var = img_var.permute(0, 3, 1, 2)
 
-        out = model(img_var)
-        out = out.permute(0, 2, 3, 1)
-        out_img = out.data.numpy() * 255
-        
-        plt.imsave(os.path.join(save_fp, file), out_img)
+        model.training = False
+        out, KLD = model(img_var)
+        model.training = True
 
-        print ("|Output {} is saved.".format(file))
+        out = out.permute(0, 2, 3, 1).cpu()
+        out_img = out.data.numpy()[0] * 255
+        print (out_img)
+        plt.imsave(os.path.join(save_fp, "{:0>5}_{}.png".format(i, int(time.time()))), out_img.astype(np.int16))
+
+        print ("|Output {} is saved.".format(f))
 
 
 
