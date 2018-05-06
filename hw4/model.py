@@ -54,11 +54,11 @@ class AVE(nn.Module):
 
         # latent space
         self.ls_fc_1 = self.fc(fc_channels[1], fc_channels[2])
-        self.ls_sig = tor.nn.Sigmoid()
+        self.ls_tanh = tor.nn.Tanh()
 
         # logvar
         self.lv_fc_1 = self.fc(fc_channels[1], fc_channels[2])
-        self.lv_sig = tor.nn.Sigmoid()
+        self.lv_tanh = tor.nn.Tanh()
 
         # decode
         self.de_fc_1 = self.fc(fc_channels[2], fc_channels[3])

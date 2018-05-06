@@ -3,4 +3,7 @@ from .train_tools import (
     load_data,
     save_pic,
 )
-from .recorder import console
+from .recorder import (
+    console,
+    record,
+)

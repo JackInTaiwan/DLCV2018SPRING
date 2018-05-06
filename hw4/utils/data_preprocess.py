@@ -10,7 +10,7 @@ def pic_to_npy(pic_dir_fp, output_fp, start, limit=float("inf")) :
     total = len(os.listdir(pic_dir_fp))
 
     for index in range(int(total)):
-        if index + start >= limit or index + start >= total:
+        if index >= limit or index + start >= total:
             break
 
         else:
