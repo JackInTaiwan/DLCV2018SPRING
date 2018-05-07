@@ -23,7 +23,7 @@ AVAILABLA_SIZE = None
 EPOCH = 80
 BATCHSIZE = 32
 LR = 0.0001
-LR_STEPSIZE = 300
+LR_STEPSIZE = 1000
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
@@ -119,7 +119,7 @@ def train(data_loader, model_index, x_eval_train):
 
 
     ### Training
-    for epoch in range(EPOCH):
+    for epoch in range(10, EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
         ### Training
