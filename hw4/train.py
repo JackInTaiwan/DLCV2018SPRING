@@ -9,10 +9,10 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model_2 import AVE
+    from model import AVE
     from utils import load_data, console, save_pic, record
 except :
-    from .model_2 import AVE
+    from .model import AVE
     from .utils import load_data, console, save_pic, record
 
 
@@ -23,7 +23,7 @@ AVAILABLA_SIZE = None
 EPOCH = 80
 BATCHSIZE = 32
 LR = 0.0001
-LR_STEPSIZE = 150
+LR_STEPSIZE = 300
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
