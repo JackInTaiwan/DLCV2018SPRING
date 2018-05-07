@@ -105,10 +105,16 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
 
 
 """ Model Training """
-def train(data_loader, model_index, x_eval_train):
+def train(data_loader, model_index, x_eval_train, loaded_model):
     ### Model Initiation
-    ave = AVE()
-    ave.cuda()
+    if loaded_model :
+        ave = AVE()
+        saved_state_dict = tor.load(loaded_model)
+        ave.load_state_dict(saved_state_dict)
+        ave.cuda()
+    else :
+        ave = AVE()
+        ave.cuda()
 
     loss_func = tor.nn.MSELoss()
 
@@ -165,10 +171,12 @@ if __name__ == "__main__":
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
     parser.add_argument("-i", action="store", type=int, required=True, help="model index")
     parser.add_argument("-lr", action="store", type=float, default=False, help="learning reate")
+    parser.add_argument("--load", action="store", type=str, default=None)
 
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
+    loaded_model = parser.parse_args().load
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
     ### Load Data
@@ -177,4 +185,4 @@ if __name__ == "__main__":
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index, x_eval_train)
+    train(data_loader, model_index, x_eval_train, loaded_model)
