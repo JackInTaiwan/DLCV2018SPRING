@@ -16,7 +16,12 @@ def record(record_fp, datum) :
     for item in data :
         if item["model_name"] == model_name :
             item["lr"].append(datum["lr"])
+<<<<<<< HEAD
             item["loss"].append(datum["KLD_loss"])
+=======
+            item["loss"].append(datum["recon_loss"])
+            item["KLD_loss"].append(datum["KLD_loss"])
+>>>>>>> 2da6e8c88ca228dcc68777f1abb3cc81d875dc51
             break
 
     else :

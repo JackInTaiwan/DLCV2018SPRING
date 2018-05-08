@@ -58,6 +58,8 @@ class GN(nn.Module) :
 
     def load_ave_state(self, state) :
         for i, layer in enumerate(self.state_dict()):
+            print (layer)
+            print (list(state)[i+10])
             w = state[list(state)[i+10]]
             self.state_dict()[layer].copy_(w)
 
@@ -104,14 +106,14 @@ class DN(nn.Module) :
 
 
     def forward(self, x) :
-        x = self.de_conv_1(x)
-        x = self.de_conv_2(x)
-        x = self.de_pool_1(x)
+        x = self.dn_conv_1(x)
+        x = self.dn_conv_2(x)
+        x = self.dn_pool_1(x)
         x = x.view(x.size(0), -1)
-        x = self.de_fc_1(x)
-        x = self.de_fc_2(x)
-        x = self.de_fc_3(x)
-        d = self.de_sig(x)
+        x = self.dn_fc_1(x)
+        x = self.dn_fc_2(x)
+        x = self.dn_fc_3(x)
+        d = self.dn_sig(x)
 
         return d
 
