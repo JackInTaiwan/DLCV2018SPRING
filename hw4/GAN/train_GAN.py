@@ -137,15 +137,15 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if step % PIVOT_STEPS == 0 :
-                out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
+            if (step // PIVOT_STEPS) % 2 == 0 :
+                out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
                 ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
                 dis = dn(out)
 
                 optim = optim_dn
 
             else :
-                out = gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
+                out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
                 ans = Variable(tor.ones(BATCHSIZE)).cuda()
                 dis = dn(out)
 
@@ -159,7 +159,8 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             lr_step_gn.step()
 
 
-            if step % RECORD_JSON_PERIOD == 0:
+            if step % RECORD_JSON_PERIOD == 0 :
+
                 save_record(model_index, epoch, optim, loss)
 
             if step % RECORD_PIC_PERIOD == 0 :
