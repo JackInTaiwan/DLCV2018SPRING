@@ -23,7 +23,7 @@ except:
 AVAILABLE_SIZE = None
 EPOCH = 30
 BATCHSIZE = 64
-EVAL_SIZE = 100
+EVAL_SIZE = 64
 PIVOT_STEPS = 30
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 500, 0.95
@@ -77,7 +77,7 @@ def data_loader(limit):
     return data_loader, x_eval_train
 
 
-def save_record(model_index, epoch, optim, loss):
+def save_record(model_index, epoch, optim, loss, acc_true, acc_false):
     record_data = dict()
 
     if epoch == 0:
@@ -102,7 +102,7 @@ def save_record(model_index, epoch, optim, loss):
 """ Model Training """
 
 
-def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
+def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
     ### Model Initiation
     gn = GN().cuda()
     dn = DN().cuda()
@@ -160,13 +160,26 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
 
 
             if step % RECORD_JSON_PERIOD == 0 :
+                x_true = x_eval_train
+                out = dn(x_true)
+                acc_true = round(int((out >= 0.5).sum().data) / EVAL_SIZE, 5)
 
-                save_record(model_index, epoch, optim, loss)
+                x_false = Variable(tor.randn((EVAL_SIZE, 512))).cuda()
+                out = dn(x_false)
+                acc_false = round(int((out < 0.5).sum().data) / EVAL_SIZE, 5)
+
+                print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
+
+                save_record(model_index, epoch, optim, loss, acc_true, acc_false)
 
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
                 save_pic("output", gn, 3)
+
+            if step % (2 * PIVOT_STEPS) == 0 :
+                pass
+
 
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
@@ -199,6 +212,6 @@ if __name__ == "__main__":
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index, gn_fp, dn_fp, ave_fp)
+    train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp)
 
 
