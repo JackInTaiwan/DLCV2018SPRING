@@ -135,7 +135,7 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
 
             ### train true/false pic
             x = Variable(x_batch).cuda() if step % 2 == 0 else Variable(tor.rand(BATCHSIZE, 512, 1, 1)).cuda()
-            ans = Variable(tor.ones(dis.size(0))).cuda() if step % 2 == 0 else Variable(tor.zeros(dis.size(0))).cuda()
+            ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
 
             out = gn(x)
             dis = dn(out)

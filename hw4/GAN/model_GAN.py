@@ -118,7 +118,7 @@ class DN(nn.Module) :
 
 
     def load_ave_state(self, state) :
-        for i, layer in enumerate(self.state_dict()[:6]) :
+        for i, layer in enumerate(list(self.state_dict())[:6]) :
             w = state[list(state)[i]]
             self.state_dict()[layer].copy_(w)
 
