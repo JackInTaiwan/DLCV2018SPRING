@@ -94,7 +94,7 @@ def save_record(model_index, epoch, optim, loss):
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["loss"] = round(float(loss.data), 6)
 
-    record(RECORD_FP, record_data)
+    #record(RECORD_FP, record_data)
 
 
 """ Model Training """
@@ -102,8 +102,8 @@ def save_record(model_index, epoch, optim, loss):
 
 def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
     ### Model Initiation
-    gn = GN()
-    dn = DN()
+    gn = GN().cuda()
+    dn = DN().cuda()
 
     ave_state_dict = tor.load(ave_fp)
     gn.load_ave_state(ave_state_dict)
@@ -134,7 +134,7 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            out = gn(Variable(x_batch)).cuda() if step % 2 == 0 else Variable(tor.rand(BATCHSIZE, 512)).cuda()
+            out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
             ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
 
             dis = dn(out)
