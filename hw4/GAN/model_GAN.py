@@ -45,7 +45,7 @@ class GN(nn.Module) :
         self.out = tor.nn.Sigmoid()
 
 
-    def GN(self, x) :
+    def forward(self, x) :
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
         x = self.de_conv_1(x)
@@ -63,7 +63,7 @@ class GN(nn.Module) :
 
 
 
-class DN :
+class DN(nn.Module) :
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
         conv = nn.Sequential(
             nn.Conv2d(
@@ -90,7 +90,7 @@ class DN :
         super(DN, self).__init__()
         self.index = 0
 
-        DN_conv_channels = [3, 2 ** 6, 2 ** 7,]
+        DN_conv_channels = [3, 2 ** 6, 2 ** 7]
         DN_fc_channels = [32 * 32 * DN_conv_channels[-1], 2 ** 10, 2 ** 10, 1]
 
         # Discriminator Network

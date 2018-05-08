@@ -31,7 +31,7 @@ MOMENTUM = 0.5
 RECORD_JSON_PERIOD = 10  # steps
 RECORD_MODEL_PERIOD = 1  # epochs
 
-TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
+TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
 RECORD_FP = "./record/model_gan.json"
 
@@ -100,7 +100,7 @@ def save_record(model_index, epoch, optim, loss):
 """ Model Training """
 
 
-def train(data_loader, model_index, x_eval_train, loaded_model, ave_fp):
+def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
     ### Model Initiation
     gn = GN()
     dn = DN()
@@ -181,7 +181,7 @@ if __name__ == "__main__":
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
     gn_fp = parser.parse_args().gn
-    dn_fp = parser.parse_args().dn
+    dn_fp = parser.parse_args().拍謝dn
     ave_fp = parser.parse_args().ave
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
@@ -191,6 +191,6 @@ if __name__ == "__main__":
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp)
+    train(data_loader, model_index, gn_fp, dn_fp, ave_fp)
 
 
