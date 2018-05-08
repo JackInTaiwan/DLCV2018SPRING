@@ -35,6 +35,7 @@ class GN(nn.Module) :
         super(GN, self).__init__()
 
         GN_conv_channels = [2 ** 9, 2 ** 7, 2 ** 8, 3]
+        GN_fc_channels = [2 ** 9]
 
         # Generator Network
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[0], kernel_size=32, stride=1)
