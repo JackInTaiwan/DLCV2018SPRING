@@ -1,9 +1,15 @@
 import cv2
+import time
+import os
+import numpy as np
 import torch as tor
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from torch.autograd import Variable
-from .model import AVE
+try : 
+    from .model import AVE
+except :
+    from model import AVE
 
 
 
@@ -11,21 +17,24 @@ from .model import AVE
 def random_generator(model, v, output_fp) :
     model.training = False
     model.cuda()
+    
     v = Variable(tor.FloatTensor(v)).cuda()
-    img = model.decode(v)
-    img = img.cpu().data.numpy() * 255
+    img = model.decode(v, None)
+    img = (img.cpu().permute(0, 2, 3, 1).data.numpy()[0] * 255).astype(np.int16)
+    img_fn = str(int(time.time())) + ".png"
 
-    plt.imsave(output_fp, img)
+    plt.imsave(os.path.join(output_fp, img_fn), img)
 
+    print ("|Picture is generated.   |{}".format(img_fn))
 
 
 if __name__ == "__main__" :
     parser = ArgumentParser()
-    parser.add_argument("-m", type=str, required=True, help="model file path")
-    parser.add_argument("-o", type=str, required=True, help="output file path")
+    parser.add_argument("-m", "--model", type=str, required=True, help="model file path")
+    parser.add_argument("-o", "--output", type=str, required=True, help="output file path")
 
-    model_fp = parser.parse_args().m
-    output_fp = parser.parse_args().o
+    model_fp = parser.parse_args().model
+    output_fp = parser.parse_args().output
 
     ave = AVE()
     ave.load_state_dict(tor.load(model_fp))
