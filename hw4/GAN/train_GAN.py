@@ -181,7 +181,7 @@ if __name__ == "__main__":
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
     gn_fp = parser.parse_args().gn
-    dn_fp = parser.parse_args().拍謝dn
+    dn_fp = parser.parse_args().dn
     ave_fp = parser.parse_args().ave
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
