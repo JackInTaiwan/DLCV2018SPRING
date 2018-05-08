@@ -31,7 +31,7 @@ MOMENTUM = 0.5
 RECORD_JSON_PERIOD = 10  # steps
 RECORD_MODEL_PERIOD = 1  # epochs
 
-TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
+TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
 RECORD_FP = "./record/model_gan.json"
 
@@ -100,7 +100,7 @@ def save_record(model_index, epoch, optim, loss):
 """ Model Training """
 
 
-def train(data_loader, model_index, x_eval_train, loaded_model, ave_fp):
+def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
     ### Model Initiation
     gn = GN()
     dn = DN()
@@ -135,7 +135,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model, ave_fp):
 
             ### train true/false pic
             x = Variable(x_batch).cuda() if step % 2 == 0 else Variable(tor.rand(BATCHSIZE, 512, 1, 1)).cuda()
-            ans = Variable(tor.ones(dis.size(0))).cuda() if step % 2 == 0 else Variable(tor.zeros(dis.size(0))).cuda()
+            ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
 
             out = gn(x)
             dis = dn(out)
@@ -191,6 +191,6 @@ if __name__ == "__main__":
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp)
+    train(data_loader, model_index, gn_fp, dn_fp, ave_fp)
 
 

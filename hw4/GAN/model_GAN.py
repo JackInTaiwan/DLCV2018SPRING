@@ -45,7 +45,7 @@ class GN(nn.Module) :
         self.out = tor.nn.Sigmoid()
 
 
-    def GN(self, x) :
+    def forward(self, x) :
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
         x = self.de_conv_1(x)
@@ -63,7 +63,7 @@ class GN(nn.Module) :
 
 
 
-class DN :
+class DN(nn.Module) :
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
         conv = nn.Sequential(
             nn.Conv2d(
@@ -118,7 +118,7 @@ class DN :
 
 
     def load_ave_state(self, state) :
-        for i, layer in enumerate(self.state_dict()[:6]) :
+        for i, layer in enumerate(list(self.state_dict())[:6]) :
             w = state[list(state)[i]]
             self.state_dict()[layer].copy_(w)
 
