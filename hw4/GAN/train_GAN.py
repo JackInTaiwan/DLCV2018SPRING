@@ -96,7 +96,7 @@ def save_record(model_index, epoch, optim, loss):
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["loss"] = round(float(loss.data), 6)
 
-    #record(RECORD_FP, record_data)
+    record(RECORD_FP, record_data)
 
 
 """ Model Training """
@@ -125,7 +125,8 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
     optim_gn = tor.optim.Adam(gn.parameters(), lr=LR)
     optim_dn = tor.optim.Adam(dn.parameters(), lr=LR)
 
-    #lr_step = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
+    lr_step_gn = StepLR(optim_gn, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
+    lr_step_dn = StepLR(optim_dn, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
 
     ### Training
@@ -136,19 +137,26 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
-            ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
+            if step % PIVOT_STEPS == 0 :
+                out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
+                ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
+                dis = dn(out)
 
-            dis = dn(out)
+                optim = optim_dn
 
-            ### Training DN/GN
-            optim = optim_dn if (step // PIVOT_STEPS) % 2 == 0 else optim_gn
+            else :
+                out = gn(Variable(tor.rand(BATCHSIZE, 512)).cuda())
+                ans = Variable(tor.ones(BATCHSIZE)).cuda()
+                dis = dn(out)
+
+                optim = optim_gn
 
             loss = loss_func(dis, ans)
             loss.backward()
             optim.step()
-            #lr_step.step()
             optim.zero_grad()
+            lr_step_dn.step()
+            lr_step_gn.step()
 
 
             if step % RECORD_JSON_PERIOD == 0:
