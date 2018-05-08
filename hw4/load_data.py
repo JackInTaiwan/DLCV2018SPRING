@@ -1,8 +1,8 @@
-import sys, os
+import os
 #sys.path.append(os.path.abspath(".."))
 from argparse import ArgumentParser
 try :
-    from .utils import pic_to_npy
+    from hw4.AVE.utils import pic_to_npy
 except :
     from utils import pic_to_npy
 

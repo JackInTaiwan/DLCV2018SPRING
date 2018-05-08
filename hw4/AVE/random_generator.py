@@ -1,13 +1,15 @@
-import cv2
 import time
 import os
+import time
+from argparse import ArgumentParser
+
+import matplotlib.pyplot as plt
 import numpy as np
 import torch as tor
-import matplotlib.pyplot as plt
-from argparse import ArgumentParser
 from torch.autograd import Variable
-try : 
-    from .model import AVE
+
+try :
+    from hw4.AVE.model import AVE
 except :
     from model import AVE
 

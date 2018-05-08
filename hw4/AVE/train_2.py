@@ -1,40 +1,40 @@
 import os
-import cv2
+from argparse import ArgumentParser
+
 import numpy as np
 import torch as tor
-
-from argparse import ArgumentParser
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model import AVE
+    from model_2 import AVE
     from utils import load_data, console, save_pic, record
 except :
-    from .model import AVE
-    from .utils import load_data, console, save_pic, record
+    from hw4.AVE.model_2 import AVE
+    from hw4.AVE.utils import load_data, console, save_pic, record
 
 
 
 
 """ Parameters """
-AVAILABLE_SIZE = None
+AVAILABLA_SIZE = None
 EPOCH = 80
 BATCHSIZE = 64
 LR = 0.0001
-LR_STEPSIZE = 700
+LR_STEPSIZE = 400
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
 RECORD_JSON_PERIOD = 10     # steps
-RECORD_MODEL_PERIOD = 1     # epochs
+RECORD_MODEL_PERIOD = 5     # epochs
+RECORD_PIC_PERIOD = 50     # steps
 
-KLD_LAMBDA = 10 ** -8
+KLD_LAMBDA = 10 ** -7
 
 TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_ave.json"
+RECORD_FP = "./record/model_ave_4.json"
 
 MODEL_ROOT = "./models"
 
@@ -56,8 +56,8 @@ def data_loader(limit):
     if limit:
         x_train = x_train[:limit]
 
-    global AVAILABLE_SIZE
-    AVAILABLE_SIZE = x_train.shape
+    global AVAILABLA_SIZE
+    AVAILABLA_SIZE = str(x_train.shape)
 
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
     x_eval_train = x_train[:EVAL_SIZE]
@@ -83,8 +83,8 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
     record_data = dict()
 
     if epoch == 0:
-        record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
-        record_data["data_size"] = AVAILABLE_SIZE
+        record_data["model_name"] = "ave_model_{}.pkl".format(model_index)
+        record_data["data_size"] = AVAILABLA_SIZE
         record_data["batch_size"] = BATCHSIZE
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
         record_data["lr_init"] = float(optim.param_groups[0]["lr"])
@@ -94,7 +94,7 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
         record_data["KLD_loss"] = round(float(KLD_loss), 6)
 
     else:
-        record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+        record_data["model_name"] = "ave_model_{}.pkl".format(model_index)
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["recon_loss"] = round(float(recon_loss.data), 6)
         record_data["KLD_loss"] = round(float(KLD_loss), 6)
@@ -125,12 +125,11 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
     ### Training
-    for epoch in range(46, EPOCH):
-        print("|Epoch: {:>4} |".format(epoch + 1))
+    for epoch in range(0, EPOCH):
+        print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
         ### Training
         for step, (x_batch, y_batch) in enumerate(data_loader):
-            print ("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0]/BATCHSIZE)), end="\r")
             x = Variable(x_batch).cuda()
             y = Variable(y_batch).cuda()
             out, KLD = ave(x)
@@ -144,6 +143,8 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
             if step % RECORD_JSON_PERIOD == 0 :
                 save_record(model_index, epoch, optim, recon_loss, KLD)
+            if step % RECORD_PIC_PERIOD == 0 :    
+                save_pic("output_4", ave, 3)
 
         #print (out[:3])
 
@@ -154,7 +155,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
         ### Save output pictures
-        save_pic("output", ave, 3)
+        #save_pic("output_4", ave, 3)
 
 
         ### Save model
