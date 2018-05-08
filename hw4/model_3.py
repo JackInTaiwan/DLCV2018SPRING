@@ -41,9 +41,9 @@ class AVE(nn.Module):
         self.index = 0
         self.training = True
 
-        conv_channels = np.array([3, 2 ** 6, 2 ** 9, 2 ** 10, 3, 2 ** 8, 3])
+        conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 8, 3, 2 ** 8, 3])
         conv_channels = [int(num) for num in conv_channels]    # transform type
-        fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
+        fc_channels = np.array([conv_channels[2] * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
         fc_channels = [int(num) for num in fc_channels]  # transform type
 
         # block 1
@@ -96,8 +96,8 @@ class AVE(nn.Module):
             x = ls
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
-        x = self.de_conv_1(x)
-        x = self.de_conv_2(x)
+        #x = self.de_conv_1(x)
+        #x = self.de_conv_2(x)
         x = self.de_trans_2(x)
         out = self.out(x)
 

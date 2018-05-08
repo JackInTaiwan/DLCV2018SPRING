@@ -9,10 +9,10 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model import AVE
+    from model_3 import AVE
     from utils import load_data, console, save_pic, record
 except :
-    from .model import AVE
+    from .model_3 import AVE
     from .utils import load_data, console, save_pic, record
 
 
@@ -28,7 +28,8 @@ LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
 RECORD_JSON_PERIOD = 10     # steps
-RECORD_MODEL_PERIOD = 5     # epochs
+RECORD_MODEL_PERIOD = 1     # epochs
+RECORD_PIC_PERIOD = 50
 
 KLD_LAMBDA = 10 ** -7
 
@@ -125,7 +126,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
     ### Training
-    for epoch in range(10, EPOCH):
+    for epoch in range(0, EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1), end="")
 
         ### Training
@@ -143,7 +144,9 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
             if step % RECORD_JSON_PERIOD == 0 :
                 save_record(model_index, epoch, optim, recon_loss, KLD)
-
+            if step % RECORD_PIC_PERIOD == 0 :
+                save_pic("output_5", ave, 3)
+                  
         print (out[:3])
 
 
@@ -153,7 +156,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
         ### Save output pictures
-        save_pic("output_5", ave, 3)
+        #save_pic("output_5", ave, 3)
 
 
         ### Save model
