@@ -164,7 +164,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 out = dn(x_true)
                 acc_true = round(int((out >= 0.5).sum().data) / EVAL_SIZE, 5)
 
-                x_false = Variable(tor.randn((EVAL_SIZE, 512))).cuda()
+                x_false = Variable(tor.randn((EVAL_SIZE, 3, 64, 64))).cuda()
                 out = dn(x_false)
                 acc_false = round(int((out < 0.5).sum().data) / EVAL_SIZE, 5)
 
