@@ -28,7 +28,6 @@ def record(record_fp, datum) :
         new_datum["lr_init"] = datum["lr_init"]
         new_datum["lr"] = [datum["lr"]]
         new_datum["record_epoch"] = datum["record_epoch"]
-        new_datum["recon_loss"] = [datum["recon_loss"]]
         new_datum["loss"] = [datum["loss"]]
         data.append(new_datum)
 
