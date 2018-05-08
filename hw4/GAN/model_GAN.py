@@ -34,7 +34,7 @@ class GN(nn.Module) :
     def __init__(self):
         super(GN, self).__init__()
 
-        GN_conv_channels = [2 ** 9, 2 ** 7, 2 ** 8, 3]
+        GN_conv_channels = [2 ** 6, 2 ** 7, 2 ** 8, 3]
         GN_fc_channels = [2 ** 9]
 
         # Generator Network

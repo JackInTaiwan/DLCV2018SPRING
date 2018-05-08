@@ -134,7 +134,7 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            x = Variable(x_batch).cuda() if step % 2 == 0 else Variable(tor.rand(BATCHSIZE, 512, 1, 1)).cuda()
+            x = Variable(x_batch).cuda() if step % 2 == 0 else Variable(tor.rand(BATCHSIZE, 3, 64, 64)).cuda()
             ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
 
             out = gn(x)
