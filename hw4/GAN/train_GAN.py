@@ -24,12 +24,14 @@ AVAILABLE_SIZE = None
 EPOCH = 30
 BATCHSIZE = 64
 EVAL_SIZE = 100
+PIVOT_STEPS = 30
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 500, 0.95
 MOMENTUM = 0.5
 
 RECORD_JSON_PERIOD = 10  # steps
 RECORD_MODEL_PERIOD = 1  # epochs
+RECORD_PIC_PERIOD = 60  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
@@ -140,7 +142,7 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             dis = dn(out)
 
             ### Training DN/GN
-            optim = optim_dn if (step // 50) % 2 == 0 else optim_gn
+            optim = optim_dn if (step // PIVOT_STEPS) % 2 == 0 else optim_gn
 
             loss = loss_func(dis, ans)
             loss.backward()
@@ -152,13 +154,10 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
             if step % RECORD_JSON_PERIOD == 0:
                 save_record(model_index, epoch, optim, loss)
 
-
-        ### Evaluation
-        loss = float(loss.data)
-        print("|Loss: {:<8}".format(loss))
-
-        ### Save output pictures
-        #save_pic("output", ave, 3)
+            if step % RECORD_PIC_PERIOD == 0 :
+                loss = float(loss.data)
+                print("|Loss: {:<8}".format(loss))
+                save_pic("output", gn, 3)
 
         ### Save model
         #if epoch % RECORD_MODEL_PERIOD == 0:

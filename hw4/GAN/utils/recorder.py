@@ -16,8 +16,7 @@ def record(record_fp, datum) :
     for item in data :
         if item["model_name"] == model_name :
             item["lr"].append(datum["lr"])
-            item["recon_loss"].append(datum["recon_loss"])
-            item["KLD_loss"].append(datum["KLD_loss"])
+            item["loss"].append(datum["KLD_loss"])
             break
 
     else :
@@ -30,7 +29,7 @@ def record(record_fp, datum) :
         new_datum["lr"] = [datum["lr"]]
         new_datum["record_epoch"] = datum["record_epoch"]
         new_datum["recon_loss"] = [datum["recon_loss"]]
-        new_datum["KLD_loss"] = [datum["KLD_loss"]]
+        new_datum["loss"] = [datum["loss"]]
         data.append(new_datum)
 
     with open(record_fp, "w") as f :
