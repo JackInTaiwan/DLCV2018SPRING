@@ -160,7 +160,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
 
 
             if step % RECORD_JSON_PERIOD == 0 :
-                x_true = x_eval_train
+                x_true = Variable(x_eval_train).cuda()
                 out = dn(x_true)
                 acc_true = round(int((out >= 0.5).sum().data) / EVAL_SIZE, 5)
 
