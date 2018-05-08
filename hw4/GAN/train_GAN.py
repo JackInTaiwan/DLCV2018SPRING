@@ -30,7 +30,7 @@ LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 500, 0.95
 MOMENTUM = 0.5
 
 RECORD_JSON_PERIOD = 10  # steps
-RECORD_MODEL_PERIOD = 1  # epochs
+RECORD_MODEL_PERIOD = 2  # epochs
 RECORD_PIC_PERIOD = 60  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
@@ -168,8 +168,9 @@ def train(data_loader, model_index, gn_fp, dn_fp, ave_fp):
                 save_pic("output", gn, 3)
 
         ### Save model
-        #if epoch % RECORD_MODEL_PERIOD == 0:
-        #    tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}_{}.pkl".format(model_index, epoch)))
+        if epoch % RECORD_MODEL_PERIOD == 0:
+            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
+            tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """
