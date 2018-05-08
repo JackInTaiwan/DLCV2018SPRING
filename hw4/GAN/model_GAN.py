@@ -8,7 +8,7 @@ from torch.autograd import Variable
 
 
 """ Module Build """
-class GAN(nn.Module):
+class GN(nn.Module) :
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
         conv = nn.Sequential(
             nn.Conv2d(
@@ -32,31 +32,17 @@ class GAN(nn.Module):
 
 
     def __init__(self):
-        super(GAN, self).__init__()
-        self.index = 0
-        self.training = True
+        super(GN, self).__init__()
 
-        GN_conv_channels = [3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3]
-        GN_fc_channels = [2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12]
-        DN_conv_channels = [3, 2 ** 5, 2 ** 6, 2 ** 7]
-        DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 2 ** 10, 1]
+        GN_conv_channels = [2 ** 6, 2 ** 7, 2 ** 8, 3]
+        GN_fc_channels = [2 ** 9]
 
         # Generator Network
-        self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=fc_channels[2], out_channels=conv_channels[3], kernel_size=32, stride=1)
-        self.de_conv_1 = self.conv(conv_channels[3], conv_channels[4], 3, 1)
-        self.de_conv_2 = self.conv(conv_channels[4], conv_channels[5], 3, 1)
-        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=conv_channels[5], out_channels=conv_channels[6], kernel_size=2, stride=2, bias=False)
+        self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[0], kernel_size=32, stride=1)
+        self.de_conv_1 = self.conv(GN_conv_channels[0], GN_conv_channels[1], 3, 1)
+        self.de_conv_2 = self.conv(GN_conv_channels[1], GN_conv_channels[2], 3, 1)
+        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[2], out_channels=GN_conv_channels[3], kernel_size=2, stride=2, bias=False)
         self.out = tor.nn.Sigmoid()
-
-        # Discriminator Network
-        self.dn_conv_1 = self.conv(DN_conv_channels[0], DN_conv_channels[1], 3, 1)
-        self.dn_pool_1 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
-        self.dn_conv_2 = self.conv(DN_conv_channels[1], DN_conv_channels[2], 3, 1)
-        self.dn_conv_3 = self.conv(DN_conv_channels[2], DN_conv_channels[3], 3, 1)
-        self.dn_pool_2 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
-        self.dn_fc_1 = self.fc(DN_fc_channels[0], DN_conv_channels[1])
-        self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_conv_channels[2])
-        self.dn_sig = tor.nn.Sigmoid()
 
 
     def GN(self, x) :
@@ -70,7 +56,54 @@ class GAN(nn.Module):
         return out
 
 
-    def DN(self, x) :
+    def load_ave_state(self, state) :
+        for i, layer in enumerate(self.state_dict()):
+            w = state[list(state)[i+10]]
+            self.state_dict()[layer].copy_(w)
+
+
+
+class DN :
+    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
+        conv = nn.Sequential(
+            nn.Conv2d(
+                in_channels=in_conv_channels,
+                out_channels=out_conv_channels,
+                kernel_size=kernel_size,
+                stride=stride,
+                padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
+            ),
+            nn.ReLU(inplace=True),
+        )
+        return conv
+
+
+    def fc(self, num_in, num_out) :
+        fc = nn.Sequential(
+            nn.Linear(num_in, num_out),
+            nn.ReLU(inplace=True)
+        )
+        return fc
+
+
+    def __init__(self):
+        super(DN, self).__init__()
+        self.index = 0
+
+        DN_conv_channels = [3, 2 ** 6, 2 ** 7,]
+        DN_fc_channels = [32 * 32 * DN_conv_channels[-1], 2 ** 10, 2 ** 10, 1]
+
+        # Discriminator Network
+        self.dn_conv_1 = self.conv(DN_conv_channels[0], DN_conv_channels[1], 3, 1)
+        self.dn_conv_2 = self.conv(DN_conv_channels[1], DN_conv_channels[2], 3, 1)
+        self.dn_pool_1 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.dn_fc_1 = self.fc(DN_fc_channels[0], DN_fc_channels[1])
+        self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_fc_channels[2])
+        self.dn_fc_3 = self.fc(DN_fc_channels[2], DN_fc_channels[3])
+        self.dn_sig = tor.nn.Sigmoid()
+
+
+    def forward(self, x) :
         x = self.de_conv_1(x)
         x = self.de_pool_1(x)
         x = self.de_conv_2(x)
@@ -84,12 +117,10 @@ class GAN(nn.Module):
         return d
 
 
-    def forward(self, x):
-        ls, logvar, KLD = self.encode(x)
-
-        output = self.decode(ls, logvar)
-
-        return output, KLD
+    def load_ave_state(self, state) :
+        for i, layer in enumerate(self.state_dict()[:6]) :
+            w = state[list(state)[i]]
+            self.state_dict()[layer].copy_(w)
 
 
     def params_init(self, m) :
