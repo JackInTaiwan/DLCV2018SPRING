@@ -81,7 +81,7 @@ class DN(nn.Module) :
     def fc(self, num_in, num_out) :
         fc = nn.Sequential(
             nn.Linear(num_in, num_out),
-            nn.ReLU(inplace=True)
+            #nn.ReLU(inplace=True)
         )
         return fc
 
@@ -114,6 +114,7 @@ class DN(nn.Module) :
         d = self.dn_sig(x)
 
         return d
+        #return x 
 
 
     def load_ave_state(self, state) :

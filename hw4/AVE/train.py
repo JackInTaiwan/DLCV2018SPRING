@@ -31,9 +31,9 @@ RECORD_MODEL_PERIOD = 1     # epochs
 
 KLD_LAMBDA = 10 ** -8
 
-TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
+TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_ave.json"
+RECORD_FP = "./record/model_ave_10.json"
 
 MODEL_ROOT = "./models"
 
@@ -124,7 +124,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
     ### Training
-    for epoch in range(46, EPOCH):
+    for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1))
 
         ### Training
@@ -153,7 +153,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
 
         ### Save output pictures
-        save_pic("output", ave, 3)
+        save_pic("output_10", ave, 3)
 
 
         ### Save model

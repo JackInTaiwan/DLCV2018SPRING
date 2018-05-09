@@ -143,13 +143,13 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             ### train true/false pic
             if (step // PIVOT_STEPS) % 2 == 0 :
                 out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
-                ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
+                ans = Variable(tor.ones(BATCHSIZE, 1)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
                 optim = optim_dn
 
             else :
                 out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
-                ans = Variable(tor.ones(BATCHSIZE)).cuda()
+                ans = Variable(tor.ones(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
 
                 optim = optim_gn
@@ -173,7 +173,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 x_true = Variable(x_eval_train).cuda()
                 out = dn(x_true)
                 acc_true = round(int((out > 0.5).sum().data) / EVAL_SIZE, 5)
-
+                print (out)
                 x_false = gn(Variable(tor.randn((EVAL_SIZE, 512))).cuda())
                 out = dn(x_false)
                 print (out)

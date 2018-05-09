@@ -22,7 +22,7 @@ def save_pic(save_fp, model, pic_n) :
     for i in range(pic_n) :
 
         f = "{:0>5}.png".format(i)
-        file_fp = os.path.join("./hw4_data/train", f)
+        file_fp = os.path.join("../hw4_data/train", f)
         img = np.array([plt.imread(file_fp)])
         img_var = Variable(tor.FloatTensor(img)).cuda()
         img_var = img_var.permute(0, 3, 1, 2)
