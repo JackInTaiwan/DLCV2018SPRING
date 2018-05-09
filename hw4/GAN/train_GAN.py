@@ -89,12 +89,16 @@ def save_record(model_index, epoch, optim, loss, acc_true, acc_false):
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["record_epoch"] = RECORD_MODEL_PERIOD
         record_data["loss"] = round(float(loss.data), 6)
+        record_data["acc_true"] = acc_true
+        record_data["acc_false"] = acc_false
 
 
     else:
         record_data["model_name"] = "gan_model_{}.pkl".format(model_index)
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["loss"] = round(float(loss.data), 6)
+        record_data["acc_true"] = acc_true
+        record_data["acc_false"] = acc_false
 
     record(RECORD_FP, record_data)
 
@@ -141,7 +145,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
                 ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
                 dis = dn(out)
-
                 optim = optim_dn
 
             else :
@@ -152,9 +155,16 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 optim = optim_gn
 
             loss = loss_func(dis, ans)
+            #print (loss.data)
             loss.backward()
-            optim.step()
-            optim.zero_grad()
+            #optim.step()
+            if (step // PIVOT_STEPS) % 2 == 0 :
+                optim_dn.step()
+                optim_dn.zero_grad()
+            else :
+                optim_gn.step()
+                optim_gn.zero_grad()
+            #optim.zero_grad()
             lr_step_dn.step()
             lr_step_gn.step()
 
@@ -162,11 +172,12 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             if step % RECORD_JSON_PERIOD == 0 :
                 x_true = Variable(x_eval_train).cuda()
                 out = dn(x_true)
-                acc_true = round(int((out >= 0.5).sum().data) / EVAL_SIZE, 5)
+                acc_true = round(int((out > 0.5).sum().data) / EVAL_SIZE, 5)
 
-                x_false = Variable(tor.randn((EVAL_SIZE, 3, 64, 64))).cuda()
+                x_false = gn(Variable(tor.randn((EVAL_SIZE, 512))).cuda())
                 out = dn(x_false)
-                acc_false = round(int((out < 0.5).sum().data) / EVAL_SIZE, 5)
+                print (out)
+                acc_false = round(int((out <= 0.5).sum().data) / EVAL_SIZE, 5)
 
                 print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
 
@@ -183,8 +194,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
 
         ### Save model
         if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
-            tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
+            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+            tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """
