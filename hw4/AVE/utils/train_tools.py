@@ -32,7 +32,7 @@ def save_pic(save_fp, model, pic_n) :
         model.training = True
 
         out = out.permute(0, 2, 3, 1).cpu()
-        out_img = out.data.numpy()[0] * 255
+        out_img = (out.data.numpy()[0] / 2 + 0.5) * 255
         #print (out_img)
         plt.imsave(os.path.join(save_fp, "{:0>5}_{}.png".format(i, int(time.time()))), out_img.astype(np.int16))
 

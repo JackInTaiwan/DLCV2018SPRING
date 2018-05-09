@@ -69,7 +69,7 @@ class AVE(nn.Module):
         self.de_conv_1 = self.conv(conv_channels[3], conv_channels[4], 3, 1)
         self.de_conv_2 = self.conv(conv_channels[4], conv_channels[5], 3, 1)
         self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=conv_channels[5], out_channels=conv_channels[6], kernel_size=2, stride=2, bias=False)
-        self.out = tor.nn.Sigmoid()
+        self.out = tor.nn.Tanh()
 
 
     def encode(self, x) :

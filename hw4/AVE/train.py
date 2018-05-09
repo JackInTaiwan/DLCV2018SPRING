@@ -58,7 +58,7 @@ def data_loader(limit):
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = x_train.shape
 
-    x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
+    x_train =  (tor.FloatTensor(x_train).permute(0, 3, 1, 2) - 0.5) * 2
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -133,7 +133,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             x = Variable(x_batch).cuda()
             y = Variable(y_batch).cuda()
             out, KLD = ave(x)
-            recon_loss = loss_func(out, y)
+            recon_loss = loss_func((out/2) + 0.5, y)
             loss = recon_loss + KLD_LAMBDA * KLD
 
             loss.backward()
