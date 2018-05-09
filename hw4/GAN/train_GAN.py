@@ -155,16 +155,15 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 optim = optim_gn
 
             loss = loss_func(dis, ans)
-            #print (loss.data)
+            print (loss.data)
             loss.backward()
-            #optim.step()
             if (step // PIVOT_STEPS) % 2 == 0 :
                 optim_dn.step()
-                optim_dn.zero_grad()
             else :
                 optim_gn.step()
-                optim_gn.zero_grad()
-            #optim.zero_grad()
+
+            optim_dn.zero_grad()
+            optim_gn.zero_grad()
             lr_step_dn.step()
             lr_step_gn.step()
 
