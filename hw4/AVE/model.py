@@ -31,7 +31,7 @@ class AVE(nn.Module):
     def fc(self, num_in, num_out) :
         fc = nn.Sequential(
             nn.Linear(num_in, num_out),
-            nn.ReLU(inplace=True)
+            #nn.ReLU(inplace=True)
         )
         return fc
 
