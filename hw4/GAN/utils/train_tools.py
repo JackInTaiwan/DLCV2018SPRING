@@ -21,8 +21,8 @@ def save_pic(save_fp, model, pic_n) :
 
     for i in range(pic_n) :
         #img = tor.randn((1, 512))
-        img = tor.FloatTensor(1, 512).uniform_(0, 1)
-        img_var = Variable(tor.FloatTensor(img)).cuda()
+        img = tor.randn(1, 512)
+        img_var = Variable(img).cuda()
 
         out = model(img_var)
 
@@ -58,17 +58,18 @@ def evaluate(model, x_eval, y_eval) :
 
 if __name__ == "__main__" :
     import torch as tor
-    from ..model_GAN import GN
+    from model_GAN import GN
     from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument("--output", type=str, required=True)
     parser.add_argument("--model", type=str, required=True)
-    parser.add_argument("-n", type=int)
+    parser.add_argument("-n", type=int, default=1)
 
     model_fp = parser.parse_args().model
     save_fp = parser.parse_args().output
+    n = parser.parse_args().n
 
     model = GN()
-    model.gpu()
+    model.cuda()
     model.load_state_dict(tor.load(model_fp))
-    save_pic(save_fp, model, 1)
+    save_pic(save_fp, model, n)
