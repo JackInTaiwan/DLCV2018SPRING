@@ -58,7 +58,16 @@ def evaluate(model, x_eval, y_eval) :
 
 if __name__ == "__main__" :
     import torch as tor
-    from argparse
+    from ..model_GAN import GN
+    from argparse import ArgumentParser
+    parser = ArgumentParser()
+    parser.add_argument("--output", type=str, required=True)
+    parser.add_argument("--model", type=str, required=True)
+    parser.add_argument("-n", type=int)
+
+    model_fp = parser.parse_args().model
+    save_fp = parser.parse_args().output
+
     model = GN()
     model.gpu()
     model.load_state_dict(tor.load(model_fp))
