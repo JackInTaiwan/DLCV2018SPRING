@@ -22,18 +22,20 @@ AVAILABLE_SIZE = None
 EPOCH = 80
 BATCHSIZE = 64
 LR = 0.0001
-LR_STEPSIZE = 700
+LR_STEPSIZE = 250
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
 RECORD_JSON_PERIOD = 10     # steps
-RECORD_MODEL_PERIOD = 1     # epochs
+RECORD_MODEL_PERIOD = 50   # steps
+RECORD_PIC_PERIOD = 50     # steps
 
-KLD_LAMBDA = 10 ** -8
+
+KLD_LAMBDA = 10 ** -5
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_ave_10.json"
+RECORD_FP = "./record/model_ave.json"
 
 MODEL_ROOT = "./models"
 
@@ -108,14 +110,15 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
     ### Model Initiation
     if loaded_model :
         ave = AVE()
+        ave.cuda()
         saved_state_dict = tor.load(loaded_model)
         ave.load_state_dict(saved_state_dict)
         ave.cuda()
     else :
         ave = AVE()
-        ave.cuda()
+        ave = ave.cuda()
 
-    loss_func = tor.nn.MSELoss()
+    loss_func = tor.nn.MSELoss().cuda()
 
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim = tor.optim.Adam(ave.parameters(), lr=LR)
@@ -133,8 +136,9 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             x = Variable(x_batch).cuda()
             y = Variable(y_batch).cuda()
             out, KLD = ave(x)
-            recon_loss = loss_func((out/2) + 0.5, y)
-            loss = recon_loss + KLD_LAMBDA * KLD
+            recon_loss = loss_func(out.cuda(), y)
+            loss = (recon_loss + KLD_LAMBDA * KLD)
+            print (loss)
 
             loss.backward()
             optim.step()
@@ -143,23 +147,11 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
             if step % RECORD_JSON_PERIOD == 0 :
                 save_record(model_index, epoch, optim, recon_loss, KLD)
-
+            if step % RECORD_PIC_PERIOD == 0 :
+                save_pic("output_{}".format(model_index), ave, 3)
+            if step % RECORD_MODEL_PERIOD == 0 :
+                tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}.pkl".format(model_index)))
         #print (out[:3])
-
-
-        ### Evaluation
-        loss = float(loss.data)
-        print("|Loss: {:<8}".format(loss))
-
-
-        ### Save output pictures
-        save_pic("output_10", ave, 3)
-
-
-        ### Save model
-        if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}_{}.pkl".format(model_index, epoch)))
-        
 
 
 

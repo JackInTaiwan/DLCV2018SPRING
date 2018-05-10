@@ -79,10 +79,10 @@ class AVE(nn.Module):
         x = x.view(x.size(0), -1)
         x = self.en_fc_1(x)
 
-        ls = self.ls_tanh(self.ls_fc_1(x))
-        logvar = self.lv_tanh(self.lv_fc_1(x))
-        #ls = self.ls_sig(self.ls_fc_1(x))
-        #logvar = self.lv_sig(self.lv_fc_1(x))
+        #ls = self.ls_tanh(self.ls_fc_1(x))
+        #logvar = self.lv_tanh(self.lv_fc_1(x))
+        ls = self.ls_fc_1(x)
+        logvar = self.lv_fc_1(x)
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
 
@@ -102,7 +102,6 @@ class AVE(nn.Module):
         x = self.de_conv_2(x)
         x = self.de_trans_2(x)
         out = self.out(x)
-
         return out
 
 

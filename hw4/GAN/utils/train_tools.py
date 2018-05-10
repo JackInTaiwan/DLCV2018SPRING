@@ -20,7 +20,8 @@ def save_pic(save_fp, model, pic_n) :
     from torch.autograd import Variable
 
     for i in range(pic_n) :
-        img = tor.randn((1, 512))
+        #img = tor.randn((1, 512))
+        img = tor.FloatTensor(1, 512).uniform_(0, 1)
         img_var = Variable(tor.FloatTensor(img)).cuda()
 
         out = model(img_var)
@@ -56,4 +57,9 @@ def evaluate(model, x_eval, y_eval) :
 
 
 if __name__ == "__main__" :
-    save_pic("../hw4_data",3 ,3)
+    import torch as tor
+    from argparse
+    model = GN()
+    model.gpu()
+    model.load_state_dict(tor.load(model_fp))
+    save_pic(save_fp, model, 1)
