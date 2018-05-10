@@ -1,7 +1,7 @@
 import cv2
 import os
+import time
 from argparse import ArgumentParser
-
 import numpy as np
 import torch as tor
 from torch.autograd import Variable
@@ -21,21 +21,21 @@ except:
 
 """ Parameters """
 AVAILABLE_SIZE = None
-EPOCH = 30
-BATCHSIZE = 64
+EPOCH = 50
+BATCHSIZE = 16
 EVAL_SIZE = 64
 PIVOT_STEPS = 30
 
-LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 500, 0.95
+LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
 MOMENTUM = 0.5
 
 RECORD_JSON_PERIOD = 10  # steps
-RECORD_MODEL_PERIOD = 2  # epochs
-RECORD_PIC_PERIOD = 60  # steps
+RECORD_MODEL_PERIOD = 360  # steps
+RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_gan.json"
+RECORD_FP = "./record/model_gan_6.json"
 
 MODEL_ROOT = "./models"
 
@@ -121,9 +121,11 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
     if dn_fp :
         dn_state_dict = tor.load(dn_fp)
         dn.load_state_dict(dn_state_dict)
+    gn.cuda()
+    dn.cuda()
 
 
-    loss_func = tor.nn.BCELoss()
+    loss_func = tor.nn.BCELoss().cuda()
 
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim_gn = tor.optim.Adam(gn.parameters(), lr=LR)
@@ -141,23 +143,23 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 2 == 0 :
+            if (step // PIVOT_STEPS) % 3 != 2 :
                 out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
-                ans = Variable(tor.ones(BATCHSIZE)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE)).cuda()
+                print (out)
+                ans = Variable(tor.ones(BATCHSIZE, 1)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
                 optim = optim_dn
 
             else :
-                out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
-                ans = Variable(tor.ones(BATCHSIZE)).cuda()
+                out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda()).cuda()
+                ans = Variable(tor.ones(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
-
-                optim = optim_gn
+                optim = optim_dn
 
             loss = loss_func(dis, ans)
             print (loss.data)
             loss.backward()
-            if (step // PIVOT_STEPS) % 2 == 0 :
+            if (step // PIVOT_STEPS) % 3 != 2 :
                 optim_dn.step()
             else :
                 optim_gn.step()
@@ -172,10 +174,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 x_true = Variable(x_eval_train).cuda()
                 out = dn(x_true)
                 acc_true = round(int((out > 0.5).sum().data) / EVAL_SIZE, 5)
-
                 x_false = gn(Variable(tor.randn((EVAL_SIZE, 512))).cuda())
                 out = dn(x_false)
-                print (out)
                 acc_false = round(int((out <= 0.5).sum().data) / EVAL_SIZE, 5)
 
                 print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
@@ -185,16 +185,16 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output", gn, 3)
+                save_pic("output_6", gn, 3)
 
             if step % (2 * PIVOT_STEPS) == 0 :
                 pass
 
 
         ### Save model
-        if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
-            tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
+            if step % RECORD_MODEL_PERIOD == 0:
+                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+                tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """

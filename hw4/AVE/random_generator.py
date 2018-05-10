@@ -19,9 +19,11 @@ except :
 def random_generator(model, v, output_fp) :
     model.training = False
     model.cuda()
-    
+  
+ 
     v = Variable(tor.FloatTensor(v)).cuda()
     img = model.decode(v, None) / 2.0 + 0.5
+    #img = model.decode(v, None)
     img = (img.cpu().permute(0, 2, 3, 1).data.numpy()[0] * 255).astype(np.int16)
     img_fn = str(int(time.time())) + ".png"
 
@@ -41,5 +43,8 @@ if __name__ == "__main__" :
     ave = AVE()
     ave.load_state_dict(tor.load(model_fp))
 
-    rand_v = tor.randn((1, 512)) 
+    rand_v = tor.randn((1, 512))
+    #rand_v = tor.FloatTensor(1, 512).uniform_(0,1)
+    print (rand_v)
+
     random_generator(ave, rand_v, output_fp)
