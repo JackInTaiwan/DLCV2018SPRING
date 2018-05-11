@@ -36,8 +36,8 @@ if __name__ == "__main__" :
     pic = plt.imread(pic_fp)
     print (pic)
     pic = (pic - 0.5) * 2.0
-    pic = Variable([pic]).type(tor.FloatTensor).permute(0, 3, 1, 2)
-    recon_pic = (model(pic).permute(0, 2, 3, 1).data.numpy()[0] / 2.0 + 0.5) * 255
+    pic = Variable(tor.FloatTensor(np.array([pic]))).permute(0, 3, 1, 2)
+    recon_pic = (model(pic)[0].permute(0, 2, 3, 1).data.numpy()[0] / 2.0 + 0.5) * 255
     recon_pic = recon_pic.astype(np.int16)
 
     pic_fn = "{}.png".format(int(time.time()))
