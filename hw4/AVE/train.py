@@ -138,7 +138,6 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             out, KLD = ave(x)
             recon_loss = loss_func(out.cuda(), y)
             loss = (recon_loss + KLD_LAMBDA * KLD)
-            print (loss)
 
             loss.backward()
             optim.step()

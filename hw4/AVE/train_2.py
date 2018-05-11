@@ -134,13 +134,11 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
         ### Training
         for step, (x_batch, y_batch) in enumerate(data_loader):
             print ("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0]/BATCHSIZE)), end="\r")
-            KLD_LAMBDA = 10 ** -5 if (step//100) % 2 == 0 else 10 ** -6
             x.data.copy_(x_batch)
             y.data.copy_(y_batch)
             out, KLD = ave(x)
             recon_loss = loss_func(out, y)
             loss = (recon_loss + KLD_LAMBDA * KLD)
-            print (loss)
 
             loss.backward()
             optim.step()

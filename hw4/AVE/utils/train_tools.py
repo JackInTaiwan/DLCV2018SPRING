@@ -32,7 +32,6 @@ def save_pic(save_fp, model, pic_n) :
         model.training = True
 
         out = out.permute(0, 2, 3, 1).cpu()
-        print (out)
         out_img = (out.data.numpy()[0] / 2.0 + 0.5) * 255
         #out_img = out.data.numpy()[0] * 255
         #print (out_img)
