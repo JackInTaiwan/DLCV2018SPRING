@@ -16,7 +16,8 @@ def record(record_fp, datum) :
     for item in data :
         if item["model_name"] == model_name :
             item["lr"].append(datum["lr"])
-            item["loss"].append(datum["loss"])
+            item["loss_real"].append(datum["loss_real"])
+            item["loss_fake"].append(datum["loss_fake"])
             item["acc_true"].append(datum["acc_true"])
             item["acc_false"].append(datum["acc_false"])
             break
@@ -30,7 +31,8 @@ def record(record_fp, datum) :
         new_datum["lr_init"] = datum["lr_init"]
         new_datum["lr"] = [datum["lr"]]
         new_datum["record_epoch"] = datum["record_epoch"]
-        new_datum["loss"] = [datum["loss"]]
+        new_datum["loss_real"] = [datum["loss_real"]]
+        new_datum["loss_fake"] = [datum["loss_fake"]]
         new_datum["acc_true"] = [datum["acc_true"]]
         new_datum["acc_false"] = [datum["acc_false"]]
         data.append(new_datum)
