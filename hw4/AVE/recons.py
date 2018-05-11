@@ -32,7 +32,7 @@ if __name__ == "__main__" :
     model.training = False
     model.load_state_dict(tor.load(model_fp))
 
-    pic_fp = os.path.join("../hw4_data/", "{:0>5}.png".format(pic_i))
+    pic_fp = os.path.join("../hw4_data/test", "{:0>5}.png".format(pic_i))
     pic = plt.imread(pic_fp)
     print (pic)
     pic = (pic - 0.5) * 2.0
