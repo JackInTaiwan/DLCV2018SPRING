@@ -31,7 +31,7 @@ RECORD_MODEL_PERIOD = 50   # steps
 RECORD_PIC_PERIOD = 50     # steps
 
 
-KLD_LAMBDA = 10 ** -5
+KLD_LAMBDA = 10 ** -7
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
@@ -138,7 +138,6 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             out, KLD = ave(x)
             recon_loss = loss_func(out.cuda(), y)
             loss = (recon_loss + KLD_LAMBDA * KLD)
-            print (loss)
 
             loss.backward()
             optim.step()

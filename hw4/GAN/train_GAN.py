@@ -22,7 +22,7 @@ except:
 """ Parameters """
 AVAILABLE_SIZE = None
 EPOCH = 50
-BATCHSIZE = 16
+BATCHSIZE = 32
 EVAL_SIZE = 64
 PIVOT_STEPS = 30
 
@@ -35,7 +35,7 @@ RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_gan_6.json"
+RECORD_FP = "./record/model_gan_7.json"
 
 MODEL_ROOT = "./models"
 
@@ -185,7 +185,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_6", gn, 3)
+                save_pic("output_{}".format(model_index), gn, 3)
 
             if step % (2 * PIVOT_STEPS) == 0 :
                 pass
@@ -193,8 +193,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
 
         ### Save model
             if step % RECORD_MODEL_PERIOD == 0:
-                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
-                tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
+                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
+                #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """

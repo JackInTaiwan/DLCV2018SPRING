@@ -31,7 +31,7 @@ class AVE(nn.Module):
     def fc(self, num_in, num_out) :
         fc = nn.Sequential(
             nn.Linear(num_in, num_out),
-            nn.ReLU(inplace=True)
+            #nn.ReLU(inplace=True)
         )
         return fc
 
@@ -41,11 +41,11 @@ class AVE(nn.Module):
         self.index = 0
         self.training = True
 
-        #conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3])
-        conv_channels = np.array([3, 2 ** 7, 2 ** 8, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 9, 3])
+        conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3])
+        #conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 8, 2 ** 10, 3])
         conv_channels = [int(num) for num in conv_channels]    # transform type
         #fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
-        fc_channels = np.array([conv_channels[2] * 32 * 32, 2 ** 7, 2 ** 10, 2 ** 7, 3 * 2 ** 12])
+        fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
         fc_channels = [int(num) for num in fc_channels]  # transform type
 
         # block 1
@@ -68,10 +68,8 @@ class AVE(nn.Module):
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=fc_channels[2], out_channels=conv_channels[3], kernel_size=32, stride=1)
         self.de_conv_1 = self.conv(conv_channels[3], conv_channels[4], 3, 1)
         self.de_conv_2 = self.conv(conv_channels[4], conv_channels[5], 3, 1)
-        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=conv_channels[6], out_channels=conv_channels[7], kernel_size=2, stride=2, bias=False)
-        self.de_conv_3 = self.conv(conv_channels[5], conv_channels[6], 3, 1)
-        #elf.de_conv_4 = self.conv(conv_channels[7], conv_channels[8], 3, 1)
-        self.out = tor.nn.Sigmoid()
+        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=conv_channels[5], out_channels=conv_channels[6], kernel_size=2, stride=2, bias=False)
+        self.out = tor.nn.Tanh()
 
 
     def encode(self, x) :
@@ -82,9 +80,9 @@ class AVE(nn.Module):
         x = self.en_fc_1(x)
 
         ls = self.ls_tanh(self.ls_fc_1(x))
-        logvar = self.lv_tanh(self.lv_fc_1(x))
-        #ls = self.ls_sig(self.ls_fc_1(x))
-        #logvar = self.lv_sig(self.lv_fc_1(x))
+        #logvar = self.lv_tanh(self.lv_fc_1(x))
+        #ls = self.ls_fc_1(x)
+        logvar = self.lv_fc_1(x)
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
 
@@ -102,12 +100,8 @@ class AVE(nn.Module):
         x = self.de_trans_1(x)
         x = self.de_conv_1(x)
         x = self.de_conv_2(x)
-        x = self.de_conv_3(x)
         x = self.de_trans_2(x)
-        #x = self.de_conv_3(x)
-        #x = self.de_conv_4(x)
         out = self.out(x)
-
         return out
 
 
