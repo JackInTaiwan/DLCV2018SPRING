@@ -58,7 +58,7 @@ def evaluate(model, x_eval, y_eval) :
 
 if __name__ == "__main__" :
     import torch as tor
-    from ..model_GAN import GN
+    from hw4.GAN.model_GAN import GN
     from argparse import ArgumentParser
     parser = ArgumentParser()
     parser.add_argument("--output", type=str, required=True)
