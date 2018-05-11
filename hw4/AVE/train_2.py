@@ -11,30 +11,31 @@ try :
     from model_2 import AVE
     from utils import load_data, console, save_pic, record
 except :
-    from hw4.AVE.model_2 import AVE
-    from hw4.AVE.utils import load_data, console, save_pic, record
+    from .model_2 import AVE
+    from .utils import load_data, console, save_pic, record
 
 
 
 
 """ Parameters """
-AVAILABLA_SIZE = None
+AVAILABLE_SIZE = None
 EPOCH = 80
-BATCHSIZE = 64
+BATCHSIZE = 32
 LR = 0.0001
-LR_STEPSIZE = 400
+LR_STEPSIZE = 1500
 LR_GAMMA = 0.95
 MOMENTUM = 0.5
 EVAL_SIZE = 100
 RECORD_JSON_PERIOD = 10     # steps
-RECORD_MODEL_PERIOD = 5     # epochs
+RECORD_MODEL_PERIOD = 50   # steps
 RECORD_PIC_PERIOD = 50     # steps
 
-KLD_LAMBDA = 10 ** -7
 
-TRAIN_DATA_FP = ["./data/train_data.npy", "./data/train_data_1.npy", "./data/train_data_2.npy"]
+KLD_LAMBDA = 10 ** -6
 
-RECORD_FP = "./record/model_ave_4.json"
+TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
+
+RECORD_FP = "./record/model_ave_10.json"
 
 MODEL_ROOT = "./models"
 
@@ -56,10 +57,10 @@ def data_loader(limit):
     if limit:
         x_train = x_train[:limit]
 
-    global AVAILABLA_SIZE
-    AVAILABLA_SIZE = str(x_train.shape)
+    global AVAILABLE_SIZE
+    AVAILABLE_SIZE = x_train.shape
 
-    x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
+    x_train =  (tor.FloatTensor(x_train).permute(0, 3, 1, 2) - 0.5) * 2
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -83,8 +84,8 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
     record_data = dict()
 
     if epoch == 0:
-        record_data["model_name"] = "ave_model_{}.pkl".format(model_index)
-        record_data["data_size"] = AVAILABLA_SIZE
+        record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
+        record_data["data_size"] = AVAILABLE_SIZE
         record_data["batch_size"] = BATCHSIZE
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
         record_data["lr_init"] = float(optim.param_groups[0]["lr"])
@@ -94,7 +95,7 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
         record_data["KLD_loss"] = round(float(KLD_loss), 6)
 
     else:
-        record_data["model_name"] = "ave_model_{}.pkl".format(model_index)
+        record_data["model_name"] = "fcn_model_{}.pkl".format(model_index)
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["recon_loss"] = round(float(recon_loss.data), 6)
         record_data["KLD_loss"] = round(float(KLD_loss), 6)
@@ -109,32 +110,37 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
     ### Model Initiation
     if loaded_model :
         ave = AVE()
+        ave.cuda()
         saved_state_dict = tor.load(loaded_model)
         ave.load_state_dict(saved_state_dict)
         ave.cuda()
     else :
         ave = AVE()
-        ave.cuda()
+        ave = ave.cuda()
 
-    loss_func = tor.nn.MSELoss()
+    loss_func = tor.nn.MSELoss().cuda()
 
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim = tor.optim.Adam(ave.parameters(), lr=LR)
 
     lr_step = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
-
+    x = Variable(tor.FloatTensor(BATCHSIZE, 3, 64, 64)).cuda()
+    y = Variable(tor.FloatTensor(BATCHSIZE, 3, 64, 64)).cuda()
     ### Training
-    for epoch in range(0, EPOCH):
-        print("|Epoch: {:>4} |".format(epoch + 1), end="")
+    for epoch in range(EPOCH):
+        print("|Epoch: {:>4} |".format(epoch + 1))
 
         ### Training
         for step, (x_batch, y_batch) in enumerate(data_loader):
-            x = Variable(x_batch).cuda()
-            y = Variable(y_batch).cuda()
+            print ("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0]/BATCHSIZE)), end="\r")
+            KLD_LAMBDA = 10 ** -5 if (step//100) % 2 == 0 else 10 ** -6
+            x.data.copy_(x_batch)
+            y.data.copy_(y_batch)
             out, KLD = ave(x)
             recon_loss = loss_func(out, y)
-            loss = recon_loss + KLD_LAMBDA * KLD
+            loss = (recon_loss + KLD_LAMBDA * KLD)
+            print (loss)
 
             loss.backward()
             optim.step()
@@ -143,25 +149,11 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
 
             if step % RECORD_JSON_PERIOD == 0 :
                 save_record(model_index, epoch, optim, recon_loss, KLD)
-            if step % RECORD_PIC_PERIOD == 0 :    
-                save_pic("output_4", ave, 3)
-
+            if step % RECORD_PIC_PERIOD == 0 :
+                save_pic("output_{}".format(model_index), ave, 3)
+            if step % RECORD_MODEL_PERIOD == 0 :
+                tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}.pkl".format(model_index)))
         #print (out[:3])
-
-
-        ### Evaluation
-        loss = float(loss.data)
-        print("|Loss: {:<8}".format(loss))
-
-
-        ### Save output pictures
-        #save_pic("output_4", ave, 3)
-
-
-        ### Save model
-        if epoch % RECORD_MODEL_PERIOD == 0:
-            tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}_{}.pkl".format(model_index, epoch)))
-        
 
 
 

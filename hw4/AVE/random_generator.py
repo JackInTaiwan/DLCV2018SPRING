@@ -9,9 +9,11 @@ import torch as tor
 from torch.autograd import Variable
 
 try :
-    from hw4.AVE.model import AVE
+    #from .model import AVE
+    from .model_2 import AVE
 except :
-    from model import AVE
+    #from model import AVE
+    from model_2 import AVE
 
 
 
@@ -25,6 +27,7 @@ def random_generator(model, v, output_fp) :
     img = model.decode(v, None) / 2.0 + 0.5
     #img = model.decode(v, None)
     img = (img.cpu().permute(0, 2, 3, 1).data.numpy()[0] * 255).astype(np.int16)
+    print (img)   
     img_fn = str(int(time.time())) + ".png"
 
     plt.imsave(os.path.join(output_fp, img_fn), img)
@@ -45,6 +48,5 @@ if __name__ == "__main__" :
 
     rand_v = tor.randn((1, 512))
     #rand_v = tor.FloatTensor(1, 512).uniform_(0,1)
-    print (rand_v)
 
     random_generator(ave, rand_v, output_fp)
