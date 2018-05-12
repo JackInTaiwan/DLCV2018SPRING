@@ -151,7 +151,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     lr_step_gn = StepLR(optim_gn, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
     lr_step_dn = StepLR(optim_dn, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
-    x = Variable(tor.FloatTensor(BATCHSIZE, LATENT_SPACE, 1)).cuda()
+    x = Variable(tor.FloatTensor(BATCHSIZE, LATENT_SPACE)).cuda()
     img = Variable(tor.FloatTensor(BATCHSIZE, 3, 64, 64)).cuda()
 
     dis_true = Variable(tor.ones(BATCHSIZE, 1)).cuda()
@@ -174,7 +174,9 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 else :
                     rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                     rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
-                    img.data.copy_(gn(x.data.copy_(rand_v)))
+                    print (type(rand_v))
+                    x.data.copy_(rand_v)
+                    img.data.copy_(gn(x))
 
                 dis = dis_true if step % 2 == 0 else dis_false
                 cls = Variable(cls_batch).cuda()
