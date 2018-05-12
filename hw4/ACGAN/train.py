@@ -240,7 +240,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_{}".format(model_index), gn, 3, epoch, step)
+                save_pic("output_{}".format(model_index), gn, 4, epoch, step)
 
 
         ### Save model
