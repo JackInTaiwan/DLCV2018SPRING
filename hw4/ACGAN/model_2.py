@@ -1,8 +1,6 @@
 import cv2
 import torch as tor
 import torch.nn as nn
-import numpy as np
-from torch.autograd import Variable
 
 
 
