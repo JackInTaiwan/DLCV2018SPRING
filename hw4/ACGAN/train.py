@@ -196,10 +196,10 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
                 x.data.copy_(rand_v)
-                img.data.copy_(gn(x).data)
+                out = gn(x)
                 dis = dis_true
                 cls = Variable(cls_batch).cuda()
-                dis_pred, cls_pred = dn(img)
+                dis_pred, cls_pred = dn(out)
 
                 optim = optim_gn
 
