@@ -68,7 +68,7 @@ def data_loader(limit):
     AVAILABLE_SIZE = x_train.shape
 
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
-    attr_train = tor.LongTensor(x_train)
+    attr_train = tor.LongTensor(attr_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
