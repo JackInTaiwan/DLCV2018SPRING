@@ -166,7 +166,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 2 != 2 :
+            if (step // PIVOT_STEPS) % 2 == 0 :
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
                 else :
@@ -224,7 +224,10 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 x_true = x_eval_train
                 dis, cls = dn(x_true)
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
-                x_false = gn(Variable(tor.randn((EVAL_SIZE, 512))).cuda())
+                x_noise = tor.randn((EVAL_SIZE, 512))
+                x_noise[:, 0] = tor.FloatTensor(EVAL_SIZE, 1).random_(0, 2)
+                x_noise = x_noise.cuda()
+                x_false = gn(x_noise)
                 dis, cls = dn(x_false)
                 acc_false = round(int((dis <= 0.5).sum().data) / EVAL_SIZE, 5)
 
