@@ -158,6 +158,10 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
     loss_real, loss_fake = None, None
 
+    def bh(m, gi, go) :
+        print (gi, go)
+    gn.register_backward_hook(bh)
+
     ### Training
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1))
