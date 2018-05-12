@@ -11,7 +11,7 @@ def load_data(x_fp) :
 
 
 
-def save_pic(save_fp, model, pic_n, step) :
+def save_pic(save_fp, model, pic_n, epoch, step) :
     import cv2
     import os
     import time
@@ -30,7 +30,7 @@ def save_pic(save_fp, model, pic_n, step) :
         out = out.permute(0, 2, 3, 1).cpu()
         out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{}_{:0>5}.png".format(step, int(time.time()), i)
+        f = "{}_{}_{}_{:0>5}.png".format(epoch, step, int(time.time()), i)
 
         if not os.path.exists(save_fp) :
             os.mkdir(save_fp)

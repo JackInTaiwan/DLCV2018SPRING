@@ -24,15 +24,15 @@ AVAILABLE_SIZE = None
 EPOCH = 50
 BATCHSIZE = 32
 EVAL_SIZE = 64
-PIVOT_STEPS = 30
+PIVOT_STEPS = 50
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 1500, 0.95
 MOMENTUM = 0.5
 
 LATENT_SPACE = 512
 
-RECORD_JSON_PERIOD = 10  # steps
-RECORD_MODEL_PERIOD = 360  # steps
+RECORD_JSON_PERIOD = 50  # steps
+RECORD_MODEL_PERIOD = 1000  # steps
 RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
@@ -57,9 +57,7 @@ def data_loader(limit):
     ### Load attribute data
     data_attr = pd.read_csv(ATTR_DATA_FP)
     attr_train = np.array(data_attr)[:, list(data_attr.keys()).index(SELECTED_ATTR)]
-    attr_train = attr_train.reshape(-1, 1)
-
-    print(x_train.shape, attr_train.shape)
+    attr_train = attr_train.reshape(-1, 1).astype(np.int64)
 
     if limit:
         x_train, attr_train = x_train[:limit], attr_train[:limit]
@@ -174,14 +172,13 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 else :
                     rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                     rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
-                    print (type(rand_v))
                     x.data.copy_(rand_v)
-                    img.data.copy_(gn(x))
+                    out = gn(x)
+                    img.data.copy_(out.data)
 
                 dis = dis_true if step % 2 == 0 else dis_false
                 cls = Variable(cls_batch).cuda()
                 dis_pred, cls_pred = dn(img)
-
                 optim = optim_dn
 
                 loss_dis = loss_func(dis_pred, dis)
@@ -196,8 +193,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             else :
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
-                img.data.copy_(gn(x.data.copy_(rand_v)))
-                img = gn(x.data.copy_())
+                x.data.copy_(rand_v)
+                img.data.copy_(gn(x).data)
                 dis = dis_true
                 cls = Variable(cls_batch).cuda()
                 dis_pred, cls_pred = dn(img)
@@ -209,9 +206,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 loss = loss_dis + loss_cls
 
                 loss_fake = loss_cls
-
-
-            print (loss.data)
 
             loss.backward()
 
@@ -241,15 +235,15 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_{}".format(model_index), gn, 3, step)
+                save_pic("output_{}".format(model_index), gn, 3, epoch, step)
 
 
         ### Save model
             if step % RECORD_MODEL_PERIOD == 0:
-                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
-                tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
-                #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
-                #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
+                #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
+                #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
+                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+                tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """
