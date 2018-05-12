@@ -214,7 +214,9 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             if (step // PIVOT_STEPS) % 3 != 2 :
                 optim_dn.step()
             else :
+                print (dn.state_dict()[list(dn.state_dict())[0]])
                 optim_gn.step()
+                print (dn.state_dict()[list(dn.state_dict())[0]])
 
             optim_dn.zero_grad()
             optim_gn.zero_grad()
