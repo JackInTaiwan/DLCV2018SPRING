@@ -156,6 +156,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
     dis_true = Variable(tor.ones(BATCHSIZE, 1)).cuda()
     dis_false = Variable(tor.zeros(BATCHSIZE, 1)).cuda()
+    x_eval_train = Variable(x_eval_train).cuda()
 
     loss_real, loss_fake = None, None
 
@@ -224,12 +225,12 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
 
             if step % RECORD_JSON_PERIOD == 0 :
-                x_true = Variable(x_eval_train).cuda()
-                out = dn(x_true)
-                acc_true = round(int((out > 0.5).sum().data) / EVAL_SIZE, 5)
+                x_true = x_eval_train
+                dis, cls = dn(x_true)
+                acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
                 x_false = gn(Variable(tor.randn((EVAL_SIZE, 512))).cuda())
-                out = dn(x_false)
-                acc_false = round(int((out <= 0.5).sum().data) / EVAL_SIZE, 5)
+                dis, cls = dn(x_false)
+                acc_false = round(int((dis <= 0.5).sum().data) / EVAL_SIZE, 5)
 
                 print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
 
