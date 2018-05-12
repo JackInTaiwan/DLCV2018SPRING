@@ -24,9 +24,9 @@ AVAILABLE_SIZE = None
 EPOCH = 50
 BATCHSIZE = 32
 EVAL_SIZE = 64
-PIVOT_STEPS = 50
+PIVOT_STEPS = 100
 
-LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 1500, 0.95
+LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
 MOMENTUM = 0.5
 
 LATENT_SPACE = 512
@@ -166,7 +166,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 2 == 0 :
+            if (step // PIVOT_STEPS) % 3 != 2 :
+                print ("use dn")
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
                 else :
@@ -191,6 +192,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                     loss_fake = loss_cls
 
             else :
+                print ("gn")
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
                 x.data.copy_(rand_v)
@@ -226,7 +228,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
                 x_noise = tor.randn((EVAL_SIZE, 512))
                 x_noise[:, 0] = tor.FloatTensor(EVAL_SIZE, 1).random_(0, 2)
-                x_noise = x_noise.cuda()
+                x_noise = Variable(x_noise).cuda()
                 x_false = gn(x_noise)
                 dis, cls = dn(x_false)
                 acc_false = round(int((dis <= 0.5).sum().data) / EVAL_SIZE, 5)
