@@ -166,7 +166,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 3 != 2 :
+            if (step // PIVOT_STEPS) % 2 != 2 :
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
                 else :
@@ -183,7 +183,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
                 loss_dis = loss_func(dis_pred, dis)
                 loss_cls = loss_func(cls_pred, cls)
-                loss = loss_dis + loss_cls
+                loss = loss_dis + loss_cls if step % 2 == 0 else loss_dis
 
                 if step % 2 == 0 :
                     loss_real = loss_cls
