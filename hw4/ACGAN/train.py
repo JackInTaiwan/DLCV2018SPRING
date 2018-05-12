@@ -57,7 +57,7 @@ def data_loader(limit):
     ### Load attribute data
     data_attr = pd.read_csv(ATTR_DATA_FP)
     attr_train = np.array(data_attr)[:, list(data_attr.keys()).index(SELECTED_ATTR)]
-    attr_train = attr_train
+    attr_train = attr_train.reshape(-1, 1)
 
     print(x_train.shape, attr_train.shape)
 
@@ -68,7 +68,7 @@ def data_loader(limit):
     AVAILABLE_SIZE = x_train.shape
 
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
-    attr_train = tor.LongTensor(attr_train)
+    attr_train = tor.FloatTensor(attr_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -141,7 +141,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     if gan_gn_fp :
         gn.load_gn_state(tor.load(gan_gn_fp))
 
-    loss_func = tor.nn.CrossEntropyLoss().cuda()
+    #loss_func = tor.nn.CrossEntropyLoss().cuda()
+    loss_func = tor.nn.BCELoss().cuda()
 
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim_gn = tor.optim.Adam(gn.parameters(), lr=LR)
@@ -153,8 +154,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     x = Variable(tor.FloatTensor(BATCHSIZE, LATENT_SPACE, 1)).cuda()
     img = Variable(tor.FloatTensor(BATCHSIZE, 3, 64, 64)).cuda()
 
-    dis_true = Variable(tor.ones(BATCHSIZE)).type(tor.LongTensor).cuda()
-    dis_false = Variable(tor.zeros(BATCHSIZE)).type(tor.LongTensor).cuda()
+    dis_true = Variable(tor.ones(BATCHSIZE, 1)).cuda()
+    dis_false = Variable(tor.zeros(BATCHSIZE, 1)).cuda()
 
     loss_real, loss_fake = None, None
 
