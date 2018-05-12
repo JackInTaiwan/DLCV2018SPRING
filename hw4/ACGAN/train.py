@@ -68,7 +68,7 @@ def data_loader(limit):
     AVAILABLE_SIZE = x_train.shape
 
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
-    attr_train = tor.FloatTensor(x_train)
+    attr_train = tor.LongTensor(x_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
@@ -153,8 +153,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     x = Variable(tor.FloatTensor(BATCHSIZE, LATENT_SPACE, 1)).cuda()
     img = Variable(tor.FloatTensor(BATCHSIZE, 3, 64, 64)).cuda()
 
-    dis_true = Variable(tor.ones(BATCHSIZE, 1)).cuda()
-    dis_false = Variable(tor.zeros(BATCHSIZE, 1)).cuda()
+    dis_true = Variable(tor.ones(BATCHSIZE, 1)).type(tor.LongTensor).cuda()
+    dis_false = Variable(tor.zeros(BATCHSIZE, 1)).type(tor.LongTensor).cuda()
 
     loss_real, loss_fake = None, None
 
