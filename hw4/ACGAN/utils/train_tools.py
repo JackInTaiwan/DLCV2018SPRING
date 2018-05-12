@@ -11,7 +11,7 @@ def load_data(x_fp) :
 
 
 
-def save_pic(save_fp, model, pic_n) :
+def save_pic(save_fp, model, pic_n, step) :
     import cv2
     import os
     import time
@@ -20,7 +20,9 @@ def save_pic(save_fp, model, pic_n) :
     from torch.autograd import Variable
 
     for i in range(pic_n) :
+        attr = 0 if i % 2 == 0 else 1
         img = tor.randn(1, 512)
+        img[0][0] = attr
         img_var = Variable(img).cuda()
 
         out = model(img_var)
@@ -28,7 +30,7 @@ def save_pic(save_fp, model, pic_n) :
         out = out.permute(0, 2, 3, 1).cpu()
         out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{:0>5}.png".format(int(time.time()), i)
+        f = "{}_{}_{:0>5}.png".format(step, int(time.time()), i)
 
         if not os.path.exists(save_fp) :
             os.mkdir(save_fp)

@@ -1,9 +1,10 @@
 import cv2
 import os
 import time
-from argparse import ArgumentParser
 import numpy as np
+import pandas as pd
 import torch as tor
+from argparse import ArgumentParser
 from torch.autograd import Variable
 from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
@@ -35,6 +36,8 @@ RECORD_MODEL_PERIOD = 360  # steps
 RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
+ATTR_DATA_FP = "../hw4_data/train.csv"
+SELECTED_ATTR = "Male"
 
 RECORD_FP = "./record"
 
@@ -45,27 +48,32 @@ MODEL_ROOT = "./models"
 
 """ Data Setting """
 def data_loader(limit):
+    ### Load img data
     x_train_1, x_size_1 = load_data(TRAIN_DATA_FP[0])
     x_train_2, x_size_2 = load_data(TRAIN_DATA_FP[1])
     x_train_3, x_size_3 = load_data(TRAIN_DATA_FP[2])
     x_train = np.vstack((x_train_1, x_train_2, x_train_3))
-    """
-    x_train, x_size = load_data(TRAIN_DATA_FP[0])
-    """
-    print(x_train.shape)
+
+    ### Load attribute data
+    data_attr = pd.read_csv(ATTR_DATA_FP)
+    attr_train = np.array(data_attr)[:, list(data_attr.keys()).index(SELECTED_ATTR)]
+    attr_train = attr_train.reshape(-1, 1)
+
+    print(x_train.shape, attr_train.shape)
 
     if limit:
-        x_train = x_train[:limit]
+        x_train, attr_train = x_train[:limit], attr_train[:limit]
 
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = x_train.shape
 
     x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
+    attr_train = tor.FloatTensor(x_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
     data_set = TensorDataset(
         data_tensor=x_train,
-        target_tensor=x_train
+        target_tensor=attr_train
     )
 
     data_loader = DataLoader(
@@ -105,20 +113,22 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
         record_data["acc_true"] = acc_true
         record_data["acc_false"] = acc_false
 
-    record(os.path.join(RECORD_FP, "acgan_{}.json".format(model_index)), record_data)
+    json_fp = os.path.join(RECORD_FP, "acgan_{}.json".format(model_index))
+
+    if not os.path.exists(json_fp) :
+        with open(json_fp, "w") as f :
+            f.write("'[]'")
+
+    record(json_fp, record_data)
 
 
 
 
 """ Model Training """
-def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
+def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_dn_fp, ave_fp):
     ### Model Initiation
     gn = GN().cuda()
     dn = DN().cuda()
-
-    ave_state_dict = tor.load(ave_fp)
-    gn.load_ave_state(ave_state_dict)
-    dn.load_ave_state(ave_state_dict)
 
     if gn_fp :
         gn_state_dict = tor.load(gn_fp)
@@ -126,6 +136,10 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
     if dn_fp :
         dn_state_dict = tor.load(dn_fp)
         dn.load_state_dict(dn_state_dict)
+    if gan_dn_fp :
+        dn.load_dn_state(tor.load(gan_dn_fp))
+    if gan_gn_fp :
+        gn.load_gn_state(tor.load(gan_gn_fp))
 
     loss_func = tor.nn.CrossEntropyLoss().cuda()
 
@@ -193,8 +207,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 loss_fake = loss_cls
 
 
-
-
             print (loss.data)
 
             loss.backward()
@@ -225,7 +237,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_{}".format(model_index), gn, 3)
+                save_pic("output_{}".format(model_index), gn, 3, step)
 
 
         ### Save model

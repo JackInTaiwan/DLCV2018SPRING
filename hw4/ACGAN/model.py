@@ -123,7 +123,7 @@ class DN(nn.Module) :
 
 
     def load_dn_state(self, state) :
-        for i, layer in enumerate(list(self.state_dict())) :
+        for i, layer in enumerate(list(self.state_dict())[:8]) :
             print ("Load dn:", list(state)[i], layer)
             w = state[list(state)[i]]
             self.state_dict()[layer].copy_(w)
