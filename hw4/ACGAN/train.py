@@ -125,7 +125,7 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
 
 
 """ Model Training """
-def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_dn_fp, ave_fp):
+def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_dn_fp):
     ### Model Initiation
     gn = GN().cuda()
     dn = DN().cuda()
@@ -257,14 +257,16 @@ if __name__ == "__main__":
     parser.add_argument("-lr", action="store", type=float, default=False, help="learning reate")
     parser.add_argument("--gn", action="store", type=str, default=None)
     parser.add_argument("--dn", action="store", type=str, default=None)
-    parser.add_argument("--ave", action="store", type=str, required=True, help="pretrained AVE model file path")
+    parser.add_argument("--gangn", action="store", type=str, default=None)
+    parser.add_argument("--gandn", action="store", type=str, default=None)
 
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
     gn_fp = parser.parse_args().gn
     dn_fp = parser.parse_args().dn
-    ave_fp = parser.parse_args().ave
+    gan_gn_fp = parser.parse_args().gangn
+    gan_dn_fp = parser.parse_args().gandn
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
 
     ### Load Data
@@ -273,6 +275,6 @@ if __name__ == "__main__":
 
     ### Train Data
     console("Train Data")
-    train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp)
+    train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_dn_fp)
 
 
