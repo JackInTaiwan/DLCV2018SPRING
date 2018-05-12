@@ -24,7 +24,7 @@ AVAILABLE_SIZE = None
 EPOCH = 50
 BATCHSIZE = 32
 EVAL_SIZE = 64
-PIVOT_STEPS = 100
+PIVOT_STEPS = 10
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
 MOMENTUM = 0.5
@@ -205,18 +205,19 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
                 loss_dis = loss_func(dis_pred, dis)
                 loss_cls = loss_func(cls_pred, cls)
-                loss = loss_dis + loss_cls
+                loss = 1000 * (loss_dis + loss_cls)
 
                 loss_fake = loss_cls
-
+            print (loss.data)
             loss.backward()
 
             if (step // PIVOT_STEPS) % 3 != 2 :
                 optim_dn.step()
             else :
-                print (dn.state_dict()[list(dn.state_dict())[0]])
+                print (gn.state_dict()[list(gn.state_dict())[-1]])
+                optim_dn.step()
                 optim_gn.step()
-                print (dn.state_dict()[list(dn.state_dict())[0]])
+                print (gn.state_dict()[list(gn.state_dict())[-1]])
 
             optim_dn.zero_grad()
             optim_gn.zero_grad()
