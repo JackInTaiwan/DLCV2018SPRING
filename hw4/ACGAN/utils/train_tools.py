@@ -19,6 +19,8 @@ def save_pic(save_fp, model, pic_n, epoch, step) :
     import torch as tor
     from torch.autograd import Variable
 
+    tor.manual_seed(0)
+
     for i in range(pic_n) :
         attr = 0 if i % 2 == 0 else 1
         img = tor.randn(1, 512)
