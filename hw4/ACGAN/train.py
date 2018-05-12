@@ -224,7 +224,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             lr_step_gn.step()
 
 
-            if step % RECORD_JSON_PERIOD == 0 :
+            if step % RECORD_JSON_PERIOD == 0 and step != 0:
                 x_true = x_eval_train
                 dis, cls = dn(x_true)
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
