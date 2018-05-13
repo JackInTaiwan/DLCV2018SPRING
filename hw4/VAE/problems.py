@@ -67,7 +67,7 @@ def tsne(dataset_fp, vae_fp, out_fp) :
 
     plt.scatter(latents[attr_data == 0, 0], latents[attr_data == 0, 1], c="r")
     plt.scatter(latents[attr_data == 1, 0], latents[attr_data == 1, 1], c="b")
-    plt.legend([""])
+    plt.legend(["Not {}".format(attr_selected), attr_selected])
 
     plt.savefig(os.path.join(out_fp, "fig1_5.jpg"))
     
