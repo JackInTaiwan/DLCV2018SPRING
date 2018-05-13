@@ -27,7 +27,7 @@ def save_pic(save_fp, model, pic_n, epoch=0, step=0) :
             img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
-
+            print (img_var)
             out = model(img_var)
 
             out = out.permute(0, 2, 3, 1).cpu()

@@ -231,18 +231,37 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
             if step % RECORD_JSON_PERIOD == 0 and step != 0:
                 x_true = x_eval_train
+                s1 = time.time()
                 dis, cls = dn(x_true)
+                s2 = time.time()
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
+                s3 = time.time()
                 x_noise = tor.randn((EVAL_SIZE, 512))
+                s4 = time.time()
                 x_noise[:, 0] = tor.FloatTensor(EVAL_SIZE, 1).random_(0, 2)
+                s5 = time.time()
                 x_noise = Variable(x_noise).cuda()
+                s6 = time.time()
                 x_false = gn(x_noise)
+                s7 = time.time()
                 dis, cls = dn(x_false)
+                s8 = time.time()
                 acc_false = round(int((dis <= 0.5).sum().data) / EVAL_SIZE, 5)
 
                 print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
-
+                s9 = time.time()
                 save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_false)
+                s10 = time.time()
+                print (s2-s1)
+                print(s3 - s2)
+                print(s4 - s3)
+                print(s5 - s4)
+                print(s6 - s5)
+                print(s7 - s6)
+                print(s8 - s7)
+                print(s9 - s8)
+                print(s10 - s9)
+
 
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
