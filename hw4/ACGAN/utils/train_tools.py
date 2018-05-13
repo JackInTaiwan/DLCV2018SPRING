@@ -11,7 +11,7 @@ def load_data(x_fp) :
 
 
 
-def save_pic(save_fp, model, pic_n, epoch, step) :
+def save_pic(save_fp, model, pic_n, epoch=0, step=0) :
     import cv2
     import os
     import time

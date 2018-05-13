@@ -22,9 +22,9 @@ except:
 """ Parameters """
 AVAILABLE_SIZE = None
 EPOCH = 50
-BATCHSIZE = 8
+BATCHSIZE = 32
 EVAL_SIZE = 64
-PIVOT_STEPS = 100
+PIVOT_STEPS = 50
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
 MOMENTUM = 0.5
@@ -175,7 +175,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 3 != 2 :
+            if (step // PIVOT_STEPS) % 2 == 0 :
                 print ("use dn")
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
@@ -218,10 +218,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 loss_fake = loss_cls
             loss.backward()
 
-            if (step // PIVOT_STEPS) % 3 != 2 :
-                optim_dn.step()
-            else :
-                optim_gn.step()
+            optim.step()
 
             optim_dn.zero_grad()
             optim_gn.zero_grad()
