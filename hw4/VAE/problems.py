@@ -43,7 +43,7 @@ def tsne(dataset_fp, vae_fp) :
         if len(imgs) == 0 :
             imgs = np.array([img])
         else :
-            imgs = np.vstack((imgs, img))
+            imgs = np.vstack((imgs, np.array([img])))
 
         if len(imgs) == batch_size :
             imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2).cuda() - 0.5 ) * 2.0
