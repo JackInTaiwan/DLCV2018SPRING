@@ -22,24 +22,25 @@ def save_pic(save_fp, model, pic_n, epoch, step) :
     tor.manual_seed(0)
 
     for i in range(pic_n) :
-        attr = 0 if i % 2 == 0 else 1
-        img = tor.randn(1, 512)
-        img[0][0] = attr
-        img_var = Variable(img).cuda()
+        for j in range(2) :
+            attr = 0 if j == 0 else 1
+            img = tor.randn(1, 512)
+            img[0][0] = attr
+            img_var = Variable(img).cuda()
 
-        out = model(img_var)
+            out = model(img_var)
 
-        out = out.permute(0, 2, 3, 1).cpu()
-        out_img = out.data.numpy()[0] * 255
+            out = out.permute(0, 2, 3, 1).cpu()
+            out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{}_{}_{:0>5}.png".format(int(time.time()), epoch, step, i)
+            f = "{:0>5}_{}_{}_{}_{}.png".format(str(int(time.time()))[4:], epoch, step, i, j)
 
-        if not os.path.exists(save_fp) :
-            os.mkdir(save_fp)
+            if not os.path.exists(save_fp) :
+                os.mkdir(save_fp)
 
-        plt.imsave(os.path.join(save_fp, f), out_img.astype(np.int16))
+            plt.imsave(os.path.join(save_fp, f), out_img.astype(np.int16))
 
-        print ("|Output {} is saved.".format(f))
+            print ("|Output {} is saved.".format(f))
 
 
 
@@ -54,24 +55,25 @@ def save_pic_2(save_fp, model, pic_n, epoch, step) :
     tor.manual_seed(0)
 
     for i in range(pic_n) :
-        attr = 0 if i % 2 == 0 else 1
-        img = tor.FloatTensor(1, 512).uniform_(0, 1)
-        img[0][0] = attr
-        img_var = Variable(img).cuda()
+        for j in range(2) :
+            attr = 0 if j == 0 else 1
+            img = tor.FloatTensor(1, 512).uniform_(0, 1)
+            img[0][0] = attr
+            img_var = Variable(img).cuda()
 
-        out = model(img_var)
+            out = model(img_var)
 
-        out = out.permute(0, 2, 3, 1).cpu()
-        out_img = out.data.numpy()[0] * 255
+            out = out.permute(0, 2, 3, 1).cpu()
+            out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{}_{}_{:0>5}.png".format(int(time.time()), epoch, step, i)
+            f = "{:0>5}_{}_{}_{}_{}.png".format(str(int(time.time()))[4:], epoch, step, i, j)
 
-        if not os.path.exists(save_fp) :
-            os.mkdir(save_fp)
+            if not os.path.exists(save_fp) :
+                os.mkdir(save_fp)
 
-        plt.imsave(os.path.join(save_fp, f), out_img.astype(np.int16))
+            plt.imsave(os.path.join(save_fp, f), out_img.astype(np.int16))
 
-        print ("|Output {} is saved.".format(f))
+            print ("|Output {} is saved.".format(f))
 
 
 
