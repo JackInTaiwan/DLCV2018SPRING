@@ -35,7 +35,7 @@ def tsne(dataset_fp, vae_fp) :
 
     imgs = np.array([])
     latents = np.array([])
-
+    
     for i in range(40000, 40000 + test_num) :
         img_fp = os.path.join(testdata_fp, "{:0>5}.png".format(i))
         img = plt.imread(img_fp)
@@ -51,8 +51,12 @@ def tsne(dataset_fp, vae_fp) :
 
             if len(latents) == 0 :
                 latents = vae.get_latents().cpu().data.numpy()
+                print (latents, "!!!!!!!")
             else :
-                latents = np.vstack((latents, latent_var.cpu().data.numpy()))
+                print ("use", vae.get_latents())
+                print ("!!!!!!!!!!!!!!!!!!!!!!1")
+                print (vae.get_latents().cpu().data.numpy().shape)
+                latents = np.vstack((latents, vae.get_latents().cpu().data.numpy()))
 
     attr_data = pd.read_csv(testcsv_fp)
     attr_data = np.array(attr_data)[:test_num, list(attr_data.keys()).index(attr_selected)].flatten()
@@ -61,7 +65,7 @@ def tsne(dataset_fp, vae_fp) :
     tsne = TSNE(n_components=2)
     latents_tsne = tsne.fit_transform(imgs)
     print ("latents_tsne shape", latents_tsne.shape)
-
+    
 
 
 
