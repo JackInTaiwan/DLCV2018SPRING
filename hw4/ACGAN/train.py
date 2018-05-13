@@ -204,7 +204,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                     loss_fake = loss_cls
 
             else :
-                print ("gn")
                 dn.training = False
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim

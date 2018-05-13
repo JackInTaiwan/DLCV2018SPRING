@@ -29,7 +29,7 @@ def random_generator(model, v, output_fp) :
 
     img_fn = str(int(time.time())) + ".png"
 
-    plt.imsvae(os.path.join(output_fp, img_fn), img)
+    plt.imsave(os.path.join(output_fp, img_fn), img)
 
     print ("|Picture is generated.   |{}".format(img_fn))
 
