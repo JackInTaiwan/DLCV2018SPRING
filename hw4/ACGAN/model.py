@@ -23,14 +23,6 @@ class GN(nn.Module) :
         return conv
 
 
-    def fc(self, num_in, num_out) :
-        fc = nn.Sequential(
-            nn.Linear(num_in, num_out),
-            nn.ReLU(inplace=True)
-        )
-        return fc
-
-
     def __init__(self):
         super(GN, self).__init__()
 
