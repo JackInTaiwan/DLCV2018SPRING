@@ -32,7 +32,7 @@ def save_pic(save_fp, model, pic_n, epoch, step) :
         out = out.permute(0, 2, 3, 1).cpu()
         out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{}_{}_{:0>5}.png".format(epoch, step, int(time.time()), i)
+        f = "{}_{}_{}_{:0>5}.png".format(int(time.time()), epoch, step, i)
 
         if not os.path.exists(save_fp) :
             os.mkdir(save_fp)
@@ -64,7 +64,7 @@ def save_pic_2(save_fp, model, pic_n, epoch, step) :
         out = out.permute(0, 2, 3, 1).cpu()
         out_img = out.data.numpy()[0] * 255
 
-        f = "{}_{}_{}_{:0>5}.png".format(epoch, step, int(time.time()), i)
+        f = "{}_{}_{}_{:0>5}.png".format(int(time.time()), epoch, step, i)
 
         if not os.path.exists(save_fp) :
             os.mkdir(save_fp)

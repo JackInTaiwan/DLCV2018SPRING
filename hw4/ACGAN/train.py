@@ -115,7 +115,7 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
 
     if not os.path.exists(json_fp) :
         with open(json_fp, "w") as f :
-            f.write("'[]'")
+            f.write('"[]"')
 
     record(json_fp, record_data)
 
