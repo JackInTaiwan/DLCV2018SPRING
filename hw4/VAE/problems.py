@@ -50,7 +50,7 @@ def tsne(dataset_fp, vae_fp) :
             latent_var, KLD = vae(imgs_var)
 
             if len(latents) == 0 :
-                latents = latent_var.cpu().data.numpy()
+                latents = vae.get_latents().cpu().data.numpy()
             else :
                 latents = np.vstack((latents, latent_var.cpu().data.numpy()))
 
