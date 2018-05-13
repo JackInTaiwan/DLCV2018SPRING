@@ -40,6 +40,7 @@ class VAE(nn.Module):
         super(VAE, self).__init__()
         self.index = 0
         self.training = True
+        self.latents = None
 
         conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3])
         #conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 8, 2 ** 10, 3])
@@ -85,6 +86,7 @@ class VAE(nn.Module):
         logvar = self.lv_fc_1(x)
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
+        self.latents = ls
 
         return ls, logvar, KLD
 
@@ -111,6 +113,10 @@ class VAE(nn.Module):
         output = self.decode(ls, logvar)
 
         return output, KLD
+
+
+    def get_latents(self) :
+        return self.latents
 
 
     def params_init(self, m) :
