@@ -223,7 +223,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 x_true = x_eval_train
                 dis, cls = dn(x_true)
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
-                x_noise = tor.FloatTensor.(EVAL_SIZE, 512).uniform_(0, 1)
+                x_noise = tor.FloatTensor(EVAL_SIZE, 512).uniform_(0, 1)
                 x_noise[:, 0] = tor.FloatTensor(EVAL_SIZE, 1).random_(0, 2)
                 x_noise = Variable(x_noise).cuda()
                 x_false = gn(x_noise)
@@ -237,7 +237,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             if step % RECORD_PIC_PERIOD == 0:
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_{}".format(model_index), gn, 4, epoch, step)
+                save_pic_2("output_{}".format(model_index), gn, 4, epoch, step)
 
 
                 ### Save model

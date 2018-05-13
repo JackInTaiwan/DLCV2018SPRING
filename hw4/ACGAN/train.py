@@ -37,7 +37,7 @@ RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 ATTR_DATA_FP = "../hw4_data/train.csv"
-SELECTED_ATTR = "Male"
+SELECTED_ATTR = "Smiling"
 
 RECORD_FP = "./record"
 
@@ -175,8 +175,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 2 == 0 :
-                print ("use dn")
+            if (step // PIVOT_STEPS) % 3 != 0 :
+                dn.training = True
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
                 else :
@@ -202,6 +202,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
             else :
                 print ("gn")
+                dn.training = False
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
                 x.data.copy_(rand_v)
