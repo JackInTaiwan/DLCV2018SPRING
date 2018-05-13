@@ -57,7 +57,7 @@ def tsne(dataset_fp, vae_fp) :
     attr_data = pd.read_csv(testcsv_fp)
     attr_data = np.array(attr_data)[:test_num, list(attr_data.keys()).index(attr_selected)].flatten()
     print ("attr_data shape", attr_data.shape)
-
+    print ("imgs shape", imgs.shape)
     tsne = TSNE(n_components=2)
     latents_tsne = tsne.fit_transform(imgs)
     print ("latents_tsne shape", latents_tsne.shape)
