@@ -89,8 +89,10 @@ def data_loader(limit):
 def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_false):
     record_data = dict()
 
+    model_name = "acgan_{}.pkl".format(model_index)
+
     if epoch == 0:
-        record_data["model_name"] = "gan_model_{}.pkl".format(model_index)
+        record_data["model_name"] = model_name
         record_data["data_size"] = AVAILABLE_SIZE
         record_data["batch_size"] = BATCHSIZE
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
@@ -104,7 +106,7 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
 
 
     else:
-        record_data["model_name"] = "gan_model_{}.pkl".format(model_index)
+        record_data["model_name"] = model_name
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["loss_real"] = round(float(loss_real.data), 6)
         record_data["loss_fake"] = round(float(loss_fake.data), 6)
