@@ -262,6 +262,8 @@ if __name__ == "__main__":
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
     parser.add_argument("-i", action="store", type=int, required=True, help="model index")
     parser.add_argument("-lr", action="store", type=float, default=False, help="learning reate")
+    parser.add_argument("-bs", action="store", type=int, default=None, help="batch size")
+    parser.add_argument("-ps", action="store", type=int, default=None, help="pivot steps")
     parser.add_argument("--gn", action="store", type=str, default=None)
     parser.add_argument("--dn", action="store", type=str, default=None)
     parser.add_argument("--gangn", action="store", type=str, default=None)
@@ -275,6 +277,8 @@ if __name__ == "__main__":
     gan_gn_fp = parser.parse_args().gangn
     gan_dn_fp = parser.parse_args().gandn
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
+    BATCHSIZE = parser.parse_args().bs if parser.parse_args().bs else BATCHSIZE
+    PIVOT_STEPS = parser.parse_args().ps if parser.parse_args().ps else PIVOT_STEPS
 
     ### Load Data
     console("Load Data")
