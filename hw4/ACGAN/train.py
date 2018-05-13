@@ -1,6 +1,7 @@
 import cv2
 import os
 import time
+import threading
 import numpy as np
 import pandas as pd
 import torch as tor
@@ -119,7 +120,9 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
         with open(json_fp, "w") as f :
             f.write('"[]"')
 
-    record(json_fp, record_data)
+    thread_record = threading.Thread(target=record, args=[json_fp, record_data])
+    thread_record.start()
+    #record(json_fp, record_data)
 
 
 
