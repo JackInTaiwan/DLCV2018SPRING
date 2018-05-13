@@ -22,7 +22,7 @@ except:
 """ Parameters """
 AVAILABLE_SIZE = None
 EPOCH = 50
-BATCHSIZE = 32
+BATCHSIZE = 8
 EVAL_SIZE = 64
 PIVOT_STEPS = 100
 
