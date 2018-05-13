@@ -80,9 +80,17 @@ def save_pic_2(save_fp, model, pic_n, epoch, step) :
 
 
 if __name__ == "__main__" :
+    import cv2
     import torch as tor
-    from model import GN
+    import sys, os
+    sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
     from argparse import ArgumentParser
+
+    try :
+        from model import GN
+    except :
+        from .model import GN
 
     parser = ArgumentParser()
     parser.add_argument("--output", type=str, required=True)
@@ -97,3 +105,4 @@ if __name__ == "__main__" :
     model.cuda()
     model.load_state_dict(tor.load(model_fp))
     save_pic(save_fp, model, n)
+
