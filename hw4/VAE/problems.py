@@ -15,7 +15,7 @@ except :
 
 
 
-def tsne(dataset_fp, vae_fp) :
+def tsne(dataset_fp, vae_fp, out_fp) :
     """
     Problem 1-5 plot t-SNE.
     """
@@ -66,7 +66,7 @@ def tsne(dataset_fp, vae_fp) :
     plt.scatter(latents[attr_data == 0, 0], latents[attr_data == 0, 1], c="r")
     plt.scatter(latents[attr_data == 1, 0], latents[attr_data == 1, 1], c="b")
 
-    plt.imsave("test.jpg")
+    plt.savefig(os.path.join(out_fp, "fig1_5.jpg"))
     
 
 
@@ -75,12 +75,14 @@ if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-q", type=str, required=True)
     parser.add_argument("--dataset", type=str)
+    parser.add_argument("--output", type=str)
     # P 1-5
     parser.add_argument("--vae", type=str)
 
     q = parser.parse_args().q
     dataset_fp = parser.parse_args().dataset
     vae_fp = parser.parse_args().vae
+    out_fp = parser.parse_args().output
 
     if q == "tsne" :
-        tsne(dataset_fp, vae_fp)
+        tsne(dataset_fp, vae_fp, out_fp)
