@@ -8,11 +8,11 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model import AVE
+    from model import VAE
     from utils import load_data, console, save_pic, record
 except :
-    from hw4.AVE.model import AVE
-    from hw4.AVE.utils import load_data, console, save_pic, record
+    from hw4.VAE.model import VAE
+    from hw4.VAE.utils import load_data, console, save_pic, record
 
 
 
@@ -44,7 +44,7 @@ MODEL_ROOT = "./models"
 
 """ Data Setting """
 def data_loader(limit):
-    
+
     x_train_1, x_size_1 = load_data(TRAIN_DATA_FP[0])
     x_train_2, x_size_2 = load_data(TRAIN_DATA_FP[1])
     x_train_3, x_size_3 = load_data(TRAIN_DATA_FP[2])
@@ -109,19 +109,19 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
 def train(data_loader, model_index, x_eval_train, loaded_model):
     ### Model Initiation
     if loaded_model :
-        ave = AVE()
-        ave.cuda()
+        vae = VAE()
+        vae.cuda()
         saved_state_dict = tor.load(loaded_model)
-        ave.load_state_dict(saved_state_dict)
-        ave.cuda()
+        vae.load_state_dict(saved_state_dict)
+        vae.cuda()
     else :
-        ave = AVE()
-        ave = ave.cuda()
+        vae = VAE()
+        vae = vae.cuda()
 
     loss_func = tor.nn.MSELoss().cuda()
 
     #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
-    optim = tor.optim.Adam(ave.parameters(), lr=LR)
+    optim = tor.optim.Adam(vae.parameters(), lr=LR)
 
     lr_step = StepLR(optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
@@ -135,7 +135,7 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             print ("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0]/BATCHSIZE)), end="\r")
             x = Variable(x_batch).cuda()
             y = Variable(y_batch).cuda()
-            out, KLD = ave(x)
+            out, KLD = vae(x)
             recon_loss = loss_func(out.cuda(), y)
             loss = (recon_loss + KLD_LAMBDA * KLD)
 
@@ -147,9 +147,9 @@ def train(data_loader, model_index, x_eval_train, loaded_model):
             if step % RECORD_JSON_PERIOD == 0 :
                 save_record(model_index, epoch, optim, recon_loss, KLD)
             if step % RECORD_PIC_PERIOD == 0 :
-                save_pic("output_{}".format(model_index), ave, 3)
+                save_pic("output_{}".format(model_index), vaee, 3)
             if step % RECORD_MODEL_PERIOD == 0 :
-                tor.save(ave.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}.pkl".format(model_index)))
+                tor.save(vae.state_dict(), os.path.join(MODEL_ROOT, "ave_model_{}.pkl".format(model_index)))
         #print (out[:3])
 
 
