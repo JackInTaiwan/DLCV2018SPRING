@@ -3,6 +3,8 @@ import cv2
 import torch as tor
 import numpy as np
 import matplotlib.pyplot as plt
+import matplotlib
+matplotlib.use('Agg')
 
 from argparse import ArgumentParser
 from torch.autograd import Variable
