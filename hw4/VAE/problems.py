@@ -35,33 +35,33 @@ def tsne(dataset_fp, vae_fp) :
 
     imgs = np.array([])
     latents = np.array([])
-    
+    imgs_tmp = np.array([])
+
     for i in range(40000, 40000 + test_num) :
         img_fp = os.path.join(testdata_fp, "{:0>5}.png".format(i))
         img = plt.imread(img_fp)
 
-        if len(imgs) == 0 :
-            imgs = np.array([img])
+        if len(imgs_tmp) == 0 :
+            imgs_tmp = np.array([img])
         else :
-            imgs = np.vstack((imgs, np.array([img])))
+            imgs_tmp = np.vstack((imgs_tmp, np.array([img])))
 
-        if len(imgs) == batch_size :
+        if len(imgs_tmp) == batch_size :
             imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2).cuda() - 0.5 ) * 2.0
             latent_var, KLD = vae(imgs_var)
 
             if len(latents) == 0 :
                 latents = vae.get_latents().cpu().data.numpy()
-                print (latents, "!!!!!!!")
             else :
-                print ("use", vae.get_latents())
-                print ("!!!!!!!!!!!!!!!!!!!!!!1")
-                print (vae.get_latents().cpu().data.numpy().shape)
                 latents = np.vstack((latents, vae.get_latents().cpu().data.numpy()))
+
+            imgs_tmp = np.array([])
 
     attr_data = pd.read_csv(testcsv_fp)
     attr_data = np.array(attr_data)[:test_num, list(attr_data.keys()).index(attr_selected)].flatten()
     print ("attr_data shape", attr_data.shape)
     print ("imgs shape", imgs.shape)
+    print("latents shape", latents.shape)
     tsne = TSNE(n_components=2)
     latents_tsne = tsne.fit_transform(imgs)
     print ("latents_tsne shape", latents_tsne.shape)
