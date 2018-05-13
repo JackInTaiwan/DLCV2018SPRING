@@ -63,7 +63,7 @@ def tsne(dataset_fp, vae_fp) :
     print ("imgs shape", imgs.shape)
     print("latents shape", latents.shape)
     tsne = TSNE(n_components=2)
-    latents_tsne = tsne.fit_transform(imgs)
+    latents_tsne = tsne.fit_transform(latents)
     print ("latents_tsne shape", latents_tsne.shape)
     
 
