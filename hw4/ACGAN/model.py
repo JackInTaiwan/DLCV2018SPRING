@@ -32,7 +32,9 @@ class GN(nn.Module) :
         # Generator Network
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[0], kernel_size=32, stride=1)
         self.de_conv_1 = self.conv(GN_conv_channels[0], GN_conv_channels[1], 3, 1)
+        self.de_bn_1 = tor.nn.BatchNorm2d(GN_conv_channels[1])
         self.de_conv_2 = self.conv(GN_conv_channels[1], GN_conv_channels[2], 3, 1)
+        self.de_bn_2 = tor.nn.BatchNorm2d(GN_conv_channels[2])
         self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[2], out_channels=GN_conv_channels[3], kernel_size=2, stride=2, bias=False)
         self.out = tor.nn.Sigmoid()
 
@@ -41,7 +43,9 @@ class GN(nn.Module) :
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
         x = self.de_conv_1(x)
+        x = self.de_bn_1(x)
         x = self.de_conv_2(x)
+        x = self.de_bn_2(x)
         x = self.de_trans_2(x)
         out = self.out(x)
 
