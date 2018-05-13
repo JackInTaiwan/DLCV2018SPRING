@@ -47,7 +47,7 @@ def tsne(dataset_fp, vae_fp) :
 
         if len(imgs) == batch_size :
             imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2).cuda() - 0.5 ) * 2.0
-            latent_var = vae(imgs_var)
+            latent_var, KLD = vae(imgs_var)
 
             if len(latents) == 0 :
                 latents = latent_var.cpu().data.numpy()
