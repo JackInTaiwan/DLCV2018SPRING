@@ -24,11 +24,11 @@ def tsne(dataset_fp, vae_fp, out_fp) :
     import pandas as pd
     from sklearn.manifold.t_sne import TSNE
 
-    test_num = 100
+    test_num = 500
     batch_size = 50
     testdata_fp = os.path.join(dataset_fp, "test")
     testcsv_fp = os.path.join(dataset_fp, "test.csv")
-    attr_selected = "Male"
+    attr_selected = "Smiling"
 
     vae = VAE()
     vae.training = False
