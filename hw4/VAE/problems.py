@@ -129,8 +129,10 @@ def rand_generator(output_fp, model_fp) :
 
     for i, img in enumerate(imgs, 1) :
         plt.subplot(4, 8, i)
+        plt.xticks([])
+        plt.yticks([])
         plt.imshow(img)
-
+    plt.tight_layout()
     plt.savefig(os.path.join(output_fp, "fig1_4.jpg"))
 
 
