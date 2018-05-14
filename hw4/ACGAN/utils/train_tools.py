@@ -27,7 +27,7 @@ def save_pic(save_fp, model, pic_n, epoch=0, step=0) :
             img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
-            out = model(img_var)
+            out = (model(img_var) / 2.0 ) + 0.5
 
             out = out.permute(0, 2, 3, 1).cpu()
             out_img = out.data.numpy()[0] * 255

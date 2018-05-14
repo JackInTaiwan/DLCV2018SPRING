@@ -55,9 +55,9 @@ class GN(nn.Module) :
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
         x = self.de_conv_1(x)
-        x = self.de_bn_1(x)
+        #x = self.de_bn_1(x)
         x = self.de_conv_2(x)
-        x = self.de_bn_2(x)
+        #x = self.de_bn_2(x)
         x = self.de_trans_2(x)
         x = self.de_conv_3(x)
         out = self.out(x)
@@ -111,7 +111,7 @@ class DN(nn.Module) :
         self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_fc_channels[2])
         self.d_fc = self.fc(DN_fc_channels[2], DN_fc_channels[3])
         self.c_fc = self.fc(DN_fc_channels[2], DN_fc_channels[3])
-        self.drop = tor.nn.Dropout(p=0.5 if self.training else 0)
+        #self.drop = tor.nn.Dropout(p=0.5 if self.training else 0)
         self.dn_sig = tor.nn.Sigmoid()
 
 
@@ -122,8 +122,10 @@ class DN(nn.Module) :
         x = x.view(x.size(0), -1)
         x = self.dn_fc_1(x)
         x = self.dn_fc_2(x)
-        d = self.d_fc(self.drop(x))
-        c = self.c_fc(self.drop(x))
+        #d = self.d_fc(self.drop(x))
+        d = self.d_fc(x)
+        #c = self.c_fc(self.drop(x))
+        c = self.c_fc(x)
         d = self.dn_sig(d)
         c = self.dn_sig(c)
 

@@ -27,7 +27,7 @@ BATCHSIZE = 32
 EVAL_SIZE = 64
 PIVOT_STEPS = 50
 
-LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
+LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 1000, 0.98
 MOMENTUM = 0.5
 
 LATENT_SPACE = 512
@@ -66,7 +66,7 @@ def data_loader(limit):
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = x_train.shape
 
-    x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
+    x_train = (tor.FloatTensor(x_train).permute(0, 3, 1, 2) - 0.5 ) * 2.0
     attr_train = tor.FloatTensor(attr_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
@@ -168,18 +168,18 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     #   print (gi, go)
     #n.register_backward_hook(bh)
     #dn.register_backward_hook(bh)
-    s = []
+    
 
     ### Training
     for epoch in range(EPOCH):
         print("|Epoch: {:>4} |".format(epoch + 1))
+
         for step, (x_batch, cls_batch) in enumerate(data_loader):
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 4 != 0 :
+            if (step // PIVOT_STEPS) % 3 != 0 :
                 dn.training = True
-                s.append(time.time())
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
                 else :
@@ -188,18 +188,14 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                     x.data.copy_(rand_v)
                     out = gn(x)
                     img.data.copy_(out.data)
-                s.append(time.time())
+
                 dis = dis_true if step % 2 == 0 else dis_false
-                s.append(time.time())
                 cls = Variable(cls_batch).cuda()
-                s.append(time.time())
                 dis_pred, cls_pred = dn(img)
-                s.append(time.time())
                 optim = optim_dn
-                s.append(time.time())
+
                 loss_dis = loss_func(dis_pred, dis)
                 loss_cls = loss_func(cls_pred, cls)
-                s.append(time.time())
                 loss = loss_dis + loss_cls if step % 2 == 0 else loss_dis
 
                 if step % 2 == 0 :
@@ -209,42 +205,28 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
             else :
                 dn.training = False
-                s.append(time.time())
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
-                s.append(time.time())
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
-                s.append(time.time())
                 x.data.copy_(rand_v)
-                gn.cuda()
-                s.append(time.time())
-                print (x)
                 out = gn(x)
-                print (out)
-                s.append(time.time())
                 dis = dis_true
                 cls = Variable(cls_batch).cuda()
-                s.append(time.time())
                 dis_pred, cls_pred = dn(out)
-                s.append(time.time())
 
                 optim = optim_gn
 
                 loss_dis = loss_func(dis_pred, dis)
                 loss_cls = loss_func(cls_pred, cls)
-                s.append(time.time())
                 loss = (loss_dis + loss_cls)
                 loss_fake = loss_cls
             loss.backward()
-            s.append(time.time())
+
             optim.step()
-            s.append(time.time())
+
             optim_dn.zero_grad()
             optim_gn.zero_grad()
             lr_step_dn.step()
             lr_step_gn.step()
-            for i in range(len(s) - 1) :
-                print (i, s[i+1] - s[i])
-            s = []
 
 
             if step % RECORD_JSON_PERIOD == 0 and step != 0:
