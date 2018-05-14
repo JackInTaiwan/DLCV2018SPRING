@@ -7,7 +7,7 @@ note*.py
 *.h5
 *.pkl
 *.png
-*.jpg
+#*.jpg
 *.txt
 *.out
 #*.json
