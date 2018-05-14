@@ -103,7 +103,7 @@ def lcurve(record_fp, output_fp) :
 
 
 
-def rand_generator(dataset_fp, output_fp, model_fp) :
+def rand_generator(output_fp, model_fp) :
     import torch as tor
     from torch.autograd import Variable
 
@@ -131,7 +131,7 @@ def rand_generator(dataset_fp, output_fp, model_fp) :
         plt.subplot(4, 8, i)
         plt.imshow(img)
 
-    plt.savefig(os.path.join(out_fp, "fig1_4.jpg"))
+    plt.savefig(os.path.join(output_fp, "fig1_4.jpg"))
 
 
 
@@ -145,12 +145,15 @@ if __name__ == "__main__" :
     parser.add_argument("--vae", type=str)
     # P 1-1
     parser.add_argument("--record", type=str)
+    # P 1-4
+    parser.add_argument("--model", type=str)
 
     q = parser.parse_args().q
     dataset_fp = parser.parse_args().dataset
     vae_fp = parser.parse_args().vae
     out_fp = parser.parse_args().output
     record_fp = parser.parse_args().record
+    model_fp = parser.parse_args().model
 
     if q == "tsne" :
         tsne(dataset_fp, vae_fp, out_fp)
@@ -159,4 +162,4 @@ if __name__ == "__main__" :
         lcurve(record_fp, out_fp)
 
     elif q == "rg" :
-        rand_generator(dataset_fp, out_fp, model_fp)
+        rand_generator(out_fp, model_fp)
