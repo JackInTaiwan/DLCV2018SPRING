@@ -27,7 +27,6 @@ def save_pic(save_fp, model, pic_n, epoch=0, step=0) :
             img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
-            print (img_var)
             out = model(img_var)
 
             out = out.permute(0, 2, 3, 1).cpu()
@@ -57,14 +56,15 @@ def save_pic_2(save_fp, model, pic_n, epoch, step) :
     for i in range(pic_n) :
         for j in range(2) :
             attr = 0 if j == 0 else 1
-            img = tor.FloatTensor(1, 512).uniform_(0, 1)
+            #img = tor.FloatTensor(1, 512).uniform_(0, 1)
+            img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
 
             out = model(img_var)
 
             out = out.permute(0, 2, 3, 1).cpu()
-            out_img = out.data.numpy()[0] * 255
+            out_img = (out.data.numpy()[0] / 2.0 + 0.5) * 255
 
             f = "{:0>5}_{}_{}_{}_{}.png".format(str(int(time.time()))[4:], epoch, step, i, j)
 

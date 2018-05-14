@@ -1,6 +1,7 @@
 import cv2
 import os
 import time
+import threading
 import numpy as np
 import pandas as pd
 import torch as tor
@@ -15,6 +16,9 @@ try:
 except:
     from .model_2 import GN, DN
     from .utils import load_data, console, save_pic_2, record
+
+
+
 
 """ Parameters """
 AVAILABLE_SIZE = None
@@ -34,15 +38,16 @@ RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 ATTR_DATA_FP = "../hw4_data/train.csv"
-SELECTED_ATTR = "Male"
+SELECTED_ATTR = "Smiling"
 
 RECORD_FP = "./record"
 
 MODEL_ROOT = "./models"
 
+
+
+
 """ Data Setting """
-
-
 def data_loader(limit):
     ### Load img data
     x_train_1, x_size_1 = load_data(TRAIN_DATA_FP[0])
@@ -61,7 +66,7 @@ def data_loader(limit):
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = x_train.shape
 
-    x_train = tor.FloatTensor(x_train).permute(0, 3, 1, 2)
+    x_train = (tor.FloatTensor(x_train).permute(0, 3, 1, 2) - 0.5 ) * 2.0
     attr_train = tor.FloatTensor(attr_train)
     x_eval_train = x_train[:EVAL_SIZE]
 
@@ -78,6 +83,8 @@ def data_loader(limit):
     )
 
     return data_loader, x_eval_train
+
+
 
 
 def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_false):
@@ -109,36 +116,38 @@ def save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_f
 
     json_fp = os.path.join(RECORD_FP, "acgan_{}.json".format(model_index))
 
-    if not os.path.exists(json_fp):
-        with open(json_fp, "w") as f:
+    if not os.path.exists(json_fp) :
+        with open(json_fp, "w") as f :
             f.write('"[]"')
 
-    record(json_fp, record_data)
+    thread_record = threading.Thread(target=record, args=[json_fp, record_data])
+    thread_record.start()
+    #record(json_fp, record_data)
+
+
 
 
 """ Model Training """
-
-
 def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_dn_fp):
     ### Model Initiation
     gn = GN().cuda()
     dn = DN().cuda()
 
-    if gn_fp:
+    if gn_fp :
         gn_state_dict = tor.load(gn_fp)
         gn.load_state_dict(gn_state_dict)
-    if dn_fp:
+    if dn_fp :
         dn_state_dict = tor.load(dn_fp)
         dn.load_state_dict(dn_state_dict)
-    if gan_dn_fp:
+    if gan_dn_fp :
         dn.load_dn_state(tor.load(gan_dn_fp))
-    if gan_gn_fp:
+    if gan_gn_fp :
         gn.load_gn_state(tor.load(gan_gn_fp))
 
-    # loss_func = tor.nn.CrossEntropyLoss().cuda()
+    #loss_func = tor.nn.CrossEntropyLoss().cuda()
     loss_func = tor.nn.BCELoss().cuda()
 
-    # optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
+    #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim_gn = tor.optim.Adam(gn.parameters(), lr=LR)
     optim_dn = tor.optim.Adam(dn.parameters(), lr=LR)
 
@@ -154,12 +163,12 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
     loss_real, loss_fake = None, None
 
-    # ef bh(m, gi, go) :
+    #ef bh(m, gi, go) :
     #   print (m)
     #   print (gi, go)
-    # n.register_backward_hook(bh)
-    # dn.register_backward_hook(bh)
-
+    #n.register_backward_hook(bh)
+    #dn.register_backward_hook(bh)
+    
 
     ### Training
     for epoch in range(EPOCH):
@@ -169,12 +178,12 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 2 == 0:
-                print("use dn")
-                if step % 2 == 0:
+            if (step // PIVOT_STEPS) % 4 != 0 :
+                dn.training = True
+                if step % 2 == 0 :
                     img.data.copy_(x_batch)
-                else:
-                    rand_v = tor.FloatTensor(BATCHSIZE, LATENT_SPACE).uniform_(0, 1)
+                else :
+                    rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                     rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
                     x.data.copy_(rand_v)
                     out = gn(x)
@@ -189,14 +198,14 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 loss_cls = loss_func(cls_pred, cls)
                 loss = loss_dis + loss_cls if step % 2 == 0 else loss_dis
 
-                if step % 2 == 0:
+                if step % 2 == 0 :
                     loss_real = loss_cls
-                else:
+                else :
                     loss_fake = loss_cls
 
-            else:
-                print("gn")
-                rand_v = tor.FloatTensor(BATCHSIZE, LATENT_SPACE).uniform_(0, 1)
+            else :
+                dn.training = False
+                rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
                 x.data.copy_(rand_v)
                 out = gn(x)
@@ -219,31 +228,32 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             lr_step_dn.step()
             lr_step_gn.step()
 
+
             if step % RECORD_JSON_PERIOD == 0 and step != 0:
                 x_true = x_eval_train
                 dis, cls = dn(x_true)
                 acc_true = round(int((dis > 0.5).sum().data) / EVAL_SIZE, 5)
-                x_noise = tor.FloatTensor(EVAL_SIZE, 512).uniform_(0, 1)
+                x_noise = tor.randn((EVAL_SIZE, 512))
                 x_noise[:, 0] = tor.FloatTensor(EVAL_SIZE, 1).random_(0, 2)
                 x_noise = Variable(x_noise).cuda()
                 x_false = gn(x_noise)
                 dis, cls = dn(x_false)
                 acc_false = round(int((dis <= 0.5).sum().data) / EVAL_SIZE, 5)
 
-                print("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
+                print ("|Acc True: {}   |Acc False: {}".format(acc_true, acc_false))
 
                 save_record(model_index, epoch, optim, loss_real, loss_fake, acc_true, acc_false)
 
-            if step % RECORD_PIC_PERIOD == 0:
+            if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
                 save_pic_2("output_{}".format(model_index), gn, 4, epoch, step)
 
 
-                ### Save model
+        ### Save model
             if step % RECORD_MODEL_PERIOD == 0:
-                # tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
-                # tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
+                #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
+                #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
                 tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
                 tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
