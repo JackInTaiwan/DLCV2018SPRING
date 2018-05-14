@@ -13,7 +13,7 @@ VGG16_PRETRAINED_FP = "./models/vgg16_pretrained.h5"
 
 
 """ Module Build """
-class AVE(nn.Module):
+class VAE(nn.Module):
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
         conv = nn.Sequential(
             nn.Conv2d(
@@ -37,7 +37,7 @@ class AVE(nn.Module):
 
 
     def __init__(self):
-        super(AVE, self).__init__()
+        super(VAE, self).__init__()
         self.index = 0
         self.training = True
 
