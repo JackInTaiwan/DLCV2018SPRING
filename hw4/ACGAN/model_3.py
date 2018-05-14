@@ -90,17 +90,19 @@ class DN(nn.Module) :
         super(DN, self).__init__()
         self.training = True
 
-        DN_conv_channels = [3, 2 ** 6, 2 ** 7]
-        DN_fc_channels = [32 * 32 * DN_conv_channels[-1], 2 ** 10, 2 ** 10, 1]
+        DN_conv_channels = [3, 2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9]
+        DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 2 ** 10, 1]
 
         # Discriminator Network
         self.dn_conv_1 = self.conv(DN_conv_channels[0], DN_conv_channels[1], 3, 1)
         self.dn_conv_2 = self.conv(DN_conv_channels[1], DN_conv_channels[2], 3, 1)
         self.dn_pool_1 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.dn_conv_3 = self.conv(DN_conv_channels[2], DN_conv_channels[3], 3, 1)
+        self.dn_conv_4 = self.conv(DN_conv_channels[3], DN_conv_channels[4], 3, 1)
+        self.dn_pool_2 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
         self.dn_fc_1 = self.fc(DN_fc_channels[0], DN_fc_channels[1])
-        self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_fc_channels[2])
-        self.d_fc = self.fc(DN_fc_channels[2], DN_fc_channels[3])
-        self.c_fc = self.fc(DN_fc_channels[2], DN_fc_channels[3])
+        self.d_fc = self.fc(DN_fc_channels[1], DN_fc_channels[2])
+        self.c_fc = self.fc(DN_fc_channels[1], DN_fc_channels[2])
         #self.drop = tor.nn.Dropout(p=0.5 if self.training else 0)
         self.dn_sig = tor.nn.Sigmoid()
 
@@ -109,11 +111,11 @@ class DN(nn.Module) :
         x = self.dn_conv_1(x)
         x = self.dn_conv_2(x)
         x = self.dn_pool_1(x)
+        x = self.dn_conv_3(x)
+        x = self.dn_conv_4(x)
+        x = self.dn_pool_2(x)
         x = x.view(x.size(0), -1)
         x = self.dn_fc_1(x)
-        x = self.dn_fc_2(x)
-        #d = self.d_fc(self.drop(x))
-        #c = self.c_fc(self.drop(x))
         d = self.d_fc(x)
         c = self.c_fc(x)
         d = self.dn_sig(d)
