@@ -10,7 +10,7 @@ note*.py
 *.jpg
 *.txt
 *.out
-*.json
+#*.json
 *_test*.py
 
 ### Dirs
