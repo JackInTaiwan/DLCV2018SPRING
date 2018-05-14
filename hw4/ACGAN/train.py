@@ -35,7 +35,7 @@ MOMENTUM = 0.5
 LATENT_SPACE = 512
 
 RECORD_JSON_PERIOD = 50  # steps
-RECORD_MODEL_PERIOD = 1000  # steps
+RECORD_MODEL_PERIOD = 1  # epochs
 RECORD_PIC_PERIOD = 360  # steps
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
@@ -82,6 +82,7 @@ def data_loader(limit):
         batch_size=BATCHSIZE,
         shuffle=True,
         drop_last=True,
+        num_workers = 10,
     )
 
     return data_loader, x_eval_train
@@ -253,11 +254,11 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
 
         ### Save model
-            if step % RECORD_MODEL_PERIOD == 0:
-                #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
-                #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
-                tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
-                tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
+        if epoch != 0:
+            #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
+            #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
+            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+            tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """
