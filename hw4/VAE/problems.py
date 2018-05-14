@@ -17,6 +17,7 @@ except :
 
 
 
+
 def tsne(dataset_fp, vae_fp, out_fp) :
     """
     Problem 1-5 plot t-SNE.
@@ -82,15 +83,56 @@ def lcurve(record_fp, output_fp) :
 
     data = json.loads(data)
     recon_loss = data["recon_loss"]
+    KLD_loss = data["KLD_loss"]
     record_step = 10
     steps = np.array(range(len(recon_loss))) * record_step
 
-    plt.subplot(1, 2, 1)
-    plt.plot(steps, recon_loss, linewidth=0.5)
+    plt.subplot(2, 1, 1)
+    plt.plot(steps, recon_loss, linewidth=0.5,)
     plt.xlabel("Steps")
     plt.ylabel("Recon. Loss")
-    plt.subplot(1, 2, 2)
-    plt.savefig(os.path.join(out_fp, "fig1_1.jpg"))
+
+    plt.subplot(2, 1, 2)
+    plt.plot(steps, KLD_loss, linewidth=0.5)
+    plt.xlabel("Steps")
+    plt.ylabel("KLD Loss")
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(out_fp, "fig1_2.jpg"))
+
+
+
+
+def rand_generator(dataset_fp, output_fp, model_fp) :
+    import torch as tor
+    from torch.autograd import Variable
+
+    try :
+        from model_2 import VAE
+    except :
+        from .model_2 import VAE
+
+    tor.manual_seed(0)
+    generate_num = 32
+    latent_size = 512
+
+    model = VAE()
+    model.training = False
+    model.cuda()
+    model.load_state_dict(tor.load(model_fp))
+
+    x = Variable(tor.randn(generate_num, latent_size)).cuda()
+
+    imgs = model(x)
+    imgs = ((imgs.permute(0, 2, 3, 1).cuda().data.nump() / 2.0 ) + 0.5) * 255
+    imgs = imgs.astype(np.int16)
+
+    for i, img in enumerate(imgs, 1) :
+        plt.subplot(4, 8, i)
+        plt.imshow(img)
+
+    plt.savefig(os.path.join(out_fp, "fig1_4.jpg"))
+
 
 
 
@@ -115,3 +157,6 @@ if __name__ == "__main__" :
 
     elif q == "lcurve" :
         lcurve(record_fp, out_fp)
+
+    elif q == "rg" :
+        rand_generator(dataset_fp, out_fp, model_fp)
