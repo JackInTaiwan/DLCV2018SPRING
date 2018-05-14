@@ -11,10 +11,12 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try:
-    from model import GN, DN
+    #from model import GN, DN
+    from model_3 import GN, DN
     from utils import load_data, console, save_pic, record
 except:
-    from .model import GN, DN
+    #from .model import GN, DN
+    from .model_3 import GN, DN
     from .utils import load_data, console, save_pic, record
 
 
@@ -24,7 +26,7 @@ except:
 AVAILABLE_SIZE = None
 EPOCH = 50
 BATCHSIZE = 32
-EVAL_SIZE = 64
+EVAL_SIZE = 32
 PIVOT_STEPS = 50
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 1000, 0.98
