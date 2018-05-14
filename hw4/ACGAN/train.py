@@ -209,18 +209,29 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
             else :
                 dn.training = False
+                s.append(time.time())
                 rand_v = tor.randn(BATCHSIZE, LATENT_SPACE)
+                s.append(time.time())
                 rand_v[:, 0] = tor.FloatTensor(BATCHSIZE).random_(0, 2)  # set attribute dim
+                s.append(time.time())
                 x.data.copy_(rand_v)
+                gn.cuda()
+                s.append(time.time())
+                print (x)
                 out = gn(x)
+                print (out)
+                s.append(time.time())
                 dis = dis_true
                 cls = Variable(cls_batch).cuda()
+                s.append(time.time())
                 dis_pred, cls_pred = dn(out)
+                s.append(time.time())
 
                 optim = optim_gn
 
                 loss_dis = loss_func(dis_pred, dis)
                 loss_cls = loss_func(cls_pred, cls)
+                s.append(time.time())
                 loss = (loss_dis + loss_cls)
                 loss_fake = loss_cls
             loss.backward()
@@ -231,8 +242,9 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             optim_gn.zero_grad()
             lr_step_dn.step()
             lr_step_gn.step()
-            for i in range(len(s)) :
-                print (s[i+1] - s[i])
+            for i in range(len(s) - 1) :
+                print (i, s[i+1] - s[i])
+            s = []
 
 
             if step % RECORD_JSON_PERIOD == 0 and step != 0:

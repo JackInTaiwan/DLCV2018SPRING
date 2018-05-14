@@ -178,7 +178,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 4 != 0 :
+            if (step // PIVOT_STEPS) % 3 != 0 :
                 dn.training = True
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)

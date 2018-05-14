@@ -9,8 +9,8 @@ from torch.autograd import Variable
 
 """ Module Build """
 class GN(nn.Module) :
-    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
-        conv = nn.Sequential(
+    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride, relu=True):
+        conv_relu = nn.Sequential(
             nn.Conv2d(
                 in_channels=in_conv_channels,
                 out_channels=out_conv_channels,
@@ -20,23 +20,34 @@ class GN(nn.Module) :
             ),
             nn.ReLU(inplace=True),
         )
-        return conv
+        conv = nn.Sequential(
+            nn.Conv2d(
+                in_channels=in_conv_channels,
+                out_channels=out_conv_channels,
+                kernel_size=kernel_size, 
+                stride=stride,
+                padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
+            ),
+        )
+        return conv_relu if relu else conv
 
 
     def __init__(self):
         super(GN, self).__init__()
 
-        GN_conv_channels = [2 ** 6, 2 ** 7, 2 ** 8, 3]
+        GN_conv_channels = [2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9, 3]
         GN_fc_channels = [2 ** 9]
 
         # Generator Network
-        self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[0], kernel_size=32, stride=1)
+        self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[0], kernel_size=32, stride=1, bias=False)
         self.de_conv_1 = self.conv(GN_conv_channels[0], GN_conv_channels[1], 3, 1)
         self.de_bn_1 = tor.nn.BatchNorm2d(GN_conv_channels[1])
         self.de_conv_2 = self.conv(GN_conv_channels[1], GN_conv_channels[2], 3, 1)
         self.de_bn_2 = tor.nn.BatchNorm2d(GN_conv_channels[2])
         self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[2], out_channels=GN_conv_channels[3], kernel_size=2, stride=2, bias=False)
         #self.out = tor.nn.Sigmoid()
+        self.de_conv_3 = self.conv(GN_conv_channels[3], GN_conv_channels[4], 3, 1, relu=False)
+        
         self.out = tor.nn.Tanh()
 
 
@@ -48,6 +59,7 @@ class GN(nn.Module) :
         x = self.de_conv_2(x)
         x = self.de_bn_2(x)
         x = self.de_trans_2(x)
+        x = self.de_conv_3(x)
         out = self.out(x)
 
         return out
