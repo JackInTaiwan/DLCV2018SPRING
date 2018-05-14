@@ -70,7 +70,27 @@ def tsne(dataset_fp, vae_fp, out_fp) :
     plt.legend(["Not {}".format(attr_selected), attr_selected])
 
     plt.savefig(os.path.join(out_fp, "fig1_5.jpg"))
-    
+
+
+
+
+def lcurve(record_fp, output_fp) :
+    import json
+
+    with open(record_fp, "r") as f :
+        data = json.load(f)
+
+    data = json.loads(data)
+    recon_loss = data["recon_loss"]
+    record_step = 10
+    steps = np.array(range(len(recon_loss))) * record_step
+
+    plt.subplot(1, 2, 1)
+    plt.plot(steps, recon_loss, linewidth=0.5)
+    plt.xlabel("Steps")
+    plt.ylabel("Recon. Loss")
+    plt.subplot(1, 2, 2)
+    plt.savefig(os.path.join(out_fp, "fig1_1.jpg"))
 
 
 
@@ -81,11 +101,17 @@ if __name__ == "__main__" :
     parser.add_argument("--output", type=str)
     # P 1-5
     parser.add_argument("--vae", type=str)
+    # P 1-1
+    parser.add_argument("--record", type=str)
 
     q = parser.parse_args().q
     dataset_fp = parser.parse_args().dataset
     vae_fp = parser.parse_args().vae
     out_fp = parser.parse_args().output
+    record_fp = parser.parse_args().record
 
     if q == "tsne" :
         tsne(dataset_fp, vae_fp, out_fp)
+
+    elif q == "lcurve" :
+        lcurve(record_fp, out_fp)

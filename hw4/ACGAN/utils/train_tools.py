@@ -22,9 +22,9 @@ def save_pic(save_fp, model, pic_n, epoch=0, step=0) :
     tor.manual_seed(0)
 
     for i in range(pic_n) :
+        img = tor.randn(1, 512)
         for j in range(2) :
             attr = 0 if j == 0 else 1
-            img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
             out = (model(img_var) / 2.0 ) + 0.5
@@ -54,10 +54,10 @@ def save_pic_2(save_fp, model, pic_n, epoch, step) :
     tor.manual_seed(0)
 
     for i in range(pic_n) :
+        img = tor.randn(1, 512)
         for j in range(2) :
             attr = 0 if j == 0 else 1
             #img = tor.FloatTensor(1, 512).uniform_(0, 1)
-            img = tor.randn(1, 512)
             img[0][0] = attr
             img_var = Variable(img).cuda()
 

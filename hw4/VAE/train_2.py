@@ -35,7 +35,7 @@ KLD_LAMBDA = 10 ** -4
 
 TRAIN_DATA_FP = ["../data/train_data.npy", "../data/train_data_1.npy", "../data/train_data_2.npy"]
 
-RECORD_FP = "./record/model_ave_12.json"
+RECORD_FP = "./record/vae_12.json"
 
 MODEL_ROOT = "./models"
 
