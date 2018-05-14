@@ -214,7 +214,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
                 x.data.copy_(rand_v)
                 out = gn(x)
                 dis = dis_true
-                cls = cls.cuda()
+                cls = Variable(cls).cuda()
                 dis_pred, cls_pred = dn(out)
 
                 optim = optim_gn
