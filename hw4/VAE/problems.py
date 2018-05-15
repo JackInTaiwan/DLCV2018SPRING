@@ -66,7 +66,6 @@ def tsne(dataset_fp, model_fp, out_fp) :
     tsne = TSNE(
         n_components=2,
         random_state=0,
-
     )
     latents_tsne = tsne.fit_transform(latents)
 
