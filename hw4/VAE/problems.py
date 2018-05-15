@@ -132,7 +132,7 @@ def rand_generator(output_fp, model_fp) :
         plt.xticks([])
         plt.yticks([])
         plt.imshow(img)
-    plt.tight_layout()
+    plt.tight_layout(pad=0.3)
     plt.savefig(os.path.join(output_fp, "fig1_4.jpg"))
 
 
