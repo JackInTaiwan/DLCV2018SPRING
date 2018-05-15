@@ -29,7 +29,7 @@ def tsne(dataset_fp, model_fp, out_fp) :
     batch_size = 50
     testdata_fp = os.path.join(dataset_fp, "test")
     testcsv_fp = os.path.join(dataset_fp, "test.csv")
-    attr_selected = "Male"
+    attr_selected = "Blond_Hair"
 
     vae = VAE()
     vae.training = False
@@ -74,7 +74,7 @@ def tsne(dataset_fp, model_fp, out_fp) :
     plt.scatter(latents_tsne[attr_data == 1, 0], latents_tsne[attr_data == 1, 1], c="b")
     plt.legend(["Not {}".format(attr_selected), attr_selected])
 
-    plt.savefig(os.path.join(out_fp, "fig1_5.jpg"))
+    plt.savefig(os.path.join(out_fp, "fig1_5_4.jpg"))
 
 
 
