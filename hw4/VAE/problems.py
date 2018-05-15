@@ -18,7 +18,7 @@ except :
 
 
 
-def tsne(dataset_fp, vae_fp, out_fp) :
+def tsne(dataset_fp, model_fp, out_fp) :
     """
     Problem 1-5 plot t-SNE.
     """
@@ -34,7 +34,7 @@ def tsne(dataset_fp, vae_fp, out_fp) :
     vae = VAE()
     vae.training = False
     vae.cuda()
-    vae.load_state_dict(tor.load(vae_fp))
+    vae.load_state_dict(tor.load(model_fp))
 
     imgs = np.array([])
     latents = np.array([])
@@ -107,7 +107,7 @@ def lcurve(record_fp, output_fp) :
 
 
 
-def rand_generator(output_fp, vae_fp) :
+def rand_generator(output_fp, model_fp) :
     import torch as tor
     from torch.autograd import Variable
 
@@ -123,7 +123,7 @@ def rand_generator(output_fp, vae_fp) :
     model = VAE()
     model.training = False
     model.cuda()
-    model.load_state_dict(tor.load(vae_fp))
+    model.load_state_dict(tor.load(model_fp))
 
     x = Variable(tor.randn(generate_num, latent_size)).cuda()
 
@@ -142,11 +142,11 @@ def rand_generator(output_fp, vae_fp) :
 
 
 
-def test_plot(dataset_fp, vae_fp, out_fp) :
+def test_plot(dataset_fp, model_fp, out_fp) :
     model = VAE()
     model.training = False
     model.cuda()
-    model.load_state_dict(tor.load(vae_fp))
+    model.load_state_dict(tor.load(model_fp))
 
     imgs = np.array([])
 
@@ -182,26 +182,24 @@ if __name__ == "__main__" :
     parser.add_argument("-q", type=str, required=True)
     parser.add_argument("--dataset", type=str)
     parser.add_argument("--output", type=str)
-    parser.add_argument("--vae", type=str)
+    parser.add_argument("--model", type=str)
     # P 1-1
     parser.add_argument("--record", type=str)
-    # P 1-4
-    parser.add_argument("--model", type=str)
 
     q = parser.parse_args().q
     dataset_fp = parser.parse_args().dataset
-    vae_fp = parser.parse_args().vae
+    model_fp = parser.parse_args().model
     out_fp = parser.parse_args().output
     record_fp = parser.parse_args().record
 
     if q == "tsne" :
-        tsne(dataset_fp, vae_fp, out_fp)
+        tsne(dataset_fp, model_fp, out_fp)
 
     elif q == "lcurve" :
         lcurve(record_fp, out_fp)
 
     elif q == "test" :
-        test_plot(dataset_fp, vae_fp, out_fp)
+        test_plot(dataset_fp, model_fp, out_fp)
 
     elif q == "rg" :
-        rand_generator(out_fp, vae_fp)
+        rand_generator(out_fp, model_fp)
