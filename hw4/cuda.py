@@ -1,19 +1,21 @@
 import time
 import torch as tor
+from ACGAN.model_3 import GN, DN
 from torch.autograd import Variable
 
 
+gn = GN()
+gn = gn.cuda()
 
-xs = []
-
-for i in range(5) :
-    xs.append(tor.randn(2 ** i, 1000))
-
-
-for x in xs :
+for i in range(8) :
+    x = tor.randn(2 ** i, 512)
+    x = Variable(x)
+    x = x.cuda()
     s = time.time()
-    x.cuda()
+    p = gn(x)
     e = time.time()
-    print (i, round(e-s, 5))
-    print (type(x))
+    print (i)
+    print (e-s)
+
+
 
