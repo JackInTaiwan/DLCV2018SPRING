@@ -107,7 +107,7 @@ def lcurve(record_fp, output_fp) :
 
 
 
-def rand_generator(output_fp, model_fp) :
+def rand_generator(output_fp, vae_fp) :
     import torch as tor
     from torch.autograd import Variable
 
@@ -123,7 +123,7 @@ def rand_generator(output_fp, model_fp) :
     model = VAE()
     model.training = False
     model.cuda()
-    model.load_state_dict(tor.load(model_fp))
+    model.load_state_dict(tor.load(vae_fp))
 
     x = Variable(tor.randn(generate_num, latent_size)).cuda()
 
@@ -142,12 +142,46 @@ def rand_generator(output_fp, model_fp) :
 
 
 
+def test_plot(dataset_fp, vae_fp, out_fp) :
+    model = VAE()
+    model.training = False
+    model.cuda()
+    model.load_state_dict(tor.load(vae_fp))
+
+    imgs = np.array([])
+
+    for i in range(10) :
+        img = plt.imread(os.path.join(dataset_fp, "test", "{:0>5}.png".format(40000 + i)))
+
+        if len(imgs) == 0 :
+            imgs = np.array([img])
+        else :
+            imgs = np.vstacj(imgs, img)
+
+    imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2) - 0.5 ) * 2.0
+    imgs_var = imgs_var.cuda()
+
+    imgs_recon = model(imgs_var)
+    imgs_recon = imgs_recon.permute(0, 2, 3, 1).cpu().data.numpy()
+    imgs_recon = (imgs_recon / 2.0) + 0.5
+
+    for i, img in enumerate(imgs_recon, 1) :
+        plt.subplot(2, 5, i)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(img)
+
+    plt.tight_layout(pad=0.5, h_pad=0.5)
+    plt.savefig(os.path.join(out_fp, "fig1_3.jpg"))
+
+
+
+
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-q", type=str, required=True)
     parser.add_argument("--dataset", type=str)
     parser.add_argument("--output", type=str)
-    # P 1-5
     parser.add_argument("--vae", type=str)
     # P 1-1
     parser.add_argument("--record", type=str)
@@ -159,7 +193,6 @@ if __name__ == "__main__" :
     vae_fp = parser.parse_args().vae
     out_fp = parser.parse_args().output
     record_fp = parser.parse_args().record
-    model_fp = parser.parse_args().model
 
     if q == "tsne" :
         tsne(dataset_fp, vae_fp, out_fp)
@@ -167,5 +200,8 @@ if __name__ == "__main__" :
     elif q == "lcurve" :
         lcurve(record_fp, out_fp)
 
+    elif q == "test" :
+        test_plot(dataset_fp, vae_fp, out_fp)
+
     elif q == "rg" :
-        rand_generator(out_fp, model_fp)
+        rand_generator(out_fp, vae_fp)
