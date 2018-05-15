@@ -109,6 +109,7 @@ def lcurve(record_fp, out_fp) :
 def rand_generator(output_fp, model_fp) :
     import torch as tor
     from torch.autograd import Variable
+    import torch.nn.functional as F
 
     try :
         from model_2 import VAE
@@ -124,7 +125,7 @@ def rand_generator(output_fp, model_fp) :
     model.cuda()
     model.load_state_dict(tor.load(model_fp))
 
-    x = Variable(tor.randn(generate_num, latent_size)).cuda()
+    x = Variable(F.tanh(tor.randn(generate_num, latent_size))).cuda()
 
     imgs = model.decode(x, None)
     imgs = ((imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0 ) + 0.5) * 255
