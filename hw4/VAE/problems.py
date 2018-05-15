@@ -63,11 +63,15 @@ def tsne(dataset_fp, vae_fp, out_fp) :
     attr_data = pd.read_csv(testcsv_fp)
     attr_data = np.array(attr_data)[:test_num, list(attr_data.keys()).index(attr_selected)].flatten()
 
-    tsne = TSNE(n_components=2)
+    tsne = TSNE(
+        n_components=2,
+        random_state=0,
+
+    )
     latents_tsne = tsne.fit_transform(latents)
 
-    plt.scatter(latents[attr_data == 0, 0], latents[attr_data == 0, 1], c="r")
-    plt.scatter(latents[attr_data == 1, 0], latents[attr_data == 1, 1], c="b")
+    plt.scatter(latents_tsne[attr_data == 0, 0], latents_tsne[attr_data == 0, 1], c="r")
+    plt.scatter(latents_tsne[attr_data == 1, 0], latents_tsne[attr_data == 1, 1], c="b")
     plt.legend(["Not {}".format(attr_selected), attr_selected])
 
     plt.savefig(os.path.join(out_fp, "fig1_5.jpg"))
