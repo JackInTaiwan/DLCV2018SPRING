@@ -156,6 +156,7 @@ def test_plot(dataset_fp, model_fp, out_fp) :
         if len(imgs) == 0 :
             imgs = np.array([img])
         else :
+            print (imgs.shape, img.shape)
             imgs = np.vstack((imgs, img))
 
     imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2) - 0.5 ) * 2.0
