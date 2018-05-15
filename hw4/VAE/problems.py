@@ -156,12 +156,12 @@ def test_plot(dataset_fp, model_fp, out_fp) :
         if len(imgs) == 0 :
             imgs = np.array([img])
         else :
-            imgs = np.vstack(imgs, img)
+            imgs = np.vstack((imgs, img))
 
     imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2) - 0.5 ) * 2.0
     imgs_var = imgs_var.cuda()
 
-    imgs_recon = model(imgs_var)
+    imgs_recon, KLD = model(imgs_var)
     imgs_recon = imgs_recon.permute(0, 2, 3, 1).cpu().data.numpy()
     imgs_recon = (imgs_recon / 2.0) + 0.5
 
