@@ -8,13 +8,13 @@ gn = GN()
 gn = gn.cuda()
 
 for i in range(8) :
-    x = tor.randn(2 ** i, 512)
+    print (i)
+    x = tor.randn(8, 512)
     x = Variable(x)
     x = x.cuda()
     s = time.time()
     p = gn(x)
     e = time.time()
-    print (i)
     print (e-s)
 
 
