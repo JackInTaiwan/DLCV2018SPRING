@@ -8,10 +8,10 @@ from torch.optim.lr_scheduler import StepLR
 from torch.utils.data import DataLoader, TensorDataset
 
 try :
-    from model_2 import AVE
+    from model_2 import VAE
     from utils import load_data, console, save_pic, record
 except :
-    from .model_2 import AVE
+    from .model_2 import VAE
     from .utils import load_data, console, save_pic, record
 
 
@@ -109,14 +109,14 @@ def save_record(model_index, epoch, optim, recon_loss, KLD_loss) :
 def train(data_loader, model_index, x_eval_train, loaded_model):
     ### Model Initiation
     if loaded_model :
-        ave = AVE()
+        ave = VAE()
         ave.cuda()
         saved_state_dict = tor.load(loaded_model)
         ave.load_state_dict(saved_state_dict)
         ave.cuda()
     else :
-        ave = AVE()
-        ave = ave.cuda()
+        ave = VAE()
+        ave.cuda()
 
     loss_func = tor.nn.MSELoss().cuda()
 
