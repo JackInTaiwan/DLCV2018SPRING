@@ -169,18 +169,18 @@ def test_plot(dataset_fp, model_fp, out_fp) :
         plt.subplot(2, 10, i)
         plt.xticks([])
         plt.yticks([])
-        plt.title("{:0>5}.png".format(40000 + i - 1))
+        #plt.title("{:0>5}.png".format(40000 + i - 1))
         plt.imshow(img)
 
     for i, img in enumerate(imgs_recon, 1) :
         plt.subplot(2, 10, i + 10)
         plt.xticks([])
         plt.yticks([])
-        plt.title("{:0>5}.png".format(40000 + i - 1))
+        #plt.title("{:0>5}.png".format(40000 + i - 1))
         plt.imshow(img)
 
 
-    plt.tight_layout(pad=0.5, h_pad=0.5)
+    plt.tight_layout(pad=0.5, h_pad=0.0)
     plt.savefig(os.path.join(out_fp, "fig1_3.jpg"))
 
 
