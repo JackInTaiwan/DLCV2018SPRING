@@ -180,7 +180,7 @@ def test_plot(dataset_fp, model_fp, out_fp) :
         plt.imshow(img)
 
 
-    plt.tight_layout(pad=0.5, h_pad=0.0)
+    plt.tight_layout(pad=0.5, h_pad=-5.0)
     plt.savefig(os.path.join(out_fp, "fig1_3.jpg"))
 
 
