@@ -41,7 +41,7 @@ class VAE(nn.Module):
         self.index = 0
         self.training = True
 
-        conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3])
+        conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 10, 2 ** 9, 2 ** 8, 3])
         #conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 8, 2 ** 10, 3])
         conv_channels = [int(num) for num in conv_channels]    # transform type
         #fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
