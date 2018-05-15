@@ -78,7 +78,7 @@ def tsne(dataset_fp, model_fp, out_fp) :
 
 
 
-def lcurve(record_fp, output_fp) :
+def lcurve(record_fp, out_fp) :
     import json
 
     with open(record_fp, "r") as f :
