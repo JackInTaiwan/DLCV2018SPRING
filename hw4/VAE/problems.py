@@ -29,7 +29,7 @@ def tsne(dataset_fp, model_fp, out_fp) :
     batch_size = 50
     testdata_fp = os.path.join(dataset_fp, "test")
     testcsv_fp = os.path.join(dataset_fp, "test.csv")
-    attr_selected = "Male"
+    attr_selected = "Black_Hair"
 
     vae = VAE()
     vae.training = False
