@@ -34,14 +34,14 @@ class GN(nn.Module) :
     def __init__(self):
         super(GN, self).__init__()
 
-        GN_conv_channels = [2 ** 9, 2 ** 8, 2 ** 8, 2 ** 7, 2 ** 7, 3]
+        GN_conv_channels = [2 ** 9, 2 ** 8, 2 ** 8, 2 ** 7, 2 ** 6, 3]
         GN_fc_channels = [2 ** 9, 2 ** 9]
 
         # Generator Network
         self.de_fc_1 = self.fc(GN_fc_channels[0], GN_fc_channels[1])
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[1], out_channels=GN_conv_channels[0], kernel_size=8, stride=1)
         self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[0], out_channels=GN_conv_channels[1],
-                                                 kernel_size=2, stride=2)
+                                                 kernel_size=2, stride=2, bias=False)
         self.de_conv_1 = self.conv(GN_conv_channels[1], GN_conv_channels[2], 3, 1)
         self.de_trans_3 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[2], out_channels=GN_conv_channels[3],
                                                  kernel_size=2, stride=2, bias=False)
@@ -99,15 +99,16 @@ class DN(nn.Module) :
         self.index = 0
 
         DN_conv_channels = [3, 2 ** 6, 2 ** 7]
-        DN_fc_channels = [32 * 32 * DN_conv_channels[-1], 2 ** 10, 2 ** 10, 1]
+        DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 2 ** 10, 1]
 
         # Discriminator Network
         self.dn_conv_1 = self.conv(DN_conv_channels[0], DN_conv_channels[1], 3, 1)
         self.dn_conv_2 = self.conv(DN_conv_channels[1], DN_conv_channels[2], 3, 1)
         self.dn_pool_1 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
+        self.dn_conv_3 = self.conv(DN_conv_channels[2], DN_conv_channels[3], 3, 1)
+        self.dn_conv_4 = self.conv(DN_conv_channels[3], DN_conv_channels[4], 3, 1)
+        self.dn_pool_2 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
         self.dn_fc_1 = self.fc(DN_fc_channels[0], DN_fc_channels[1])
-        self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_fc_channels[2])
-        self.dn_fc_3 = self.fc(DN_fc_channels[2], DN_fc_channels[3])
         self.dn_sig = tor.nn.Sigmoid()
 
 
@@ -115,10 +116,11 @@ class DN(nn.Module) :
         x = self.dn_conv_1(x)
         x = self.dn_conv_2(x)
         x = self.dn_pool_1(x)
+        x = self.dn_conv_3(x)
+        x = self.dn_conv_4(x)
+        x = self.dn_pool_2(x)
         x = x.view(x.size(0), -1)
         x = self.dn_fc_1(x)
-        x = self.dn_fc_2(x)
-        x = self.dn_fc_3(x)
         d = self.dn_sig(x)
 
         return d
