@@ -145,7 +145,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             ### train true/false pic
             if (step // PIVOT_STEPS) % 3 != 2 :
                 out = Variable(x_batch).cuda() if step % 2 == 0 else gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
-                print (out)
                 ans = Variable(tor.ones(BATCHSIZE, 1)).cuda() if step % 2 == 0 else Variable(tor.zeros(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
                 optim = optim_dn
