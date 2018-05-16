@@ -122,6 +122,7 @@ class DN(nn.Module) :
         x = self.dn_pool_2(x)
         x = x.view(x.size(0), -1)
         x = self.dn_fc_1(x)
+        x = self.dn_fc_2(x)
         d = self.dn_sig(x)
 
         return d
