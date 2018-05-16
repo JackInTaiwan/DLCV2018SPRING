@@ -99,7 +99,7 @@ class DN(nn.Module) :
         self.index = 0
 
         DN_conv_channels = [3, 2 ** 5, 2 ** 6, 2 ** 7, 2 ** 8]
-        DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 1]
+        DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 2 ** 10, 1]
 
         # Discriminator Network
         self.dn_conv_1 = self.conv(DN_conv_channels[0], DN_conv_channels[1], 3, 1)
@@ -109,6 +109,7 @@ class DN(nn.Module) :
         self.dn_conv_4 = self.conv(DN_conv_channels[3], DN_conv_channels[4], 3, 1)
         self.dn_pool_2 = tor.nn.MaxPool2d(kernel_size=2, stride=2)
         self.dn_fc_1 = self.fc(DN_fc_channels[0], DN_fc_channels[1])
+        self.dn_fc_2 = self.fc(DN_fc_channels[1], DN_fc_channels[2])
         self.dn_sig = tor.nn.Sigmoid()
 
 

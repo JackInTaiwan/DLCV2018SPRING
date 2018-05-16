@@ -150,7 +150,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 optim = optim_dn
 
             else :
-                out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda()).cuda()
+                out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda())
                 ans = Variable(tor.ones(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
                 optim = optim_gn
