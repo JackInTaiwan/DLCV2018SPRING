@@ -12,7 +12,7 @@ try:
     from model_2 import GN, DN
     from utils import load_data, console, save_pic, record
 except:
-    from .model_GAN import GN, DN
+    from .model_2 import GN, DN
     from .utils import load_data, console, save_pic, record
 
 
@@ -154,15 +154,12 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
                 out = gn(Variable(tor.randn(BATCHSIZE, 512)).cuda()).cuda()
                 ans = Variable(tor.ones(BATCHSIZE, 1)).cuda()
                 dis = dn(out)
-                optim = optim_dn
+                optim = optim_gn
 
             loss = loss_func(dis, ans)
-            print (loss.data)
             loss.backward()
-            if (step // PIVOT_STEPS) % 3 != 2 :
-                optim_dn.step()
-            else :
-                optim_gn.step()
+
+            optim.step()
 
             optim_dn.zero_grad()
             optim_gn.zero_grad()
