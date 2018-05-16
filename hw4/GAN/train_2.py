@@ -157,7 +157,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
 
             loss = loss_func(dis, ans)
             loss.backward()
-
+            print (loss.data)
             optim.step()
 
             optim_dn.zero_grad()
