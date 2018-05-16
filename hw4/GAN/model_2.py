@@ -40,7 +40,7 @@ class GN(nn.Module) :
         # Generator Network
         self.de_fc_1 = self.fc(GN_fc_channels[0], GN_fc_channels[1])
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[1], out_channels=GN_conv_channels[0], kernel_size=8, stride=1)
-        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_fc_channels[0], out_channels=GN_conv_channels[1],
+        self.de_trans_2 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[0], out_channels=GN_conv_channels[1],
                                                  kernel_size=2, stride=2)
         self.de_conv_1 = self.conv(GN_conv_channels[1], GN_conv_channels[2], 3, 1)
         self.de_trans_3 = tor.nn.ConvTranspose2d(in_channels=GN_conv_channels[2], out_channels=GN_conv_channels[3],
