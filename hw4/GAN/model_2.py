@@ -98,7 +98,7 @@ class DN(nn.Module) :
         super(DN, self).__init__()
         self.index = 0
 
-        DN_conv_channels = [3, 2 ** 6, 2 ** 7]
+        DN_conv_channels = [3, 2 ** 5, 2 ** 6, 2 ** 7, 2 ** 8]
         DN_fc_channels = [16 * 16 * DN_conv_channels[-1], 2 ** 10, 1]
 
         # Discriminator Network
