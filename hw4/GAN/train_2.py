@@ -111,9 +111,9 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
     gn = GN().cuda()
     dn = DN().cuda()
 
-    ave_state_dict = tor.load(ave_fp)
-    gn.load_ave_state(ave_state_dict)
-    dn.load_ave_state(ave_state_dict)
+    #ave_state_dict = tor.load(ave_fp)
+    #gn.load_ave_state(ave_state_dict)
+    #dn.load_ave_state(ave_state_dict)
 
     if gn_fp :
         gn_state_dict = tor.load(gn_fp)
