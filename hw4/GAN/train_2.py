@@ -206,7 +206,7 @@ if __name__ == "__main__":
     parser.add_argument("-lr", action="store", type=float, default=False, help="learning reate")
     parser.add_argument("--gn", action="store", type=str, default=None)
     parser.add_argument("--dn", action="store", type=str, default=None)
-    parser.add_argument("--ave", action="store", type=str, required=True, help="pretrained VAE model file path")
+    parser.add_argument("--ave", action="store", type=str, help="pretrained VAE model file path")
 
     limit = parser.parse_args().l
     num_val = parser.parse_args().v
