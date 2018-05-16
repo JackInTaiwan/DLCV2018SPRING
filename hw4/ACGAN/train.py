@@ -24,7 +24,7 @@ except:
 
 """ Parameters """
 AVAILABLE_SIZE = None
-EPOCH = 50
+EPOCH = 60
 BATCHSIZE = 32
 EVAL_SIZE = 32
 PIVOT_STEPS = 50
@@ -181,7 +181,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 3 != 0 :
+            if (step // PIVOT_STEPS) % 4 != 0 :
                 dn.training = True
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
@@ -256,10 +256,10 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
 
         ### Save model
         if epoch != 0:
-            #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch)))
-            #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}_{}.pkl".format(model_index, epoch)))
-            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+            tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}_{}.pkl".format(model_index, epoch//5)))
             tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
+            #tor.save(gn.state_dict(), os.path.join(MODEL_ROOT, "gan_gn_{}.pkl".format(model_index, epoch)))
+            #tor.save(dn.state_dict(), os.path.join(MODEL_ROOT, "gan_dn_{}.pkl".format(model_index, epoch)))
 
 
 """ Main """
