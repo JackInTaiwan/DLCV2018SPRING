@@ -51,11 +51,15 @@ class GN(nn.Module) :
 
 
     def forward(self, x) :
+        x = self.de_fc_1(x)
         x = x.view(x.size(0), -1, 1, 1)
         x = self.de_trans_1(x)
+        x = self.de_trans_2(x)
         x = self.de_conv_1(x)
+        x = self.de_trans_3(x)
         x = self.de_conv_2(x)
         x = self.de_trans_2(x)
+        x = self.de_trans_4(x)
         out = self.out(x)
 
         return out
