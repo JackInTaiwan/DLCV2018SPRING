@@ -10,9 +10,9 @@ from argparse import ArgumentParser
 from torch.autograd import Variable
 
 try :
-    from model_2 import VAE
+    from model import VAE
 except :
-    from .model_2 import VAE
+    from .model import VAE
 
 
 
