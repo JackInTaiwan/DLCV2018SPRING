@@ -125,7 +125,7 @@ def rand_generator(output_fp, model_fp) :
         plt.imshow(img)
 
     plt.tight_layout(pad=0.3)
-    plt.savefig(os.path.join(output_fp, "fig2_3.jpg"))
+    plt.savefig(os.path.join(output_fp, "fig3_3.jpg"))
 
 
 
