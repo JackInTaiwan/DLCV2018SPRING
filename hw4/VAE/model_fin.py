@@ -74,7 +74,7 @@ class VAE(nn.Module):
         logvar = self.lv_fc_1(x)
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
-
+        self.latents = ls
         return ls, logvar, KLD
 
 
