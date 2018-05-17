@@ -199,7 +199,7 @@ def test_loss(dataset_fp, model_fp) :
     loss_func = tor.nn.MSELoss().cuda()
 
     imgs = np.array([])
-    batchsize = 32
+    batchsize = 8
 
     total_loss = np.array([])
 
@@ -216,7 +216,7 @@ def test_loss(dataset_fp, model_fp) :
             output, KLD = model(imgs_var)
             loss = loss_func(output, imgs_var)
             total_loss =  np.concatenate((total_loss, [float(loss.cpu().data)]))
-            print ("loss:", float(loss.cpu().data))
+            #print ("loss:", float(loss.cpu().data))
 
         imgs = np.array([])
 
