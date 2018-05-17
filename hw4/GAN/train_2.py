@@ -22,11 +22,11 @@ except:
 """ Parameters """
 AVAILABLE_SIZE = None
 EPOCH = 50
-BATCHSIZE = 32
+BATCHSIZE = 64
 EVAL_SIZE = 64
 PIVOT_STEPS = 10
 
-LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.95
+LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 1000, 0.95
 MOMENTUM = 0.5
 
 RECORD_JSON_PERIOD = 10  # steps
@@ -157,7 +157,6 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
 
             loss = loss_func(dis, ans)
             loss.backward()
-            print (loss.data)
             optim.step()
 
             optim_dn.zero_grad()
@@ -181,7 +180,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, ave_fp):
             if step % RECORD_PIC_PERIOD == 0 :
                 loss = float(loss.data)
                 print("|Loss: {:<8}".format(loss))
-                save_pic("output_{}".format(model_index), gn, 3)
+                save_pic("output_{}".format(model_index), gn, 5)
 
             if step % (2 * PIVOT_STEPS) == 0 :
                 pass

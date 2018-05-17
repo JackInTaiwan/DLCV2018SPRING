@@ -20,10 +20,8 @@ def save_pic(save_fp, model, pic_n) :
     from torch.autograd import Variable
 
     for i in range(pic_n) :
-        #img = tor.randn((1, 512))
         img = tor.randn(1, 512)
         img_var = Variable(img).cuda()
-        print (img_var[0])
         out = model(img_var)
 
         out = out.permute(0, 2, 3, 1).cpu()
