@@ -27,7 +27,7 @@ AVAILABLE_SIZE = None
 EPOCH = 60
 BATCHSIZE = 32
 EVAL_SIZE = 32
-PIVOT_STEPS = 50
+PIVOT_STEPS = 10
 
 LR, LR_STEPSIZE, LR_GAMMA = 0.0001, 2000, 0.99
 MOMENTUM = 0.5
@@ -174,7 +174,7 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
             print("Process: {}/{}".format(step, int(AVAILABLE_SIZE[0] / BATCHSIZE)), end="\r")
 
             ### train true/false pic
-            if (step // PIVOT_STEPS) % 3 != 0 :
+            if (step // PIVOT_STEPS) % 4 != 0 :
                 dn.training = True
                 if step % 2 == 0 :
                     img.data.copy_(x_batch)
