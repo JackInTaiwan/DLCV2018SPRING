@@ -19,18 +19,22 @@ def tsne(dataset_fp, model_fp, out_fp) :
     import pandas as pd
     from sklearn.manifold.t_sne import TSNE
 
+    try :
+        from model_fin import VAE
+    except :
+        from .model_fin import VAE
+
     test_num = 500
     batch_size = 50
     testdata_fp = os.path.join(dataset_fp, "test")
     testcsv_fp = os.path.join(dataset_fp, "test.csv")
-    attr_selected = "Black_Hair"
+    attr_selected = "Blond_Hair"
 
     vae = VAE()
     vae.training = False
     vae.cuda()
     vae.load_state_dict(tor.load(model_fp))
 
-    imgs = np.array([])
     latents = np.array([])
     imgs_tmp = np.array([])
 
