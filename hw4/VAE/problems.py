@@ -215,7 +215,7 @@ def test_loss(dataset_fp, model_fp) :
             imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2).cuda() - 0.5) * 2.0
             output, KLD = model(imgs_var)
             loss = loss_func(output, imgs_var)
-            total_loss =  total_loss.concatenate((total_loss, [float(loss.cpu().data)]))
+            total_loss =  np.concatenate((total_loss, [float(loss.cpu().data)]))
             print ("loss:", float(loss.cpu().data))
 
         imgs = np.array([])
