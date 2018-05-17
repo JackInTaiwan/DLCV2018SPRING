@@ -22,7 +22,7 @@ def save_pic(save_fp, model, pic_n) :
     tor.manual_seed(0)
 
     for i in range(pic_n) :
-        img = tor.randn(1, 512)
+        img = tor.nn.functional.tanh(tor.randn(1, 512))
         img_var = Variable(img).cuda()
         out = model(img_var)
 
