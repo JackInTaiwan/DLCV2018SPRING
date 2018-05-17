@@ -103,6 +103,7 @@ def rand_generator(output_fp, model_fp) :
     xs[:, 0] = 0
 
     imgs = model(xs)
+    print (imgs)
     imgs = (imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5
     imgs = imgs.astype(np.int16)
 
