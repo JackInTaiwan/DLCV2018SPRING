@@ -22,5 +22,5 @@ models/
 pictures/
 
 
-!ave_model_14.pkl
+!./VAE/models/ave_model_14.pkl
 !GAN/models/gan_gn_fin.pkl
