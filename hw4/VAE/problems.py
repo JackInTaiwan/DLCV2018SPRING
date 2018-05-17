@@ -203,7 +203,7 @@ def test_loss(dataset_fp, model_fp) :
 
     total_loss = np.array([])
 
-    for i, fn in enumerate(os.listdir(dataset_fp), 1) :
+    for i, fn in enumerate(os.listdir(os.path.join(dataset_fp, "test")), 1) :
         img = plt.imread(os.path.join(dataset_fp, fn))
 
         if len(imgs) == 0 :
