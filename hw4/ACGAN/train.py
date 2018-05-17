@@ -147,10 +147,8 @@ def train(data_loader, model_index, x_eval_train, gn_fp, dn_fp, gan_gn_fp, gan_d
     if gan_gn_fp :
         gn.load_gn_state(tor.load(gan_gn_fp))
 
-    #loss_func = tor.nn.CrossEntropyLoss().cuda()
     loss_func = tor.nn.BCELoss().cuda()
 
-    #optim = tor.optim.SGD(fcn.parameters(), lr=LR, momentum=MOMENTUM)
     optim_gn = tor.optim.Adam(gn.parameters(), lr=LR)
     optim_dn = tor.optim.Adam(dn.parameters(), lr=LR)
 

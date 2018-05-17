@@ -155,7 +155,6 @@ def test_plot(dataset_fp, model_fp, out_fp) :
 
     for i in range(10) :
         img = plt.imread(os.path.join(dataset_fp, "test", "{:0>5}.png".format(40000 + i)))
-
         if len(imgs) == 0 :
             imgs = np.array([img])
         else :
