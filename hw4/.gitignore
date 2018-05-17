@@ -20,3 +20,6 @@ hw4_data/
 data/
 models/
 pictures/
+
+
+!VAE/models/ave_model_14.pkl
