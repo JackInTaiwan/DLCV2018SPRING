@@ -196,15 +196,32 @@ def test_loss(dataset_fp, model_fp) :
     model.cuda()
     model.load_state_dict(tor.load(model_fp))
 
+    loss_func = tor.nn.MSELoss().cuda()
+
     imgs = np.array([])
+    batchsize = 32
 
-    for i in range(10):
-        img = plt.imread(os.path.join(dataset_fp, "test", "{:0>5}.png".format(40000 + i)))
+    total_loss = np.array([])
 
-        if len(imgs) == 0:
-            imgs = np.array([img])
-        else:
+    for i, fn in os.listdir(dataset_fp, 1) :
+        img = plt.imread(os.path.join(dataset_fp, fn))
+
+        if len(imgs) == 0 :
+            imgs = np.arrau([img])
+        else :
             imgs = np.vstack((imgs, np.array([img])))
+
+        if i % batchsize == 0 :
+            imgs_var = (Variable(tor.FloatTensor(imgs)).permute(0, 3, 1, 2).cuda() - 0.5) * 2.0
+            output, KLD = model(imgs_var)
+            loss = loss_func(output, imgs_var)
+            total_loss =  total_loss.concatenate((total_loss, [float(loss.cpu().data)]))
+            print ("loss:", float(loss.cpu().data))
+
+        imgs = np.array([])
+
+    print ("Average total loss:", total_loss.mean())
+
 
 
 
