@@ -9,12 +9,6 @@ import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from torch.autograd import Variable
 
-try :
-    from model import VAE
-except :
-    from .model import VAE
-
-
 
 
 
@@ -143,6 +137,11 @@ def rand_generator(output_fp, model_fp) :
 
 
 def test_plot(dataset_fp, model_fp, out_fp) :
+    try :
+        from model_2 import VAE
+    except :
+        from .model_2 import VAE
+
     model = VAE()
     model.training = False
     model.cuda()
@@ -186,6 +185,33 @@ def test_plot(dataset_fp, model_fp, out_fp) :
 
 
 
+def test_loss(dataset_fp, model_fp) :
+    try :
+        from model_2 import VAE
+    except :
+        from .model_2 import VAE
+
+    model = VAE()
+    model.training = False
+    model.cuda()
+    model.load_state_dict(tor.load(model_fp))
+
+    imgs = np.array([])
+
+    for i in range(10):
+        img = plt.imread(os.path.join(dataset_fp, "test", "{:0>5}.png".format(40000 + i)))
+
+        if len(imgs) == 0:
+            imgs = np.array([img])
+        else:
+            imgs = np.vstack((imgs, np.array([img])))
+
+
+
+
+
+
+
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-q", type=str, required=True)
@@ -212,3 +238,6 @@ if __name__ == "__main__" :
 
     elif q == "rg" :
         rand_generator(out_fp, model_fp)
+
+    elif q == "test_loss" :
+        test_loss(dataset_fp, model_fp)
