@@ -92,24 +92,38 @@ def rand_generator(output_fp, model_fp) :
         from .model_4 import GN
 
     tor.manual_seed(0)
-    generate_num = 32
+    generate_num = 10
     latent_size = 512
 
     model = GN()
     model.cuda()
     model.load_state_dict(tor.load(model_fp))
 
-    x = Variable(tor.randn(generate_num, latent_size)).cuda()
+    xs = Variable(tor.randn(generate_num, latent_size)).cuda()
+    xs[:, 0] = 0
 
-    imgs = model(x)
-    imgs = imgs.permute(0, 2, 3, 1).cpu().data.numpy() * 255
+    imgs = model(xs)
+    imgs = (imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5
     imgs = imgs.astype(np.int16)
 
     for i, img in enumerate(imgs, 1) :
-        plt.subplot(4, 8, i)
+        plt.subplot(2, 10, i)
         plt.xticks([])
         plt.yticks([])
         plt.imshow(img)
+
+    xs[:, 0] = 1
+
+    imgs = model(xs)
+    imgs = (imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5
+    imgs = imgs.astype(np.int16)
+
+    for i, img in enumerate(imgs, 1) :
+        plt.subplot(2, 10, i+10)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(img)
+
     plt.tight_layout(pad=0.3)
     plt.savefig(os.path.join(output_fp, "fig2_3.jpg"))
 
