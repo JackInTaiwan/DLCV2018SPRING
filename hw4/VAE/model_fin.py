@@ -100,3 +100,7 @@ class VAE(nn.Module):
         output = self.decode(ls, logvar)
 
         return output, KLD
+
+
+    def get_latents(self) :
+        return self.latents
