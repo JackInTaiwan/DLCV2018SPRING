@@ -106,9 +106,9 @@ def rand_generator(output_fp, model_fp) :
     import torch.nn.functional as F
 
     try :
-        from model_2 import VAE
+        from model_fin import VAE
     except :
-        from .model_2 import VAE
+        from .model_fin import VAE
 
     tor.manual_seed(0)
     generate_num = 32
@@ -138,9 +138,9 @@ def rand_generator(output_fp, model_fp) :
 
 def test_plot(dataset_fp, model_fp, out_fp) :
     try :
-        from model_2 import VAE
+        from model_fin import VAE
     except :
-        from .model_2 import VAE
+        from .model_fin import VAE
 
     model = VAE()
     model.training = False
@@ -187,9 +187,9 @@ def test_plot(dataset_fp, model_fp, out_fp) :
 
 def test_loss(dataset_fp, model_fp) :
     try :
-        from model_2 import VAE
+        from model_fin import VAE
     except :
-        from .model_2 import VAE
+        from .model_fin import VAE
 
     model = VAE()
     model.training = False

@@ -103,8 +103,8 @@ def rand_generator(output_fp, model_fp) :
     x = Variable(tor.randn(generate_num, latent_size)).cuda()
 
     imgs = model(x)
-    # need fixing
-    #imgs = imgs.permute(0, 2, 3, 1).cpu().data.numpy() * 255
+
+    imgs = imgs.permute(0, 2, 3, 1).cpu().data.numpy() * 255
     imgs = imgs.astype(np.int16)
 
     for i, img in enumerate(imgs, 1) :

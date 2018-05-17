@@ -7,11 +7,6 @@ from torch.autograd import Variable
 
 
 
-""" Parameters """
-VGG16_PRETRAINED_FP = "./models/vgg16_pretrained.h5"
-
-
-
 """ Module Build """
 class VAE(nn.Module):
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
@@ -31,7 +26,6 @@ class VAE(nn.Module):
     def fc(self, num_in, num_out) :
         fc = nn.Sequential(
             nn.Linear(num_in, num_out),
-            #nn.ReLU(inplace=True)
         )
         return fc
 
@@ -42,9 +36,7 @@ class VAE(nn.Module):
         self.training = True
 
         conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 7, 2 ** 8, 3])
-        #conv_channels = np.array([3, 2 ** 6, 2 ** 7, 2 ** 6, 2 ** 8, 2 ** 10, 3])
         conv_channels = [int(num) for num in conv_channels]    # transform type
-        #fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
         fc_channels = np.array([2 ** 7 * 32 * 32, 2 ** 10, 2 ** 9, 2 ** 7, 3 * 2 ** 12])
         fc_channels = [int(num) for num in fc_channels]  # transform type
 
@@ -62,7 +54,6 @@ class VAE(nn.Module):
         # logvar
         self.lv_fc_1 = self.fc(fc_channels[1], fc_channels[2])
         self.lv_tanh = tor.nn.Tanh()
-        self.lv_sig = tor.nn.Sigmoid()
 
         # decode
         self.de_trans_1 = tor.nn.ConvTranspose2d(in_channels=fc_channels[2], out_channels=conv_channels[3], kernel_size=32, stride=1)
@@ -80,8 +71,6 @@ class VAE(nn.Module):
         x = self.en_fc_1(x)
 
         ls = self.ls_tanh(self.ls_fc_1(x))
-        #logvar = self.lv_tanh(self.lv_fc_1(x))
-        #ls = self.ls_fc_1(x)
         logvar = self.lv_fc_1(x)
 
         KLD = -0.5 * tor.sum(1 + logvar - ls.pow(2) - logvar.exp())
@@ -111,14 +100,3 @@ class VAE(nn.Module):
         output = self.decode(ls, logvar)
 
         return output, KLD
-
-
-    def params_init(self, m) :
-        classname = m.__class__.__name__
-        if classname.lower() == "linear" :
-            tor.nn.init.normal(m.weight, 0, 0.001)
-            tor.nn.init.normal(m.bias, 0, 0.001)
-        elif classname.find("Conv") != -1 and self.index >=44 :
-            m.weight.data.normal_(0.01, 0.001)
-            m.bias.data.normal_(0.01, 0.001)
-        self.index += 1

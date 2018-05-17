@@ -15,6 +15,16 @@ from torch.autograd import Variable
 def lcurve(record_fp, out_fp) :
     import json
 
+
+    def get_avg(arr, avg_num) :
+        for i in range(len(arr)) :
+            if i < (avg_num // 2) or i >= len(arr) - (avg_num // 2) :
+                arr[i] = arr[i]
+            else :
+                arr[i] = arr[i-(avg_num//2): i+(avg_num//2)].mean()
+        return arr
+
+
     with open(record_fp, "r") as f :
         data = json.load(f)
 
@@ -22,25 +32,22 @@ def lcurve(record_fp, out_fp) :
 
 
     ### Loss
+    avg_num = 9
     loss_fake = np.array(data["loss_fake"])
     loss_real = np.array(data["loss_real"])
-    loss_fake_avg = np.copy(loss_fake)
-    loss_real_avg = np.copy(loss_real)
+    loss_fake_avg = get_avg(np.copy(loss_fake), avg_num)
+    loss_real_avg = get_avg(np.copy(loss_real), avg_num)
     record_step = 10
     steps_fake = np.array(range(len(loss_fake))) * record_step
     steps_real = np.array(range(len(loss_real))) * record_step
-    avg_num = 9
-    """
-    for i in range(len(loss_avg)) :
-        if i < (avg_num // 2) or i >= len(loss_avg) - (avg_num // 2) :
-            loss_avg[i] = loss[i]
-        else :
-            loss_avg[i] = loss[i-(avg_num//2): i+(avg_num//2)].mean()
+
 
     plt.subplot(2, 1, 1)
-    plt.plot(steps, loss, linewidth=0.5)
-    plt.plot(steps, loss_avg, linewidth=0.5, c="r")
-    plt.legend(["Original", "Averaged"])
+    plt.plot(steps_real, loss_real, linewidth=0.5, c="#ffaa0033")
+    plt.plot(steps_fake, loss_fake, linewidth=0.5, c="#00aaff33")
+    plt.plot(steps_real[avg_num:-avg_num], loss_real_avg[avg_num:-avg_num], linewidth=0.5, c="#ffaa00")
+    plt.plot(steps_fake[avg_num:-avg_num], loss_fake_avg[avg_num:-avg_num], linewidth=0.5, c="#00aaff")
+    plt.legend(["Real", "Avg. Real", "Fake", "Avg. Fake"])
     plt.xlabel("Steps")
     plt.ylabel("Loss")
 
@@ -48,23 +55,12 @@ def lcurve(record_fp, out_fp) :
     ## Accuracy
     acc_true = np.array(data["acc_true"])
     acc_false = np.array(data["acc_false"])
-    acc_true_avg = np.copy(acc_true)
-    acc_false_avg = np.array(acc_false)
-    record_step = 10
-    steps = np.array(range(len(loss))) * record_step
     avg_num = 9
+    acc_true_avg = get_avg(np.array(acc_true), avg_num)
+    acc_false_avg = get_avg(np.array(acc_false), avg_num)
+    record_step = 10
+    steps = np.array(range(len(acc_true_avg))) * record_step
 
-    for i in range(len(acc_true_avg)) :
-        if i < (avg_num // 2) or i >= len(acc_true_avg) - (avg_num // 2) :
-            acc_true_avg[i] = acc_true[i]
-        else :
-            acc_true_avg[i] = acc_true[i-(avg_num//2): i+(avg_num//2)].mean()
-
-    for i in range(len(acc_false_avg)) :
-        if i < (avg_num // 2) or i >= len(acc_false) - (avg_num // 2) :
-            acc_false_avg[i] = acc_false[i]
-        else :
-            acc_false_avg[i] = acc_false[i-(avg_num//2): i+(avg_num//2)].mean()
 
     plt.subplot(2, 1, 2)
     plt.plot(steps, acc_true, linewidth=1.0, c="#0088ff33")
@@ -76,8 +72,7 @@ def lcurve(record_fp, out_fp) :
     plt.ylabel("Accuracy")
 
     plt.tight_layout()
-    plt.savefig(os.path.join(out_fp, "fig2_2.jpg"))
-    """
+    plt.savefig(os.path.join(out_fp, "fig3_2.jpg"))
 
 
 
@@ -87,9 +82,9 @@ def rand_generator(output_fp, model_fp) :
     from torch.autograd import Variable
 
     try :
-        from model_3 import GN
+        from model_4 import GN
     except :
-        from .model_3 import GN
+        from .model_4 import GN
 
     tor.manual_seed(0)
     generate_num = 10
@@ -145,14 +140,8 @@ if __name__ == "__main__" :
     out_fp = parser.parse_args().output
     record_fp = parser.parse_args().record
 
-    if q == "tsne" :
-        tsne(dataset_fp, model_fp, out_fp)
-
-    elif q == "lcurve" :
+    if q == "lcurve" :
         lcurve(record_fp, out_fp)
-
-    elif q == "test" :
-        test_plot(dataset_fp, model_fp, out_fp)
 
     elif q == "rg" :
         rand_generator(out_fp, model_fp)
