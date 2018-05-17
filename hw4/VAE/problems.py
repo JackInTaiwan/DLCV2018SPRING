@@ -207,7 +207,7 @@ def test_loss(dataset_fp, model_fp) :
         img = plt.imread(os.path.join(dataset_fp, "test", fn))
 
         if len(imgs) == 0 :
-            imgs = np.arrau([img])
+            imgs = np.array([img])
         else :
             imgs = np.vstack((imgs, np.array([img])))
 
