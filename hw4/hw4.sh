@@ -1,3 +1,6 @@
+if ! [ -d $2 ]; then
+    mkdir $2
+fi
 python3 ./VAE/problems.py -q tsne --output $2 --model ./VAE/models/ave_model_14.pkl --dataset $1
 python3 ./VAE/problems.py -q lcurve --output $2 --record ./VAE/record/vae_fin.json
 python3 ./VAE/problems.py -q rg --output $2 --model ./VAE/models/ave_model_14.pkl

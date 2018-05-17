@@ -228,10 +228,6 @@ def test_loss(dataset_fp, model_fp) :
 
 
 
-
-
-
-
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-q", type=str, required=True)
