@@ -15,12 +15,7 @@ note*.py
 
 ### Dirs
 __pycache__/
-hw3-train-validation/
 hw4_data/
 data/
-models/
+#models/
 pictures/
-
-
-!./VAE/models/ave_model_14.pkl
-!GAN/models/gan_gn_fin.pkl
