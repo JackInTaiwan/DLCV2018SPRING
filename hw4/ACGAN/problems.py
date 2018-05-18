@@ -86,7 +86,7 @@ def rand_generator(output_fp, model_fp) :
     except :
         from .model_3 import GN
     for s in range(10) :
-        tor.manual_seed(0)
+        tor.manual_seed(s)
         generate_num = 10
         latent_size = 512
 
