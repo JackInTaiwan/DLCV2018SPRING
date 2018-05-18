@@ -82,9 +82,9 @@ def rand_generator(output_fp, model_fp) :
     from torch.autograd import Variable
 
     try :
-        from model_4 import GN
+        from model_3 import GN
     except :
-        from .model_4 import GN
+        from .model_3 import GN
 
     tor.manual_seed(0)
     generate_num = 10
