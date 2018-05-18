@@ -5,7 +5,7 @@ note*.py
 *.tar*
 *.gz
 *.h5
-*.pkl
+*.pkl*
 *.png
 #*.jpg
 *.txt
