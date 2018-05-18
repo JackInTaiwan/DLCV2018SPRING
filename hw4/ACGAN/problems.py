@@ -85,42 +85,42 @@ def rand_generator(output_fp, model_fp) :
         from model_fin import GN
     except :
         from .model_fin import GN
-    for s in range(10) :
-        tor.manual_seed(s)
-        generate_num = 10
-        latent_size = 512
 
-        model = GN()
-        model.cuda()
-        model.load_state_dict(tor.load(model_fp))
+    tor.manual_seed(9)
+    generate_num = 10
+    latent_size = 512
 
-        xs = Variable(tor.randn(generate_num, latent_size)).cuda()
-        xs[:, 0] = 0
+    model = GN()
+    model.cuda()
+    model.load_state_dict(tor.load(model_fp))
 
-        imgs = model(xs)
-        imgs = ((imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5) * 255
-        imgs = imgs.astype(np.int16)
+    xs = Variable(tor.randn(generate_num, latent_size)).cuda()
+    xs[:, 0] = 0
 
-        for i, img in enumerate(imgs, 1) :
-            plt.subplot(2, 10, i)
-            plt.xticks([])
-            plt.yticks([])
-            plt.imshow(img)
+    imgs = model(xs)
+    imgs = ((imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5) * 255
+    imgs = imgs.astype(np.int16)
 
-        xs[:, 0] = 1
+    for i, img in enumerate(imgs, 1) :
+        plt.subplot(2, 10, i)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(img)
 
-        imgs = model(xs)
-        imgs = ((imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5) * 255
-        imgs = imgs.astype(np.int16)
+    xs[:, 0] = 1
 
-        for i, img in enumerate(imgs, 1) :
-            plt.subplot(2, 10, i+10)
-            plt.xticks([])
-            plt.yticks([])
-            plt.imshow(img)
+    imgs = model(xs)
+    imgs = ((imgs.permute(0, 2, 3, 1).cpu().data.numpy() / 2.0) + 0.5) * 255
+    imgs = imgs.astype(np.int16)
 
-        plt.tight_layout(pad=0.3, h_pad=-10.0)
-        plt.savefig(os.path.join(output_fp, "fig3_3_{}.jpg".format(s)))
+    for i, img in enumerate(imgs, 1) :
+        plt.subplot(2, 10, i+10)
+        plt.xticks([])
+        plt.yticks([])
+        plt.imshow(img)
+
+    plt.tight_layout(pad=0.3, h_pad=-10.0)
+    plt.savefig(os.path.join(output_fp, "fig3_3.jpg".format(s)))
 
 
 
