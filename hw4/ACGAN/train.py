@@ -12,11 +12,11 @@ from torch.utils.data import DataLoader, TensorDataset
 
 try:
     #from model import GN, DN
-    from model_4 import GN, DN
+    from model_fin import GN, DN
     from utils import load_data, console, save_pic, record
 except:
     #from .model import GN, DN
-    from .model_4 import GN, DN
+    from .model_fin import GN, DN
     from .utils import load_data, console, save_pic, record
 
 

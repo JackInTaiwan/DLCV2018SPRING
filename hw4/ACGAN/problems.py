@@ -82,9 +82,9 @@ def rand_generator(output_fp, model_fp) :
     from torch.autograd import Variable
 
     try :
-        from model_3 import GN
+        from model_fin import GN
     except :
-        from .model_3 import GN
+        from .model_fin import GN
     for s in range(10) :
         tor.manual_seed(s)
         generate_num = 10
@@ -119,7 +119,7 @@ def rand_generator(output_fp, model_fp) :
             plt.yticks([])
             plt.imshow(img)
 
-        plt.tight_layout(pad=0.3)
+        plt.tight_layout(pad=0.3, h_pad=-10.0)
         plt.savefig(os.path.join(output_fp, "fig3_3_{}.jpg".format(s)))
 
 

@@ -1,6 +1,6 @@
 import time
 import torch as tor
-from ACGAN.model_3 import GN, DN
+from ACGAN.model_fin import GN, DN
 from torch.autograd import Variable
 
 
