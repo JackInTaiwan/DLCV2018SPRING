@@ -43,8 +43,8 @@ def load(limit) :
             labels = np.load(TRIMMED_LABEL_TRAIN_PF[i])
 
         else :
-            videos = np.vstack((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
-            labels = np.vstack((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
+            videos = np.concatenate((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
+            labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
 
     if limit :
         videos = videos[:limit]
