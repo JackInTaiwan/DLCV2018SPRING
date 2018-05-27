@@ -74,7 +74,7 @@ def train(batch_gen, model, model_index, x_eval_train) :
 
             optim.zero_grad()
             out = model(x)
-            out = out.mean(dim=0)
+            out = out.mean(dim=0).unsqueeze(0)
             cls = model.cls(out)
             print (cls)
             print (y)
