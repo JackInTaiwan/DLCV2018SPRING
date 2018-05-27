@@ -22,11 +22,11 @@ except :
 
 
 """ Parameters """
-TRIMMED_LABEL_TRAIN_PF = ["./labels_train_0.npy", "./labels_train_1.npy", "./labels_train_2.npy", "./labels_train_4.npy"]
-TRIMMED_VIDEO_TRAIN_PF = ["./videos_train_0.npy", "./videos_train_1.npy", "./videos_train_2.npy", "./videos_train_4.npy"]
+TRIMMED_LABEL_TRAIN_FP = ["./labels_train_0.npy", "./labels_train_1.npy", "./labels_train_2.npy", "./labels_train_4.npy"]
+TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./videos_train_2.npy", "./videos_train_4.npy"]
 
-TRIMMED_LABEL_VALID_PF = "./labels_valid_0.npy"
-TRIMMED_VIDEO_VALID_PF = "./videos_valid_0.npy"
+TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
+TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
 EPOCH = 30
 BATCHSIZE = 1
@@ -40,21 +40,21 @@ CAL_ACC_PERIOD = 100  # steps
 
 """ Load Data """
 def load(limit) :
-    for i in range(len(TRIMMED_VIDEO_TRAIN_PF)) :
+    for i in range(len(TRIMMED_VIDEO_TRAIN_FP)) :
         print (i)
         if i == 0 :
-            videos = np.load(TRIMMED_VIDEO_TRAIN_PF[i])
-            labels = np.load(TRIMMED_LABEL_TRAIN_PF[i])
+            videos = np.load(TRIMMED_VIDEO_TRAIN_FP[i])
+            labels = np.load(TRIMMED_LABEL_TRAIN_FP[i])
             videos = videos / 255.
             videos = normalize(videos)
             videos = select_data(videos, VIDEOS_MAX_BATCH)
 
         else :
-            videos_new = np.load(TRIMMED_VIDEO_TRAIN_PF[i])  / 255.
+            videos_new = np.load(TRIMMED_VIDEO_TRAIN_FP[i])  / 255.
             videos_new = normalize(videos_new)
             videos_new = select_data(videos_new, VIDEOS_MAX_BATCH)
             videos = np.concatenate((videos, videos_new))
-            labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
+            labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_FP[i])))
 
     if limit :
         videos = videos[:limit]
@@ -67,8 +67,8 @@ def load(limit) :
     videos_eval = videos[:EVAL_TRAIN_SIZE][:]
     labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
-    videos_test = np.loads(TRIMMED_VIDEO_VALID_PF)
-    labels_test = np.loads(TRIMMED_LABEL_VALID_PF)
+    videos_test = np.load(TRIMMED_VIDEO_VALID_FP)
+    labels_test = np.load(TRIMMED_LABEL_VALID_FP)
 
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
