@@ -11,11 +11,11 @@ from torch.utils.data import Dataset, DataLoader
 
 try :
     from .reader import readShortVideo, getVideoList
-    from .utils import normalize, console, accuracy, Batch_generator
+    from .utils import normalize, select_data, console, accuracy, Batch_generator
     from .model import Classifier
 except :
     from reader import  readShortVideo, getVideoList
-    from utils import normalize, console, accuracy, Batch_generator
+    from utils import normalize, select_data, console, accuracy, Batch_generator
     from model import Classifier
 
 
@@ -30,7 +30,8 @@ BATCHSIZE = 1
 LR = 0.0001
 
 AVAILABLE_SIZE = None
-
+EVAL_TRAIN_SIZE = 100
+VIDEOS_MAX_BATCH = 30
 
 
 
@@ -39,6 +40,10 @@ def load() :
     videos = np.load(TRIMMED_VIDEO_TRAIN_PF) / 255.
     labels = np.load(TRIMMED_LABEL_TRAIN_PF)
     videos = normalize(videos)
+    videos = select_data(videos, VIDEOS_MAX_BATCH)
+
+    videos_eval = videos[:EVAL_TRAIN_SIZE][:]
+    labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
@@ -50,13 +55,13 @@ def load() :
         drop_last=True,
     )
 
-    return batch_gen
+    return batch_gen, videos_eval, labels_eval
 
 
 
 
 """ Training """
-def train(batch_gen, model, model_index, x_eval_train) :
+def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
     epoch_start = model.epoch
     step_start = model.step
 
@@ -79,10 +84,11 @@ def train(batch_gen, model, model_index, x_eval_train) :
             print (cls)
             loss = loss_func(cls, y)
 
-            #loss.backward()
+            loss.backward()
             optim.step()
 
-        #acc = accuracy(model, )
+        acc = accuracy(model, x_eval_train, y_eval_train)
+        print ("|Acc: {}".format(round(acc, 5)))
 
 
 
@@ -111,7 +117,7 @@ if __name__ == "__main__" :
 
     ### Data load
     console("Loading Data")
-    batch_gen = load()
+    batch_gen, videos_eval, labels_eval = load()
 
 
     ### Load Model
@@ -127,5 +133,4 @@ if __name__ == "__main__" :
 
     ### Train Data
     console("Training Data")
-    x_eval_train = None
-    train(batch_gen, model, model_index, x_eval_train)
+    train(batch_gen, model, model_index, videos_eval, labels_eval)

@@ -1,5 +1,6 @@
 from .load_data import (
     normalize,
+    select_data,
 )
 
 from .recorder import (
