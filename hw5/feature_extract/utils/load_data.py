@@ -18,3 +18,20 @@ def normalize(data) :
             data[n][:, :, :, i] = (data[n][:, :, :, i] - mean[i]) / std[i]
 
     return data
+
+
+
+def select_data(data, max_num) :
+    import math
+
+    output = []
+
+    for item in data :
+        if item.shape[0] <= max_num :
+            output.append(item)
+
+        else :
+            seq = [math.floor(item.shape[0] * i / max_num) for i in range(max_num)]
+            output.append(item[seq])
+
+    return np.array(output)

@@ -4,6 +4,8 @@ import random
 import numpy as np
 import torch as tor
 
+from torch.autograd import Variable
+
 
 
 
@@ -42,6 +44,7 @@ def accuracy(model, data, labels) :
     correct, total = 0, len(labels)
 
     for x, label in zip(data, labels) :
+        x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
         cls = model.cls(out)
