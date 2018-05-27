@@ -47,10 +47,10 @@ def load(limit) :
             videos = select_data(videos, VIDEOS_MAX_BATCH)
 
         else :
-            videos = np.concatenate((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
-            videos = videos / 255.
-            videos = normalize(videos)
-            videos = select_data(videos, VIDEOS_MAX_BATCH)
+            videos_new = np.load(TRIMMED_VIDEO_TRAIN_PF[i])  / 255.
+            videos_new = normalize(videos_new)
+            videos_new = select_data(videos_new, VIDEOS_MAX_BATCH)
+            videos = np.concatenate((videos, videos_new))
             labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
 
     if limit :
