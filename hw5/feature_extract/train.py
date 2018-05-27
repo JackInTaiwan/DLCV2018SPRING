@@ -32,27 +32,34 @@ LR = 0.0001
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 VIDEOS_MAX_BATCH = 30
-
+CAL_ACC_PERIOD = 100  # steps
 
 
 """ Load Data """
 def load(limit) :
     for i in range(len(TRIMMED_VIDEO_TRAIN_PF)) :
+        print (i)
         if i == 0 :
             videos = np.load(TRIMMED_VIDEO_TRAIN_PF[i])
             labels = np.load(TRIMMED_LABEL_TRAIN_PF[i])
+            videos = videos / 255.
+            videos = normalize(videos)
+            videos = select_data(videos, VIDEOS_MAX_BATCH)
 
         else :
             videos = np.concatenate((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
+            videos = videos / 255.
+            videos = normalize(videos)
+            videos = select_data(videos, VIDEOS_MAX_BATCH)
             labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
 
     if limit :
         videos = videos[:limit]
         labels = labels[:limit]
 
-    videos = videos / 255.
-    videos = normalize(videos)
-    videos = select_data(videos, VIDEOS_MAX_BATCH)
+    #videos = videos / 255.
+    #videos = normalize(videos)
+    #videos = select_data(videos, VIDEOS_MAX_BATCH)
 
     videos_eval = videos[:EVAL_TRAIN_SIZE][:]
     labels_eval = labels[:EVAL_TRAIN_SIZE][:]
@@ -92,13 +99,14 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
             out = model(x)
             out = out.mean(dim=0).unsqueeze(0)
             cls = model.cls(out)
-            print (cls)
             loss = loss_func(cls, y)
             print ("|Loss: {}".format(loss.data.cpu().numpy()))
             loss.backward()
             optim.step()
 
             if step % 20 == 0 :
+                print (cls)
+            if step % CAL_ACC_PERIOD == 0 :
                 acc = accuracy(model, x_eval_train, y_eval_train)
                 print ("|Acc: {}".format(round(acc, 5)))
 

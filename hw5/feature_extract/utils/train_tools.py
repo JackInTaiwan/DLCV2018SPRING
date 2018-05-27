@@ -29,7 +29,7 @@ class Batch_generator() :
     def __next__(self) :
         max_index = len(self.x) // self.batch if self.drop_last else math.ceil(len(self.x)/self.batch)
 
-        if self.index < max_index :
+        if self.index < max_index - 1 :
             self.index += 1
             return np.array(self.x[self.batch * self.index: self.batch * (self.index + 1)]), np.array(self.y[self.batch * self.index: self.batch * (self.index + 1)])
 
@@ -48,8 +48,8 @@ def accuracy(model, data, labels) :
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
         cls = model.cls(out)
-        y = tor.max(cls, 0)[1]
-        if int(y.data) == label :
+        y = tor.max(cls, 1)[1]
+        if int(y[0].data) == label :
             correct += 1
 
     return correct/total
