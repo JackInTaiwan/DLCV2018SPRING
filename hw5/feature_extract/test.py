@@ -7,5 +7,5 @@ from sklearn.model_selection import ShuffleSplit
 #from model import Classifier
 
 
-x = np.ones((1,5, 5, 3))
-x = x.permute(0, 3, 1, 2)
+x = Variable(tor.FloatTensor(tor.ones((3, 10))))
+print (x.mean(dim=0).unsqueeze(0))
