@@ -25,6 +25,9 @@ except :
 TRIMMED_LABEL_TRAIN_PF = ["./labels_train_0.npy", "./labels_train_1.npy", "./labels_train_2.npy", "./labels_train_4.npy"]
 TRIMMED_VIDEO_TRAIN_PF = ["./videos_train_0.npy", "./videos_train_1.npy", "./videos_train_2.npy", "./videos_train_4.npy"]
 
+TRIMMED_LABEL_VALID_PF = "./labels_valid_0.npy"
+TRIMMED_VIDEO_VALID_PF = "./videos_valid_0.npy"
+
 EPOCH = 30
 BATCHSIZE = 1
 LR = 0.0001
@@ -64,6 +67,9 @@ def load(limit) :
     videos_eval = videos[:EVAL_TRAIN_SIZE][:]
     labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
+    videos_test = np.loads(TRIMMED_VIDEO_VALID_PF)
+    labels_test = np.loads(TRIMMED_LABEL_VALID_PF)
+
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
 
@@ -74,13 +80,13 @@ def load(limit) :
         drop_last=True,
     )
 
-    return batch_gen, videos_eval, labels_eval
+    return batch_gen, videos_eval, labels_eval, videos_test, labels_test
 
 
 
 
 """ Training """
-def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
+def train(batch_gen, model, model_index, x_eval_train, y_eval_train, x_eval_test, y_eval_test) :
     epoch_start = model.epoch
     step_start = model.step
 
@@ -108,9 +114,14 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
 
             if step % 20 == 0 :
                 print (cls)
+
             if step % CAL_ACC_PERIOD == 0 :
-                acc = accuracy(model, x_eval_train, y_eval_train)
-                print ("|Acc: {}".format(round(acc, 5)))
+                acc_train = accuracy(model, x_eval_train, y_eval_train)
+                acc_test = accuracy(model, x_eval_test, y_eval_test)
+
+                print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                print ("|Acc on test data: {}".format(round(acc_test, 5)))
+
 
 
 
@@ -139,7 +150,7 @@ if __name__ == "__main__" :
 
     ### Data load
     console("Loading Data")
-    batch_gen, videos_eval, labels_eval = load(limit)
+    batch_gen, videos_eval, labels_eval, videos_test, labels_test = load(limit)
 
 
     ### Load Model
@@ -155,4 +166,4 @@ if __name__ == "__main__" :
 
     ### Train Data
     console("Training Data")
-    train(batch_gen, model, model_index, videos_eval, labels_eval)
+    train(batch_gen, model, model_index, videos_eval, labels_eval, videos_test, labels_test)
