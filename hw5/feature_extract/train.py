@@ -22,8 +22,8 @@ except :
 
 
 """ Parameters """
-TRIMMED_LABEL_TRAIN_PF = "./labels_train_0.npy"
-TRIMMED_VIDEO_TRAIN_PF = "./videos_train_0.npy"
+TRIMMED_LABEL_TRAIN_PF = ["./labels_train_0.npy", "./labels_train_1.npy", "./labels_train_2.npy", "./labels_train_4.npy"]
+TRIMMED_VIDEO_TRAIN_PF = ["./videos_train_0.npy", "./videos_train_1.npy", "./videos_train_2.npy", "./videos_train_4.npy"]
 
 EPOCH = 30
 BATCHSIZE = 1
@@ -37,8 +37,16 @@ VIDEOS_MAX_BATCH = 30
 
 """ Load Data """
 def load() :
-    videos = np.load(TRIMMED_VIDEO_TRAIN_PF) / 255.
-    labels = np.load(TRIMMED_LABEL_TRAIN_PF)
+    for i in range(len(TRIMMED_VIDEO_TRAIN_PF)) :
+        if i == 0 :
+            videos = np.load(TRIMMED_VIDEO_TRAIN_PF[i])
+            labels = np.load(TRIMMED_LABEL_TRAIN_PF[i])
+
+        else :
+            videos = np.vstack((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
+            labels = np.vstack((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
+
+    videos = videos / 255.
     videos = normalize(videos)
     videos = select_data(videos, VIDEOS_MAX_BATCH)
 
