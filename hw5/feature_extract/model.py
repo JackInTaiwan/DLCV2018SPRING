@@ -28,17 +28,21 @@ class Classifier(nn.Module) :
         self.vgg16 = vgg16.features
 
         # output = (bs, 512, 7, 10)
-        self.fc_1 = nn.Linear(512 * 7 * 10, 110)
+        self.fc_1 = nn.Linear(512 * 7 * 10, 11)
+        self.sig = nn.Sigmoid()
 
 
     def forward(self, x) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
-
+        x = self.sig(x)
         return x
 
-    def avg_pool(self, x) :
-        pass
+
+    def cls(selfs, x) :
+        x = self.fc_1(x)
+        x = self.sig(x)
+        return x
 
 
     def step(self) :

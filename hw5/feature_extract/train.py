@@ -1,10 +1,12 @@
 import os
 import cv2
+import time
 import numpy as np
 import torch as tor
 import torchvision.datasets as datasets
 
 from argparse import ArgumentParser
+from torch.autograd import Variable
 from torch.utils.data import Dataset, DataLoader
 
 try :
@@ -38,8 +40,6 @@ def load() :
     labels = np.load(TRIMMED_LABEL_TRAIN_PF)
     videos = normalize(videos)
 
-    labels = tor.LongTensor(labels)
-
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
 
@@ -60,14 +60,26 @@ def train(batch_gen, model, model_index, x_eval_train) :
     epoch_start = model.epoch
     step_start = model.step
 
+    optim = tor.optim.Adam(model.fc1.parameters(), lr=LR)
+    loss_func = tor.nn.CrossEntropyLoss().cuda()
 
     for epoch in range(epoch_start, epoch_start + EPOCH) :
         print("|Epoch: {:>4} |".format(epoch))
 
         for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
-            print("Process: {}/{}".format(step, int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
-            print (x_batch)
-            print (y_batch)
+            print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
+            time.sleep(10)
+            x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
+            y = Variable(tor.LongTensor(y_batch)).cuda()
+
+            optim.zero_grad()
+            out = model(x)
+            cls = model.cls(out)
+
+            loss = loss_func(cls, y)
+
+            loss.backward()
+            optim.step()
 
 
 
@@ -79,6 +91,7 @@ if __name__ == "__main__" :
     parser.add_argument("-l", action="store", type=int, default=False, help="limitation of data for training")
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
     parser.add_argument("-e", action="store", type=int, help="epoch")
+    parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning reate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
     parser.add_argument("--load", action="store", type=str, help="file path of loaded model")
@@ -87,6 +100,7 @@ if __name__ == "__main__" :
     num_val = parser.parse_args().v
     model_index = parser.parse_args().i
     load_model_fp = parser.parse_args().load
+    cpu = parser.parse_args().cpu
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
     BATCHSIZE = parser.parse_args().bs if parser.parse_args().bs else BATCHSIZE
     EPOCH = parser.parse_args().e if parser.parse_args().e else EPOCH
@@ -104,6 +118,9 @@ if __name__ == "__main__" :
         pass
     else :
         model = Classifier()
+
+    if not cpu :
+        model.cuda()
 
 
     ### Train Data
