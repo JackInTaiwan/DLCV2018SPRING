@@ -8,6 +8,7 @@ from reader import getVideoList, readShortVideo
 
 
 def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit) :
+    batch_max = 1000
     l = getVideoList(labels_fp)
     videos_output, labels_output = [], []
 
@@ -15,6 +16,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit) :
 
     for i in range(data_num):
         print ("Convert videos into numpy: {}/{} \r".format(i + 1, data_num), end="")
+
         cat = l["Video_category"][i]
         name = l["Video_name"][i]
         label = l["Action_labels"][i]
@@ -23,9 +25,17 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit) :
         videos_output.append(data)
         labels_output.append(int(label))
 
-    videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-    np.save(os.path.join(save_fp, "videos_{}.npy").format(mode), videos_output)
-    np.save(os.path.join(save_fp, "labels_{}.npy").format(mode), labels_output)
+        if i % batch_max == 0 and i != 0 :
+            videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
+            np.save(os.path.join(save_fp, "videos_{}_{}.npy").format(mode), videos_output, i//batch_max)
+            np.save(os.path.join(save_fp, "labels_{}_{}.npy").format(mode), labels_output, i//batch_max)
+            videos_output = []
+            labels_output = []
+
+    if i % batch_max != 0 and i != 0 :
+        videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
+        np.save(os.path.join(save_fp, "videos_{}_{}.npy").format(mode), videos_output, i // batch_max)
+        np.save(os.path.join(save_fp, "labels_{}_{}.npy").format(mode), labels_output, i // batch_max)
 
     print ("\nDone !")
 
