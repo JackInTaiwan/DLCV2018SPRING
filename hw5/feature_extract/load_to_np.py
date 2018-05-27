@@ -27,15 +27,15 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit) :
 
         if i % batch_max == 0 and i != 0 :
             videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-            np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, videos_output, i//batch_max)))
-            np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, labels_output, i//batch_max)))
+            np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, videos_output, i//batch_max)), videos_output)
+            np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, labels_output, i//batch_max)), labels_output)
             videos_output = []
             labels_output = []
 
     if i % batch_max != 0 and i != 0 :
         videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-        np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, videos_output, i // batch_max)))
-        np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, labels_output, i // batch_max)))
+        np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, videos_output, i // batch_max)), videos_output)
+        np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, labels_output, i // batch_max)), labels_output)
 
     print ("\nDone !")
 
