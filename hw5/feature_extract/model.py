@@ -39,7 +39,7 @@ class Classifier(nn.Module) :
         return x
 
 
-    def cls(selfs, x) :
+    def cls(self, x) :
         x = self.fc_1(x)
         x = self.sig(x)
         return x
