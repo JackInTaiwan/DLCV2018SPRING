@@ -35,11 +35,11 @@ LR = 0.0001
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 VIDEOS_MAX_BATCH = 30
-CAL_ACC_PERIOD = 100  # steps
+CAL_ACC_PERIOD = 300  # steps
 
 
 """ Load Data """
-def load(limit) :
+def load(limit, val_limit) :
     for i in range(len(TRIMMED_VIDEO_TRAIN_FP)) :
         print (i)
         if i == 0 :
@@ -64,8 +64,12 @@ def load(limit) :
     #videos = normalize(videos)
     #videos = select_data(videos, VIDEOS_MAX_BATCH)
 
-    videos_eval = videos[:EVAL_TRAIN_SIZE][:]
-    labels_eval = labels[:EVAL_TRAIN_SIZE][:]
+    if val_limit :
+        videos_eval = videos[:val_limit][:]
+        labels_eval = labels[:val_limit][:]
+    else :
+        videos_eval = videos[:EVAL_TRAIN_SIZE][:]
+        labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
     videos_test = normalize(np.load(TRIMMED_VIDEO_VALID_FP) / 255.)
     videos_test = select_data(videos_test, VIDEOS_MAX_BATCH)
@@ -132,7 +136,7 @@ if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-i", action="store", type=int, required=True, help="model index")
     parser.add_argument("-l", action="store", type=int, default=None, help="limitation of data for training")
-    parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
+    parser.add_argument("-v", action="store", type=int, default=None, help="amount of validation data")
     parser.add_argument("-e", action="store", type=int, help="epoch")
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning reate")
@@ -140,7 +144,7 @@ if __name__ == "__main__" :
     parser.add_argument("--load", action="store", type=str, help="file path of loaded model")
 
     limit = parser.parse_args().l
-    num_val = parser.parse_args().v
+    valid_limit = parser.parse_args().v
     model_index = parser.parse_args().i
     load_model_fp = parser.parse_args().load
     cpu = parser.parse_args().cpu
@@ -152,7 +156,7 @@ if __name__ == "__main__" :
 
     ### Data load
     console("Loading Data")
-    batch_gen, videos_eval, labels_eval, videos_test, labels_test = load(limit)
+    batch_gen, videos_eval, labels_eval, videos_test, labels_test = load(limit, valid_limit)
 
 
     ### Load Model
