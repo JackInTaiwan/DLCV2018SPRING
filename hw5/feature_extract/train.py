@@ -85,6 +85,7 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
     step_start = model.step
 
     optim = tor.optim.Adam(model.fc_1.parameters(), lr=LR)
+    optim_vgg = tor.optim.Adam(model.vgg16.parameters(), lr=LR)
     loss_func = tor.nn.CrossEntropyLoss().cuda()
 
     for epoch in range(epoch_start, epoch_start + EPOCH) :
@@ -96,6 +97,7 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
             y = Variable(tor.LongTensor(y_batch)).cuda()
 
             optim.zero_grad()
+            optim_vgg.zero_grad()
             out = model(x)
             out = out.mean(dim=0).unsqueeze(0)
             cls = model.cls(out)
