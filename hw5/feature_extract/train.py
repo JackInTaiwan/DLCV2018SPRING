@@ -39,13 +39,8 @@ CAL_ACC_PERIOD = 300  # steps
 
 
 """ Load Data """
-<<<<<<< HEAD
-def load(limit) :
-    for i in range(1) :
-=======
 def load(limit, val_limit) :
-    for i in range(len(TRIMMED_VIDEO_TRAIN_FP)) :
->>>>>>> d4e32c12a3c3d4addb2b32f3b02cdd9623c63360
+    for i in range(1) :
         print (i)
         if i == 0 :
             videos = np.load(TRIMMED_VIDEO_TRAIN_FP[i])
