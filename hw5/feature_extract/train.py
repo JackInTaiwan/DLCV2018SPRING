@@ -67,7 +67,7 @@ def load(limit) :
     videos_eval = videos[:EVAL_TRAIN_SIZE][:]
     labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
-    videos_test = np.load(TRIMMED_VIDEO_VALID_FP)
+    videos_test = normalize(np.load(TRIMMED_VIDEO_VALID_FP) / 255.)
     labels_test = np.load(TRIMMED_LABEL_VALID_FP)
 
     global AVAILABLE_SIZE
