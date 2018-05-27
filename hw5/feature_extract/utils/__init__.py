@@ -8,4 +8,5 @@ from .recorder import (
 
 from .train_tools import (
     Batch_generator,
+    accuracy,
 )

@@ -7,5 +7,6 @@ from sklearn.model_selection import ShuffleSplit
 #from model import Classifier
 
 
-x = Variable(tor.FloatTensor(tor.ones((3, 10))))
-print (x.mean(dim=0).unsqueeze(0))
+x = Variable(tor.FloatTensor(np.array([1,2,3])))
+y = tor.max(x, 0)[1]
+print (y.data)

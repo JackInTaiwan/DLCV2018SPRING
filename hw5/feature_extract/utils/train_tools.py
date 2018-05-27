@@ -1,6 +1,8 @@
+import cv2
 import math
 import random
 import numpy as np
+import torch as tor
 
 
 
@@ -32,3 +34,19 @@ class Batch_generator() :
         else :
             self.index = 0
             raise StopIteration
+
+
+
+
+def accuracy(model, data, labels) :
+    correct, total = 0, len(labels)
+
+    for x, label in zip(data, labels) :
+        out = model(x)
+        out = out.mean(dim=0).unsqueeze(0)
+        cls = model.cls(out)
+        y = tor.max(cls, 0)[1]
+        if int(y.data) == label :
+            correct += 1
+
+    return correct/total

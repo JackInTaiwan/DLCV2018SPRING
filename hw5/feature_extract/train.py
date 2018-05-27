@@ -11,11 +11,11 @@ from torch.utils.data import Dataset, DataLoader
 
 try :
     from .reader import readShortVideo, getVideoList
-    from .utils import normalize, console, Batch_generator
+    from .utils import normalize, console, accuracy, Batch_generator
     from .model import Classifier
 except :
     from reader import  readShortVideo, getVideoList
-    from utils import normalize, console, Batch_generator
+    from utils import normalize, console, accuracy, Batch_generator
     from model import Classifier
 
 
@@ -82,6 +82,7 @@ def train(batch_gen, model, model_index, x_eval_train) :
             loss.backward()
             optim.step()
 
+        #acc = accuracy(model, )
 
 
 
