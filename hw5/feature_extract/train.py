@@ -36,7 +36,7 @@ VIDEOS_MAX_BATCH = 30
 
 
 """ Load Data """
-def load() :
+def load(limit) :
     for i in range(len(TRIMMED_VIDEO_TRAIN_PF)) :
         if i == 0 :
             videos = np.load(TRIMMED_VIDEO_TRAIN_PF[i])
@@ -45,6 +45,10 @@ def load() :
         else :
             videos = np.vstack((videos, np.load(TRIMMED_VIDEO_TRAIN_PF[i])))
             labels = np.vstack((labels, np.load(TRIMMED_LABEL_TRAIN_PF[i])))
+
+    if limit :
+        videos = videos[:limit]
+        labels = labels[:limit]
 
     videos = videos / 255.
     videos = normalize(videos)
@@ -94,8 +98,9 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
             loss.backward()
             optim.step()
 
-        acc = accuracy(model, x_eval_train, y_eval_train)
-        print ("|Acc: {}".format(round(acc, 5)))
+            if step % 20 == 0 :
+                acc = accuracy(model, x_eval_train, y_eval_train)
+                print ("|Acc: {}".format(round(acc, 5)))
 
 
 
@@ -103,7 +108,7 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-i", action="store", type=int, required=True, help="model index")
-    parser.add_argument("-l", action="store", type=int, default=False, help="limitation of data for training")
+    parser.add_argument("-l", action="store", type=int, default=None, help="limitation of data for training")
     parser.add_argument("-v", action="store", type=int, default=False, help="amount of validation data")
     parser.add_argument("-e", action="store", type=int, help="epoch")
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
@@ -124,7 +129,7 @@ if __name__ == "__main__" :
 
     ### Data load
     console("Loading Data")
-    batch_gen, videos_eval, labels_eval = load()
+    batch_gen, videos_eval, labels_eval = load(limit)
 
 
     ### Load Model
