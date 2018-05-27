@@ -60,7 +60,7 @@ def train(batch_gen, model, model_index, x_eval_train) :
     epoch_start = model.epoch
     step_start = model.step
 
-    optim = tor.optim.Adam(model.fc1.parameters(), lr=LR)
+    optim = tor.optim.Adam(model.fc_1.parameters(), lr=LR)
     loss_func = tor.nn.CrossEntropyLoss().cuda()
 
     for epoch in range(epoch_start, epoch_start + EPOCH) :
