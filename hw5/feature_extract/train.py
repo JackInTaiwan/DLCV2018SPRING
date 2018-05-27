@@ -72,8 +72,7 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
         print("|Epoch: {:>4} |".format(epoch))
 
         for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
-            #print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
-            print (x_batch.shape)
+            print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
             x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
             y = Variable(tor.LongTensor(y_batch)).cuda()
 
@@ -81,9 +80,9 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train) :
             out = model(x)
             out = out.mean(dim=0).unsqueeze(0)
             cls = model.cls(out)
-            #print (cls)
+            print (cls)
             loss = loss_func(cls, y)
-
+            print ("|Loss: {}".format(loss.data.cpu().numpy()))
             loss.backward()
             optim.step()
 
