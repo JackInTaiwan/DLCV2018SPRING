@@ -68,7 +68,7 @@ def train(batch_gen, model, model_index, x_eval_train) :
 
         for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
             print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
-            time.sleep(10)
+
             x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
             y = Variable(tor.LongTensor(y_batch)).cuda()
 
