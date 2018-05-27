@@ -76,7 +76,8 @@ def train(batch_gen, model, model_index, x_eval_train) :
             out = model(x)
             out = out.mean(dim=0)
             cls = model.cls(out)
-
+            print (cls)
+            print (y)
             loss = loss_func(cls, y)
 
             loss.backward()
