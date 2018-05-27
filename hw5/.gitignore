@@ -1,6 +1,6 @@
 ### Dir
 HW5_data/
-
+__pycache__/
 
 
 ### Files
@@ -15,3 +15,4 @@ HW5_data/
 *.jpg
 *.json
 *.npy
+*.swp
