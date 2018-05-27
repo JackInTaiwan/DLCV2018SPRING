@@ -22,8 +22,8 @@ except :
 
 
 """ Parameters """
-TRIMMED_LABEL_TRAIN_PF = "./labels_train.npy"
-TRIMMED_VIDEO_TRAIN_PF = "./videos_train.npy"
+TRIMMED_LABEL_TRAIN_PF = "./labels_train_0.npy"
+TRIMMED_VIDEO_TRAIN_PF = "./videos_train_0.npy"
 
 EPOCH = 30
 BATCHSIZE = 1
