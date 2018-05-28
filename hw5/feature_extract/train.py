@@ -178,7 +178,7 @@ def train(model, model_index, limit, valid_limit) :
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
             if epoch % SAVE_MODEL_PERIOD == 0:
-                save_model_fp = os.path.join(MODEL_FP, "model_{}".format(model_index))
+                save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
                 model.save(save_model_fp)
 
         model.run_epoch()
