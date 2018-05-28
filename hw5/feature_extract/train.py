@@ -39,34 +39,21 @@ CAL_ACC_PERIOD = 300  # steps
 
 
 """ Load Data """
-def load(limit, val_limit) :
-    for i in range(len(TRIMMED_VIDEO_TRAIN_FP)) :
-        print (i)
-        if i == 0 :
-            videos = np.load(TRIMMED_VIDEO_TRAIN_FP[i])
-            labels = np.load(TRIMMED_LABEL_TRAIN_FP[i])
-            videos = videos / 255.
-            videos = normalize(videos)
-            videos = select_data(videos, VIDEOS_MAX_BATCH)
-
-        else :
-            videos_new = np.load(TRIMMED_VIDEO_TRAIN_FP[i])  / 255.
-            videos_new = normalize(videos_new)
-            videos_new = select_data(videos_new, VIDEOS_MAX_BATCH)
-            videos = np.concatenate((videos, videos_new))
-            labels = np.concatenate((labels, np.load(TRIMMED_LABEL_TRAIN_FP[i])))
+def load(videos_fp, labels_fp, limit, val_limit) :
+    videos = np.load(videos_fp)
+    labels = np.load(labels_fp)
+    videos = videos / 255.
+    videos = normalize(videos)
+    videos = select_data(videos, VIDEOS_MAX_BATCH)
 
     if limit :
         videos = videos[:limit]
         labels = labels[:limit]
 
-    #videos = videos / 255.
-    #videos = normalize(videos)
-    #videos = select_data(videos, VIDEOS_MAX_BATCH)
-
     if val_limit :
         videos_eval = videos[:val_limit][:]
         labels_eval = labels[:val_limit][:]
+
     else :
         videos_eval = videos[:EVAL_TRAIN_SIZE][:]
         labels_eval = labels[:EVAL_TRAIN_SIZE][:]
@@ -91,7 +78,7 @@ def load(limit, val_limit) :
 
 
 """ Training """
-def train(batch_gen, model, model_index, x_eval_train, y_eval_train, x_eval_test, y_eval_test) :
+def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
     step_start = model.step
 
@@ -105,37 +92,43 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train, x_eval_test
     for epoch in range(epoch_start, epoch_start + EPOCH) :
         print("|Epoch: {:>4} |".format(epoch))
 
-        for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
-            print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
-            x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
-            y = Variable(tor.LongTensor(y_batch)).cuda()
+        for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
+            batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
-            optim.zero_grad()
-            optim_vgg.zero_grad()
+            for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
+                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
+                x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
+                y = Variable(tor.LongTensor(y_batch)).cuda()
 
-            out = model(x)
-            out = out.mean(dim=0).unsqueeze(0)
-            pred = model.pred(out)
+                optim.zero_grad()
+                optim_vgg.zero_grad()
 
-            loss = loss_func(pred, y)
-            loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
-            print ("|Loss: {}".format(loss.data.cpu().numpy()))
-            loss.backward()
+                out = model(x)
+                out = out.mean(dim=0).unsqueeze(0)
+                pred = model.pred(out)
 
-            optim.step()
-            optim_vgg.step()
+                loss = loss_func(pred, y)
+                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                #print ("|Loss: {}".format(loss.data.cpu().numpy()))
+                loss.backward()
 
-            if step % 20 == 0 :
-                print (loss_total.mean())
-                loss_total = np.array([])
+                optim.step()
+                optim_vgg.step()
 
-            if step % CAL_ACC_PERIOD == 0 :
-                acc_train = accuracy(model, x_eval_train, y_eval_train)
-                acc_test = accuracy(model, x_eval_test, y_eval_test)
+                model.step()
 
-                print ("|Acc on train data: {}".format(round(acc_train, 5)))
-                print ("|Acc on test data: {}".format(round(acc_test, 5)))
+                if step % 20 == 0 :
+                    print (loss_total.mean())
+                    loss_total = np.array([])
 
+                if step % CAL_ACC_PERIOD == 0 :
+                    acc_train = accuracy(model, x_eval_train, y_eval_train)
+                    acc_test = accuracy(model, x_eval_test, y_eval_test)
+
+                    print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                    print ("|Acc on test data: {}".format(round(acc_test, 5)))
+
+        model.epoch()
 
 
 
@@ -161,12 +154,6 @@ if __name__ == "__main__" :
     EPOCH = parser.parse_args().e if parser.parse_args().e else EPOCH
 
 
-
-    ### Data load
-    console("Loading Data")
-    batch_gen, videos_eval, labels_eval, videos_test, labels_test = load(limit, valid_limit)
-
-
     ### Load Model
     console("Loading Model")
     if load_model_fp :
@@ -180,4 +167,4 @@ if __name__ == "__main__" :
 
     ### Train Data
     console("Training Data")
-    train(batch_gen, model, model_index, videos_eval, labels_eval, videos_test, labels_test)
+    train(model, model_index, limit, valid_limit)
