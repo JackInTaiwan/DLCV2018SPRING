@@ -87,7 +87,7 @@ def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
     step_start = model.step
 
-    optim = tor.optim.Adam(model.fc_1.parameters(), lr=LR)
+    optim = tor.optim.Adam([model.fc_1.parameters(), model.vgg16_fc_1.parameters()], lr=LR)
     #optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
     optim_vgg = tor.optim.Adam(model.vgg16.parameters(), lr=LR)
     loss_func = tor.nn.CrossEntropyLoss().cuda()
