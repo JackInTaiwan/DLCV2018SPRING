@@ -5,6 +5,7 @@ from .load_data import (
 
 from .recorder import (
     console,
+    record,
 )
 
 from .train_tools import (
