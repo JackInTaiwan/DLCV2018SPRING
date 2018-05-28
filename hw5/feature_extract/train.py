@@ -158,7 +158,6 @@ def train(model, model_index, limit, valid_limit) :
                 loss.backward()
                 optim.step()
                 #optim_vgg.step()
-                model.run_step()
 
                 if step % SHOW_LOSS_PERIOD == 0 :
                     print("|Loss: {}".format(loss_total.mean()))
@@ -175,6 +174,8 @@ def train(model, model_index, limit, valid_limit) :
 
                 elif (step - 1) % SAVE_JSON_PERIOD == 0 :
                     save_record(model_index, epoch, optim, loss, None, None)
+
+                model.run_step()
 
         model.run_epoch()
 
