@@ -28,19 +28,25 @@ class Classifier(nn.Module) :
         self.vgg16 = vgg16.features
 
         # output = (bs, 512, 7, 10)
-        self.fc_1 = nn.Linear(512 * 7 * 10, 11)
+        fc_channels = [512 * 7 * 10, 2 ** 10, 11]
+
+        self.fc_1 = nn.Linear(fc_channels[0], fc_channels[1])
+        self.relu = nn.ReLU()
+        self.fc_2 = nn.Linear(fc_channels[1], fc_channels[2])
         self.sig = nn.Sigmoid()
 
 
     def forward(self, x) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
-        x = self.sig(x)
+        x = self.relu(x)
         return x
 
 
     def cls(self, x) :
         x = self.fc_1(x)
+        x = self.relu
+        x = self.fc_2(x)
         x = self.sig(x)
         return x
 
