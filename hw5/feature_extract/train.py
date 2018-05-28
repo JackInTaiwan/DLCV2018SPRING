@@ -172,7 +172,7 @@ def train(model, model_index, limit, valid_limit) :
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
 
-                    save_record(model_index, epoch, optim, None, acc_train, acc_test)
+                    save_record(model_index, step, optim, None, acc_train, acc_test)
 
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
