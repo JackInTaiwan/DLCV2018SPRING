@@ -87,9 +87,10 @@ def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
     step_start = model.step
 
-    optim = tor.optim.Adam([model.fc_1.parameters(), model.vgg16_fc_1.parameters()], lr=LR)
+    #optim = tor.optim.Adam([model.fc_1.parameters(), model.vgg16_fc_1.parameters()], lr=LR)
     #optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
-    optim_vgg = tor.optim.Adam(model.vgg16.parameters(), lr=LR)
+    optim = tor.optim.Adam(model.parameters(), lr=LR)
+    #optim_vgg = tor.optim.Adam(model.vgg16.parameters(), lr=LR)
     loss_func = tor.nn.CrossEntropyLoss().cuda()
 
     loss_total = np.array([])
@@ -106,7 +107,7 @@ def train(model, model_index, limit, valid_limit) :
                 y = Variable(tor.LongTensor(y_batch)).cuda()
 
                 optim.zero_grad()
-                optim_vgg.zero_grad()
+                #optim_vgg.zero_grad()
 
                 out = model(x)
                 out = out.mean(dim=0).unsqueeze(0)
@@ -117,7 +118,7 @@ def train(model, model_index, limit, valid_limit) :
 
                 loss.backward()
                 optim.step()
-                optim_vgg.step()
+                #optim_vgg.step()
                 model.run_step()
 
                 if step % SHOW_LOSS_PERIOD == 0 :
