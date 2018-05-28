@@ -43,9 +43,9 @@ class Classifier(nn.Module) :
         return x
 
 
-    def cls(self, x) :
+    def pred(self, x) :
         x = self.fc_1(x)
-        x = self.relu
+        x = self.relu(x)
         x = self.fc_2(x)
         x = self.sig(x)
         return x
