@@ -35,7 +35,7 @@ MODEL_FP = "./models/"
 CAL_ACC_PERIOD = 300    # steps
 SHOW_LOSS_PERIOD = 30   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
-SAVE_JSON_PERIOD = 100  # steps
+SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
@@ -101,6 +101,7 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
         record_data["lr_init"] = float(optim.param_groups[0]["lr"])
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["record_period"] = SAVE_JSON_PERIOD
+        print ("use")
 
     else:
         record_data["model_name"] = model_name
@@ -158,6 +159,7 @@ def train(model, model_index, limit, valid_limit) :
                 loss.backward()
                 optim.step()
                 #optim_vgg.step()
+                model.run_step()
 
                 if step % SHOW_LOSS_PERIOD == 0 :
                     #print("|Loss: {}".format(loss_total.mean()))
@@ -175,7 +177,7 @@ def train(model, model_index, limit, valid_limit) :
                 elif (step - 1) % SAVE_JSON_PERIOD == 0 :
                     save_record(model_index, epoch, optim, loss, None, None)
 
-                model.run_step()
+
 
         model.run_epoch()
 
