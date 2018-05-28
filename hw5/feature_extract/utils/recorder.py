@@ -25,6 +25,7 @@ def record(record_fp, datum) :
             break
 
     else :
+        print ("use new")
         new_datum = dict()
         new_datum["model_name"] = model_name
         new_datum["batch_size"] = datum["batch_size"]

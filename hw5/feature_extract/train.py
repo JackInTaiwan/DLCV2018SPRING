@@ -153,14 +153,14 @@ def train(model, model_index, limit, valid_limit) :
                 pred = model.pred(out)
 
                 loss = loss_func(pred, y)
-                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
                 loss.backward()
                 optim.step()
                 #optim_vgg.step()
 
                 if step % SHOW_LOSS_PERIOD == 0 :
-                    print("|Loss: {}".format(loss_total.mean()))
+                    #print("|Loss: {}".format(loss_total.mean()))
                     loss_total = np.array([])
 
                 if step % CAL_ACC_PERIOD == 0 :
