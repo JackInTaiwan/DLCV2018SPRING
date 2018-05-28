@@ -47,8 +47,8 @@ def accuracy(model, data, labels) :
         x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
-        cls = model.cls(out)
-        y = tor.max(cls, 1)[1]
+        pred = model.pred(out)
+        y = tor.max(pred, 1)[1]
         if int(y[0].data) == label :
             correct += 1
 
