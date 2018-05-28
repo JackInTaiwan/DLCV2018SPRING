@@ -112,14 +112,14 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train, x_eval_test
             optim_vgg.zero_grad()
             out = model(x)
             out = out.mean(dim=0).unsqueeze(0)
-            cls = model.cls(out)
-            loss = loss_func(cls, y)
+            pred = model.pred(out)
+            loss = loss_func(pred, y)
             print ("|Loss: {}".format(loss.data.cpu().numpy()))
             loss.backward()
             optim.step()
 
             if step % 20 == 0 :
-                print (cls)
+                print (pred)
 
             if step % CAL_ACC_PERIOD == 0 :
                 acc_train = accuracy(model, x_eval_train, y_eval_train)
