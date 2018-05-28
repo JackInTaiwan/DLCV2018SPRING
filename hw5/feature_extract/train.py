@@ -96,7 +96,7 @@ def train(model, model_index, limit, valid_limit) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
             for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
-                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
+                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
                 x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
                 y = Variable(tor.LongTensor(y_batch)).cuda()
 
