@@ -15,7 +15,6 @@ def record(record_fp, datum) :
 
     for item in data :
         if item["model_name"] == model_name :
-            print (datum)
             item["lr"].append(datum["lr"])
             if datum["loss"] != None :
                 item["loss"].append(datum["loss"])
@@ -26,7 +25,6 @@ def record(record_fp, datum) :
             break
 
     else :
-        print ("use new")
         new_datum = dict()
         new_datum["model_name"] = model_name
         new_datum["batch_size"] = datum["batch_size"]
