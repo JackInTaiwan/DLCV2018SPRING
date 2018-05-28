@@ -51,11 +51,11 @@ class Classifier(nn.Module) :
         return x
 
 
-    def step(self) :
+    def run_step(self) :
         self.step += 1
 
 
-    def epoch(self) :
+    def run_epoch(self) :
         self.epoch += 1
 
 
