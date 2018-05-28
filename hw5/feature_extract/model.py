@@ -25,21 +25,25 @@ class Classifier(nn.Module) :
         vgg16 = torchvision.models.vgg16(pretrained=True)
         vgg16.eval()
 
+        vgg16_fc_channels = [512 * 7 * 10, 2 ** 10]
         self.vgg16 = vgg16.features
+        self.vgg16_fc_1 = nn.Linear(512 * 7 * 10, 2 ** 10)
 
         # output = (bs, 512, 7, 10)
-        fc_channels = [512 * 7 * 10, 2 ** 10, 11]
+        fc_channels = [vgg16_fc_channels[-1], 2 ** 9, 11]
 
         self.fc_1 = nn.Linear(fc_channels[0], fc_channels[1])
-        self.relu = nn.ReLU()
         self.fc_2 = nn.Linear(fc_channels[1], fc_channels[2])
+
+        self.relu = nn.ReLU()
         self.sig = nn.Sigmoid()
 
 
     def forward(self, x) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
-        x = self.relu(x)
+        x = self.vgg16_fc_1(x)
+        x = self.sig(x)
         return x
 
 

@@ -28,14 +28,19 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
-EPOCH = 30
-BATCHSIZE = 1
-LR = 0.0001
+CAL_ACC_PERIOD = 300    # steps
+SHOW_LOSS_PERIOD = 30   # steps
+SAVE_MODEL_PERIOD = 1   # epochs
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 VIDEOS_MAX_BATCH = 30
-CAL_ACC_PERIOD = 300  # steps
+
+EPOCH = 30
+BATCHSIZE = 1
+LR = 0.0001
+
+
 
 
 """ Load Data """
@@ -96,7 +101,7 @@ def train(model, model_index, limit, valid_limit) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
             for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
-                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)))
+                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
                 x = Variable(tor.FloatTensor(x_batch[0])).permute(0, 3, 1, 2).cuda()
                 y = Variable(tor.LongTensor(y_batch)).cuda()
 
@@ -109,16 +114,14 @@ def train(model, model_index, limit, valid_limit) :
 
                 loss = loss_func(pred, y)
                 loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
-                #print ("|Loss: {}".format(loss.data.cpu().numpy()))
-                loss.backward()
 
+                loss.backward()
                 optim.step()
                 optim_vgg.step()
-
                 model.run_step()
 
-                if step % 20 == 0 :
-                    print (loss_total.mean())
+                if step % SHOW_LOSS_PERIOD == 0 :
+                    print("|Loss: {}".format(loss_total.mean()))
                     loss_total = np.array([])
 
                 if step % CAL_ACC_PERIOD == 0 :
@@ -129,6 +132,10 @@ def train(model, model_index, limit, valid_limit) :
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
         model.run_epoch()
+
+        if epoch % SAVE_MODEL_PERIOD == 0 :
+            save_model_fp = "model_{}".format(model_index)
+            model.save(save_model_fp)
 
 
 
