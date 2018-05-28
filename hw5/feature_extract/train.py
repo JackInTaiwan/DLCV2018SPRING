@@ -153,29 +153,29 @@ def train(model, model_index, limit, valid_limit) :
                 pred = model.pred(out)
 
                 loss = loss_func(pred, y)
-                #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
                 loss.backward()
                 optim.step()
                 #optim_vgg.step()
                 model.run_step()
 
+                if step == 1 :
+                    save_record(model_index, step, optim, None, None, None)
+
                 if step % SHOW_LOSS_PERIOD == 0 :
                     print("|Loss: {}".format(loss_total.mean()))
-                    #loss_total = np.array([])
+                    save_record(model_index, step, optim, loss_total.mean(), None, None)
+                    loss_total = np.array([])
 
                 if step % CAL_ACC_PERIOD == 0 :
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
 
-                    save_record(model_index, epoch, optim, loss, acc_train, acc_test)
+                    save_record(model_index, epoch, optim, None, acc_train, acc_test)
 
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
-
-                elif (step - 1) % SAVE_JSON_PERIOD == 0 :
-                    save_record(model_index, step, optim, loss, None, None)
-
 
 
         model.run_epoch()
