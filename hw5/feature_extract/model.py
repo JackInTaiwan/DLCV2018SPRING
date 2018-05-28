@@ -43,7 +43,7 @@ class Classifier(nn.Module) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
         x = self.vgg16_fc_1(x)
-        x = self.sig(x)
+        #x = self.sig(x)
         return x
 
 
