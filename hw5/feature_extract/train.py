@@ -100,7 +100,7 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
         record_data["lr_init"] = float(optim.param_groups[0]["lr"])
         record_data["lr"] = float(optim.param_groups[0]["lr"])
-        record_data["record_epoch"] = SAVE_JSON_PERIOD
+        record_data["record_period"] = SAVE_JSON_PERIOD
 
     else:
         record_data["model_name"] = model_name
