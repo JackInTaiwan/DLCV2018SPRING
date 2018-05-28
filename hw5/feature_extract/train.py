@@ -94,7 +94,7 @@ def save_record(model_index, epoch, optim, loss, acc_train, acc_test):
 
     model_name = "model_{}".format(model_index)
 
-    if epoch == 0:
+    if epoch == 1:
         record_data["model_name"] = model_name
         record_data["batch_size"] = BATCHSIZE
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
