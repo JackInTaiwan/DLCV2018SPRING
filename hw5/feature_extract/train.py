@@ -115,7 +115,7 @@ def train(model, model_index, limit, valid_limit) :
                 optim.step()
                 optim_vgg.step()
 
-                model.step()
+                model.run_step()
 
                 if step % 20 == 0 :
                     print (loss_total.mean())
@@ -128,7 +128,7 @@ def train(model, model_index, limit, valid_limit) :
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
-        model.epoch()
+        model.run_epoch()
 
 
 
