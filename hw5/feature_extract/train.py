@@ -1,6 +1,7 @@
 import os
 import cv2
 import time
+import threading
 import numpy as np
 import torch as tor
 import torchvision.datasets as datasets
@@ -11,11 +12,11 @@ from torch.utils.data import Dataset, DataLoader
 
 try :
     from .reader import readShortVideo, getVideoList
-    from .utils import normalize, select_data, console, accuracy, Batch_generator
+    from .utils import normalize, select_data, console, accuracy, record, Batch_generator
     from .model import Classifier
 except :
     from reader import  readShortVideo, getVideoList
-    from utils import normalize, select_data, console, accuracy, Batch_generator
+    from utils import normalize, select_data, console, accuracy, record, Batch_generator
     from model import Classifier
 
 
@@ -28,9 +29,12 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
+RECORD_FP = "./record/"
+
 CAL_ACC_PERIOD = 300    # steps
 SHOW_LOSS_PERIOD = 30   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
+SAVE_JSON_PERIOD = 100  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
@@ -39,6 +43,7 @@ VIDEOS_MAX_BATCH = 30
 EPOCH = 30
 BATCHSIZE = 1
 LR = 0.0001
+LR_STEPSIZE, LR_GAMMA = None, None
 
 
 
@@ -78,6 +83,39 @@ def load(videos_fp, labels_fp, limit, val_limit) :
     )
 
     return batch_gen, videos_eval, labels_eval, videos_test, labels_test
+
+
+
+
+""" Save record """
+def save_record(model_index, epoch, optim, loss, acc_train, acc_test):
+    record_data = dict()
+
+    model_name = "model_{}".format(model_index)
+
+    if epoch == 0:
+        record_data["model_name"] = model_name
+        record_data["batch_size"] = BATCHSIZE
+        record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
+        record_data["lr_init"] = float(optim.param_groups[0]["lr"])
+        record_data["lr"] = float(optim.param_groups[0]["lr"])
+        record_data["record_epoch"] = SAVE_JSON_PERIOD
+
+    else:
+        record_data["model_name"] = model_name
+        record_data["lr"] = float(optim.param_groups[0]["lr"])
+        record_data["loss"] = round(float(loss.data), 6)
+        record_data["acc_train"] = acc_train
+        record_data["acc_test"] = acc_test
+
+    json_fp = os.path.join(RECORD_FP, "model_{}.json".format(model_index))
+
+    if not os.path.exists(json_fp) :
+        with open(json_fp, "w") as f :
+            f.write('"[]"')
+
+    thread_record = threading.Thread(target=record, args=[json_fp, record_data])
+    thread_record.start()
 
 
 
@@ -129,8 +167,13 @@ def train(model, model_index, limit, valid_limit) :
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
 
+                    save_record(model_index, epoch, optim, loss, None, None)
+
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
+
+                elif step % SAVE_JSON_PERIOD == 0 :
+                    save_record(model_index, epoch, optim, loss, None, None)
 
         model.run_epoch()
 
