@@ -118,7 +118,7 @@ def train(batch_gen, model, model_index, x_eval_train, y_eval_train, x_eval_test
             pred = model.pred(out)
 
             loss = loss_func(pred, y)
-            loss_total = np.concatenate((loss_total, [loss]))
+            loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
             print ("|Loss: {}".format(loss.data.cpu().numpy()))
             loss.backward()
 
