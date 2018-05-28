@@ -89,12 +89,12 @@ def load(videos_fp, labels_fp, limit, val_limit) :
 
 
 """ Save record """
-def save_record(model_index, epoch, optim, loss, acc_train, acc_test):
+def save_record(model_index, step, optim, loss, acc_train, acc_test):
     record_data = dict()
 
     model_name = "model_{}".format(model_index)
 
-    if epoch == 1:
+    if step == 1:
         record_data["model_name"] = model_name
         record_data["batch_size"] = BATCHSIZE
         record_data["decay"] = str((LR_STEPSIZE, LR_GAMMA))
@@ -168,12 +168,12 @@ def train(model, model_index, limit, valid_limit) :
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
 
-                    save_record(model_index, epoch, optim, loss, None, None)
+                    save_record(model_index, epoch, optim, loss, acc_train, acc_test)
 
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
-                elif step % SAVE_JSON_PERIOD == 0 :
+                elif (step - 1) % SAVE_JSON_PERIOD == 0 :
                     save_record(model_index, epoch, optim, loss, None, None)
 
         model.run_epoch()
