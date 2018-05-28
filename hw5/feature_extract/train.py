@@ -101,7 +101,6 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
         record_data["lr_init"] = float(optim.param_groups[0]["lr"])
         record_data["lr"] = float(optim.param_groups[0]["lr"])
         record_data["record_period"] = SAVE_JSON_PERIOD
-        print ("use")
 
     else:
         record_data["model_name"] = model_name
@@ -175,7 +174,7 @@ def train(model, model_index, limit, valid_limit) :
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
                 elif (step - 1) % SAVE_JSON_PERIOD == 0 :
-                    save_record(model_index, epoch, optim, loss, None, None)
+                    save_record(model_index, step, optim, loss, None, None)
 
 
 
