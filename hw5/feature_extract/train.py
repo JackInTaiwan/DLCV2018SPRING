@@ -30,6 +30,7 @@ TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
 RECORD_FP = "./record/"
+MODEL_FP = "./models/"
 
 CAL_ACC_PERIOD = 300    # steps
 SHOW_LOSS_PERIOD = 30   # steps
@@ -178,7 +179,7 @@ def train(model, model_index, limit, valid_limit) :
         model.run_epoch()
 
         if epoch % SAVE_MODEL_PERIOD == 0 :
-            save_model_fp = "model_{}".format(model_index)
+            save_model_fp = os.path.join(MODEL_FP, "model_{}".format(model_index))
             model.save(save_model_fp)
 
 

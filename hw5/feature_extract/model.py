@@ -41,9 +41,9 @@ class Classifier(nn.Module) :
 
     def forward(self, x) :
         x = self.vgg16(x)
-        x = x.view(x.size(0), -1)
-        x = self.vgg16_fc_1(x)
-        return x
+        out = x.view(x.size(0), -1)
+        out = self.vgg16_fc_1(out)
+        return out
 
 
     def pred(self, x) :
