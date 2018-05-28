@@ -105,7 +105,7 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
     else:
         record_data["model_name"] = model_name
         record_data["lr"] = float(optim.param_groups[0]["lr"])
-        record_data["loss"] = round(loss, 6)
+        record_data["loss"] = round(loss, 6) if loss != None else None
         record_data["acc_train"] = acc_train
         record_data["acc_test"] = acc_test
 
