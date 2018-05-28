@@ -27,7 +27,7 @@ class Classifier(nn.Module) :
 
         vgg16_fc_channels = [512 * 7 * 10, 2 ** 10]
         self.vgg16 = vgg16.features
-        self.vgg16_fc_1 = nn.Linear(512 * 7 * 10, 2 ** 10)
+        self.vgg16_fc_1 = nn.Linear(vgg16_fc_channels[0], vgg16_fc_channels[1])
 
         # output = (bs, 512, 7, 10)
         fc_channels = [vgg16_fc_channels[-1], 2 ** 9, 11]
