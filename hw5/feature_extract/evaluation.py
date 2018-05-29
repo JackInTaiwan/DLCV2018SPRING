@@ -33,7 +33,7 @@ def evaluation(mode, model_fp, limit) :
 
     correct, total = 0, len(labels)
 
-    for i, x, label in enumerate(zip(videos, labels), 1) :
+    for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
         x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
         out = model(x)
