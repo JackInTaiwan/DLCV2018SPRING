@@ -220,7 +220,7 @@ if __name__ == "__main__" :
     if load_model_fp :
         pass
     else :
-        Model = model_versions[model_version]
+        Model = model_versions[model_version] if model_version == 0 else model_versions[model_version - 1]
         model = Model()
 
     if not cpu :
