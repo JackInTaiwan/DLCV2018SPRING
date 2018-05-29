@@ -22,7 +22,7 @@ def evaluation(mode, model_fp) :
         videos = np.load(VIDEOS_TEST_FP)
         labels = np.load(LABELS_TEST_FP)
 
-        model = tor.load(model_fp)
+        model = tor.load(model_fp).cuda()
 
     videos = normalize(videos / 255.)
     videos = select_data(videos, VIDEOS_MAX_BATCH)
