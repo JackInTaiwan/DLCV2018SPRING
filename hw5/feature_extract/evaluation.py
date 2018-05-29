@@ -33,7 +33,8 @@ def evaluation(mode, model_fp, limit) :
 
     correct, total = 0, len(labels)
 
-    for x, label in zip(videos, labels) :
+    for i, x, label in enumerate(zip(videos, labels), 1) :
+        print ("Process: {}/{}".format(i, total))
         x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
@@ -43,6 +44,8 @@ def evaluation(mode, model_fp, limit) :
             correct += 1
 
     acc = correct / total
+
+    print ("|Acc on {}: {}".format(mode, round(acc, 6)))
 
     return acc
 
