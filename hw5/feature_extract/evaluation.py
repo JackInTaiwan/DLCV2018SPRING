@@ -11,8 +11,8 @@ from train import VIDEOS_MAX_BATCH
 
 
 """ Parameters """
-VIDEOS_TEST_FP = "./videos_test_0.npy"
-LABELS_TEST_FP = "./labels_test_0.npy"
+VIDEOS_TEST_FP = "./videos_valid_0.npy"
+LABELS_TEST_FP = "./labels_valid_0.npy"
 
 
 
@@ -22,7 +22,7 @@ def evaluation(mode, model_fp) :
         videos = np.load(VIDEOS_TEST_FP)
         labels = np.load(LABELS_TEST_FP)
 
-        model = tor.load(model_fp)
+        model = tor.load(model_fp).cuda()
 
     videos = normalize(videos / 255.)
     videos = select_data(videos, VIDEOS_MAX_BATCH)
@@ -48,6 +48,7 @@ def evaluation(mode, model_fp) :
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-m", type=str, required=True, choices=["test", "train"])
+    parser.add_argument("-l", type=int, help="limitation of amount of data")
     parser.add_argument("--model", type=str, required=True)
 
     mode = parser.parse_args().m
