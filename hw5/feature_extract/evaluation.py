@@ -17,19 +17,24 @@ LABELS_TEST_FP = "./labels_valid_0.npy"
 
 
 
-def evaluation(mode, model_fp) :
+def evaluation(mode, model_fp, limit) :
     if mode == "test" :
         videos = np.load(VIDEOS_TEST_FP)
         labels = np.load(LABELS_TEST_FP)
 
-        model = tor.load(model_fp).cuda()
+    if limit :
+        videos = videos[:limit]
+        labels = labels[:limit]
 
     videos = normalize(videos / 255.)
     videos = select_data(videos, VIDEOS_MAX_BATCH)
 
+    model = tor.load(model_fp).cuda()
+
     correct, total = 0, len(labels)
 
-    for x, label in zip(videos, labels) :
+    for i, x, label in enumerate(zip(videos, labels), 1) :
+        print ("Process: {}/{}".format(i, total))
         x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
@@ -40,6 +45,8 @@ def evaluation(mode, model_fp) :
 
     acc = correct / total
 
+    print ("|Acc on {}: {}".format(mode, round(acc, 6)))
+
     return acc
 
 
@@ -48,10 +55,11 @@ def evaluation(mode, model_fp) :
 if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-m", type=str, required=True, choices=["test", "train"])
-    parser.add_argument("-l", type=int, help="limitation of amount of data")
+    parser.add_argument("-l", type=int, default=None, help="limitation of amount of data")
     parser.add_argument("--model", type=str, required=True)
 
     mode = parser.parse_args().m
     model_fp = parser.parse_args().model
+    limit = parser.parse_args().l
 
-    evaluation(mode, model_fp)
+    evaluation(mode, model_fp, limit)
