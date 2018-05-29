@@ -30,20 +30,19 @@ class Classifier(nn.Module) :
         self.vgg16_fc_1 = nn.Linear(vgg16_fc_channels[0], vgg16_fc_channels[1])
 
         # output = (bs, 512, 7, 10)
-        fc_channels = [vgg16_fc_channels[-1], 2 ** 9, 11]
+        fc_channels = [vgg16_fc_channels[-1], 2 ** 11, 11]
 
         self.fc_1 = nn.Linear(fc_channels[0], fc_channels[1])
         self.fc_2 = nn.Linear(fc_channels[1], fc_channels[2])
 
-        self.relu = nn.ReLU()
-        self.sig = nn.Sigmoid()
+        self.relu = nn.ReLU(inplace=True)
+        self.sig = nn.Sigmoid(inplace=True)
 
 
     def forward(self, x) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
         x = self.vgg16_fc_1(x)
-        x = self.sig(x)
         return x
 
 

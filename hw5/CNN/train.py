@@ -14,10 +14,12 @@ try :
     from .reader import readShortVideo, getVideoList
     from .utils import normalize, select_data, console, accuracy, record, Batch_generator
     from .model import Classifier
+    from .model_2 import Classifier as Classifier_2
 except :
     from reader import  readShortVideo, getVideoList
     from utils import normalize, select_data, console, accuracy, record, Batch_generator
-    from model import Classifier
+    from model import Classifier as Classifier
+    from model_2 import Classifier as Classifier_2
 
 
 
@@ -28,6 +30,8 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
+
+model_versions = [Classifier, Classifier_2]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
@@ -198,12 +202,14 @@ if __name__ == "__main__" :
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning reate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
     parser.add_argument("--load", action="store", type=str, help="file path of loaded model")
+    parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
 
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
     model_index = parser.parse_args().i
     load_model_fp = parser.parse_args().load
     cpu = parser.parse_args().cpu
+    model_version = parser.parse_args().version
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
     BATCHSIZE = parser.parse_args().bs if parser.parse_args().bs else BATCHSIZE
     EPOCH = parser.parse_args().e if parser.parse_args().e else EPOCH
@@ -214,7 +220,8 @@ if __name__ == "__main__" :
     if load_model_fp :
         pass
     else :
-        model = Classifier()
+        Model = model_versions[model_version]
+        model = Model()
 
     if not cpu :
         model.cuda()
