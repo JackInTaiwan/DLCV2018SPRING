@@ -62,7 +62,8 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
             seq = [math.floor(data.shape[0] * i / MAX_VIDEO_LEN) for i in range(MAX_VIDEO_LEN)]
             data = data[seq]
             data = tor.Tensor(data).permute(0, 3, 1, 2)
-            for i in range(data) :
+            for i in range(len(data)) :
+                print (data[i])
                 data[i] = norm(data[i])
             data = norm(data).cuda()
             out = model(data)
