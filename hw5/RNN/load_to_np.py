@@ -50,7 +50,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
     norm = Normalize(mean, std)
 
 
-    for i in range(data_num):
+    for batch in range(data_num):
         print ("Convert videos into numpy: {}/{} \r".format(i + 1, data_num), end="")
 
         cat = l["Video_category"][i]
@@ -75,18 +75,18 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         labels_output.append(int(label))
 
 
-        if (i+1) % batch_max == 0 :
+        if (batch+1) % batch_max == 0 :
             videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-            np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, i//batch_max)), videos_output)
-            np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, i//batch_max)), labels_output)
+            np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, batch//batch_max)), videos_output)
+            np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, batch//batch_max)), labels_output)
             videos_output = []
             labels_output = []
 
 
-    if (i+1) % batch_max != 0 :
+    if (batch+1) % batch_max != 0 :
         videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-        np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, (i // batch_max))), videos_output)
-        np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, (i // batch_max))), labels_output)
+        np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, (batch // batch_max))), videos_output)
+        np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, (batch // batch_max))), labels_output)
 
 
     print ("\nDone !")
