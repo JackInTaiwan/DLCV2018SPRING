@@ -51,16 +51,16 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
 
 
     for batch in range(data_num):
-        print ("Convert videos into numpy: {}/{} \r".format(i + 1, data_num), end="")
+        print ("Convert videos into numpy: {}/{} \r".format(batch + 1, data_num), end="")
 
-        cat = l["Video_category"][i]
-        name = l["Video_name"][i]
-        label = l["Action_labels"][i]
+        cat = l["Video_category"][batch]
+        name = l["Video_name"][batch]
+        label = l["Action_labels"][batch]
         data = readShortVideo(videos_fp, cat, name, downsample_factor=12)
 
 
         if len(data) > MAX_VIDEO_LEN :
-            seq = [math.floor(data.shape[0] * i / MAX_VIDEO_LEN) for i in range(MAX_VIDEO_LEN)]
+            seq = [math.floor(data.shape[0] * _i / MAX_VIDEO_LEN) for _i in range(MAX_VIDEO_LEN)]
             data = data[seq]
 
         data = tor.Tensor(data).permute(0, 3, 1, 2) / 255.
