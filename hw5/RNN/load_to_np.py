@@ -70,7 +70,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
             data[i] = norm(data[i])
         data = data.cuda()
         out = model(data)
-        features = out.cpu().numpy()
+        features = out.cpu().data.numpy()
 
         videos_output.append(features)
         labels_output.append(int(label))
