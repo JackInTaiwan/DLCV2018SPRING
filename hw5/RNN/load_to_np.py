@@ -69,8 +69,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         for i in range(len(data)) :
             print (data[i])
             data[i] = norm(data[i])
-        data = norm(data).cuda()
-        print (data)
+        data = data.cuda()
         out = model(data)
         features = out.cpu().numpy()
         print (features)
