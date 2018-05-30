@@ -58,19 +58,23 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         label = l["Action_labels"][i]
         data = readShortVideo(videos_fp, cat, name, downsample_factor=12)
 
+
         if len(data) > MAX_VIDEO_LEN :
             seq = [math.floor(data.shape[0] * i / MAX_VIDEO_LEN) for i in range(MAX_VIDEO_LEN)]
             data = data[seq]
-            data = tor.Tensor(data).permute(0, 3, 1, 2)
-            for i in range(data) :
-                data[i] = norm(data[i])
-            data = norm(data).cuda()
-            out = model(data)
-            features = out.cpu().numpy()
 
-            videos_output.append(features)
+        data = tor.Tensor(data).permute(0, 3, 1, 2) / 255.
 
+
+        for i in range(len(data)) :
+            data[i] = norm(data[i])
+        data = norm(data).cuda()
+        out = model(data)
+        features = out.cpu().numpy()
+
+        videos_output.append(features)
         labels_output.append(int(label))
+
 
         if (i+1) % batch_max == 0 :
             videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
@@ -79,10 +83,12 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
             videos_output = []
             labels_output = []
 
+
     if (i+1) % batch_max != 0 :
         videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
         np.save(os.path.join(save_fp, "videos_{}_{}.npy".format(mode, (i // batch_max))), videos_output)
         np.save(os.path.join(save_fp, "labels_{}_{}.npy".format(mode, (i // batch_max))), labels_output)
+
 
     print ("\nDone !")
 
