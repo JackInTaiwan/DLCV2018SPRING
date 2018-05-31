@@ -45,8 +45,7 @@ class RNN(nn.Module) :
 
     def forward(self, x) :
         o, c = self.lstm(x)
-        print (o[-1].size())
-        f = self.fc_1(o[-1])
+        f = self.fc_1(o[0][-1])
         f = self.relu(f)
         f = self.fc_2(f)
         out = self.sig(f)
