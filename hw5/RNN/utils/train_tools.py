@@ -45,7 +45,7 @@ def accuracy(model, data, labels) :
 
     for i, (x, label) in enumerate(zip(data, labels), 1) :
         print ("Accuracy Process: {}/{}".format(i, total), end="\r")
-        x = tor.FloatTensor(x).cuda()
+        x = tor.FloatTensor(x).unsqueeze(0).cuda()
         pred = model(x)
         pred = tor.max(pred, 1)[1]
         if int(pred[0].data) == label :
