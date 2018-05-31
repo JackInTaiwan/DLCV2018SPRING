@@ -12,11 +12,11 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="train.py" pinned="false" current-in-tab="false">
+      <file leaf-file-name="train.py" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/../RNN/train.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="340">
-              <caret line="104" column="50" lean-forward="true" selection-start-line="104" selection-start-column="50" selection-end-line="104" selection-end-column="50" />
+            <state relative-caret-position="300">
+              <caret line="69" column="49" lean-forward="false" selection-start-line="69" selection-start-column="49" selection-end-line="69" selection-end-column="49" />
               <folding>
                 <element signature="e#0#9#0" expanded="true" />
               </folding>
@@ -24,11 +24,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="train_tools.py" pinned="false" current-in-tab="true">
+      <file leaf-file-name="train_tools.py" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/../RNN/utils/train_tools.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="318">
-              <caret line="47" column="42" lean-forward="false" selection-start-line="47" selection-start-column="42" selection-end-line="47" selection-end-column="42" />
+            <state relative-caret-position="278">
+              <caret line="45" column="51" lean-forward="false" selection-start-line="45" selection-start-column="45" selection-end-line="45" selection-end-column="51" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -133,8 +133,8 @@
         <option value="$PROJECT_DIR$/../CNN/train.py" />
         <option value="$PROJECT_DIR$/../RNN/model.py" />
         <option value="$PROJECT_DIR$/../RNN/evaluation.py" />
-        <option value="$PROJECT_DIR$/../RNN/train.py" />
         <option value="$PROJECT_DIR$/../RNN/utils/train_tools.py" />
+        <option value="$PROJECT_DIR$/../RNN/train.py" />
       </list>
     </option>
   </component>
@@ -496,16 +496,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/../RNN/train.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="340">
-          <caret line="104" column="50" lean-forward="true" selection-start-line="104" selection-start-column="50" selection-end-line="104" selection-end-column="50" />
-          <folding>
-            <element signature="e#0#9#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/../RNN/model.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
@@ -518,10 +508,20 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/../RNN/utils/train_tools.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="318">
-          <caret line="47" column="42" lean-forward="false" selection-start-line="47" selection-start-column="42" selection-end-line="47" selection-end-column="42" />
+        <state relative-caret-position="278">
+          <caret line="45" column="51" lean-forward="false" selection-start-line="45" selection-start-column="45" selection-end-line="45" selection-end-column="51" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../RNN/train.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="69" column="49" lean-forward="false" selection-start-line="69" selection-start-column="49" selection-end-line="69" selection-end-column="49" />
+          <folding>
+            <element signature="e#0#9#0" expanded="true" />
           </folding>
         </state>
       </provider>

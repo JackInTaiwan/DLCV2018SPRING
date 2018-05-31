@@ -68,7 +68,6 @@ def load(videos_fp, labels_fp, limit, val_limit) :
 
     videos_test = np.load(TRIMMED_VIDEO_VALID_FP)
     labels_test = np.load(TRIMMED_LABEL_VALID_FP)
-    videos_test, labels_test = None, None
 
     global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
