@@ -18,7 +18,7 @@ LABELS_TEST_FP = "./labels_valid_0.npy"
 
 
 def evaluation(mode, model_fp, limit) :
-    if mode == "test" :
+    if mode == "valid" :
         videos = np.load(VIDEOS_TEST_FP)
         labels = np.load(LABELS_TEST_FP)
 
@@ -50,7 +50,7 @@ def evaluation(mode, model_fp, limit) :
 
 if __name__ == "__main__" :
     parser = ArgumentParser()
-    parser.add_argument("-m", type=str, required=True, choices=["test", "train"])
+    parser.add_argument("-m", type=str, required=True, choices=["valid", "train"])
     parser.add_argument("-l", type=int, default=None, help="limitation of amount of data")
     parser.add_argument("--model", type=str, required=True)
 
