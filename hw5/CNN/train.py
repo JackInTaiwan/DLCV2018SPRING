@@ -216,7 +216,7 @@ if __name__ == "__main__" :
 
 
     ### Load Model
-    console("Loading Model")
+    console("Building Model")
     if load_model_fp :
         pass
     else :
@@ -228,5 +228,5 @@ if __name__ == "__main__" :
 
 
     ### Train Data
-    console("Training Data")
+    console("Training Model")
     train(model, model_index, limit, valid_limit)

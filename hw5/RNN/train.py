@@ -70,9 +70,8 @@ def load(videos_fp, labels_fp, limit, val_limit) :
     #labels_test = np.load(TRIMMED_LABEL_VALID_FP)
     videos_test, labels_test = None, None
 
-    global AVAILABLE_SIZE, INPUT_SIZE
+    global AVAILABLE_SIZE
     AVAILABLE_SIZE = videos.shape[0]
-    INPUT_SIZE = videos.shape[1]
 
     batch_gen = Batch_generator(
         x=videos,
@@ -219,5 +218,5 @@ if __name__ == "__main__" :
 
 
     ### Train Data
-    console("Training Data")
+    console("Training Model")
     train(model, model_index, limit, valid_limit)
