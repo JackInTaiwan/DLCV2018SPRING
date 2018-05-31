@@ -120,7 +120,6 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 """ Training """
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
-    step_start = model.step
 
     optim = tor.optim.Adam(model.parameters(), lr=LR)
 
@@ -138,7 +137,7 @@ def train(model, model_index, limit, valid_limit) :
 
             for (x_batch, y_batch) in batch_gen:
                 step = model.step
-                print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
+                print("Process: {}/{}".format(step % int(AVAILABLE_SIZE / BATCHSIZE) , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
                 x = tor.FloatTensor(x_batch).cuda()
                 y = tor.LongTensor(y_batch).cuda()
 
