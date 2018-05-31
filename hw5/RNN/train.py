@@ -30,7 +30,7 @@ model_versions = [RNN]
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
-CAL_ACC_PERIOD = 300    # steps
+CAL_ACC_PERIOD = 500    # steps
 SHOW_LOSS_PERIOD = 30   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 50  # steps
@@ -158,7 +158,7 @@ def train(model, model_index, limit, valid_limit) :
                     print("|Loss: {}".format(loss_total.mean()))
                     save_record(model_index, step, optim, loss_total.mean(), None, None)
                     loss_total = np.array([])
-                """
+
                 if step % CAL_ACC_PERIOD == 0 :
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
@@ -167,7 +167,7 @@ def train(model, model_index, limit, valid_limit) :
 
                     print ("|Acc on train data: {}".format(round(acc_train, 5)))
                     print ("|Acc on test data: {}".format(round(acc_test, 5)))
-                """
+
             if epoch % SAVE_MODEL_PERIOD == 0:
                 save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
                 model.save(save_model_fp)
