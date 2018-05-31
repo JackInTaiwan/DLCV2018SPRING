@@ -210,7 +210,7 @@ if __name__ == "__main__" :
     else :
         Model = model_versions[model_version] if model_version == 0 else model_versions[model_version - 1]
         model = Model(
-            input_size=,
+            input_size=INPUT_SIZE,
             hidden_size=HIDDEN_SIZE,
         )
 
