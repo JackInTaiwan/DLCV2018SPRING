@@ -6,7 +6,7 @@ import torch.nn as nn
 
 
 class RNN(nn.Module) :
-    def __init__(self) :
+    def __init__(self, input_size, num_layers=1, dropout=0) :
         super(RNN, self).__init__()
 
         self.index = 0
@@ -18,36 +18,37 @@ class RNN(nn.Module) :
         self.epoch = 1
         self.step = 1
 
-        vgg16 = torchvision.models.vgg16(pretrained=True)
-        vgg16.eval()
+        # block_1 LSTM
+        self.input_size = input_size
+        self.num_layers = num_layers
+        self.dropout = dropout
 
-        vgg16_fc_channels = [512 * 7 * 10, 2 ** 10]
-        self.vgg16 = vgg16.features
-        self.vgg16_fc_1 = nn.Linear(vgg16_fc_channels[0], vgg16_fc_channels[1])
+        self.lstm = nn.LSTM(
+            input_size=input_size,
+            hidden_size=input_size,
+            num_layers=num_layers,
+            dropout=dropout,
+        )
 
-        # output = (bs, 512, 7, 10)
-        fc_channels = [vgg16_fc_channels[-1], 2 ** 9, 11]
+        # block_2 FC Layers
+        self.fc_channels = [input_size, 2 ** 9, 2 ** 10, 11]
 
-        self.fc_1 = nn.Linear(fc_channels[0], fc_channels[1])
-        self.fc_2 = nn.Linear(fc_channels[1], fc_channels[2])
-
-        self.relu = nn.ReLU()
+        self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
+        self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
+        self.fc_2 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
+        self.relu = nn.ReLU(inplace=True)
         self.sig = nn.Sigmoid()
 
 
+
     def forward(self, x) :
-        x = self.vgg16(x)
-        out = x.view(x.size(0), -1)
-        out = self.vgg16_fc_1(out)
+        x = self.lstm(x)
+        f = self.fc_1(x)
+        f = self.relu(f)
+        f = self.fc_2(f)
+        out = self.sig(f)
+
         return out
-
-
-    def pred(self, x) :
-        x = self.fc_1(x)
-        x = self.relu(x)
-        x = self.fc_2(x)
-        x = self.sig(x)
-        return x
 
 
     def run_step(self) :
