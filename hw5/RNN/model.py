@@ -37,7 +37,7 @@ class RNN(nn.Module) :
 
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
-        self.fc_2 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
+        self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
         self.relu = nn.ReLU(inplace=True)
         self.sig = nn.Sigmoid()
 
@@ -48,6 +48,8 @@ class RNN(nn.Module) :
         f = self.fc_1(o[0][-1])
         f = self.relu(f)
         f = self.fc_2(f)
+        f = self.relu(f)
+        f = self.fc_3(f)
         out = self.sig(f)
 
         return out
