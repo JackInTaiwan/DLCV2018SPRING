@@ -66,20 +66,10 @@ class RNN(nn.Module) :
         tor.save(self, save_fp)
 
         print ("===== Save Model =====")
-        print ("|Model index: {} \n \
-                |Epoch: {} \n \
-                |Step: {} \n \
-                |Lr: {} |Lr_decay: {} |\n \
-                |Optim: {} |Beta:{} \n \
-                |Save path: {}"
-               .format(
-                    self.index,
-                    self.epoch,
-                    self.step,
-                    self.lr,
-                    self.lr_decay,
-                    self.optim,
-                    self.beta,
-                    save_fp,
-                )
+        print ("|Model index: {}".format(self.index),
+                "\n|Epoch: {}".format(self.epoch),
+                "\n|Step: {}".format(self.step),
+                "\n|Lr: {} |Lr_decay: {}".format(self.lr, self.lr_decay),
+                "\n|Optim: {} |Beta: {}".format(self.optim, self.beta),
+                "\n|Save path: {}".format(save_fp),
                )
