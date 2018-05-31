@@ -139,11 +139,11 @@ def train(model, model_index, limit, valid_limit) :
                 print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
                 x = tor.FloatTensor(x_batch).cuda()
                 y = tor.LongTensor(y_batch).cuda()
-                print (y.size())
+
                 optim.zero_grad()
 
                 pred = model(x)
-                print (pred.size())
+
                 loss = loss_func(pred, y)
                 loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
