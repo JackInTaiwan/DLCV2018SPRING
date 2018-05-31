@@ -35,8 +35,8 @@ class Classifier(nn.Module) :
         self.fc_1 = nn.Linear(fc_channels[0], fc_channels[1])
         self.fc_2 = nn.Linear(fc_channels[1], fc_channels[2])
 
-        self.relu = nn.ReLU(inplace=True)
-        self.sig = nn.Sigmoid(inplace=True)
+        self.relu = nn.ReLU()
+        self.sig = nn.Sigmoid()
 
 
     def forward(self, x) :
