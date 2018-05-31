@@ -136,7 +136,8 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
-            for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
+            for (x_batch, y_batch) in batch_gen:
+                step = model.step
                 print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
                 x = tor.FloatTensor(x_batch).cuda()
                 y = tor.LongTensor(y_batch).cuda()
