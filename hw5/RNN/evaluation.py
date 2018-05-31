@@ -52,10 +52,10 @@ if __name__ == "__main__" :
     parser = ArgumentParser()
     parser.add_argument("-m", type=str, required=True, choices=["valid", "train"])
     parser.add_argument("-l", type=int, default=None, help="limitation of amount of data")
-    parser.add_argument("--model", type=str, required=True)
+    parser.add_argument("--load", type=str, required=True, help="loaded model file path")
 
     mode = parser.parse_args().m
-    model_fp = parser.parse_args().model
+    model_fp = parser.parse_args().load
     limit = parser.parse_args().l
 
     evaluation(mode, model_fp, limit)

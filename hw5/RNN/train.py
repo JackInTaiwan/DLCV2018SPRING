@@ -6,7 +6,7 @@ import numpy as np
 import torch as tor
 
 from argparse import ArgumentParser
-from torch.autograd import Variable
+from torch.optim.lr_scheduler import StepLR
 
 try :
     from .utils import console, accuracy, record, Batch_generator
@@ -39,12 +39,12 @@ AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 VIDEOS_MAX_BATCH = 10
 
-EPOCH = 30
+EPOCH = 100
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = None, None
+LR_STEPSIZE, LR_GAMMA = 3000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 100
+INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
 
 
 
@@ -66,8 +66,8 @@ def load(videos_fp, labels_fp, limit, val_limit) :
         videos_eval = videos[:EVAL_TRAIN_SIZE][:]
         labels_eval = labels[:EVAL_TRAIN_SIZE][:]
 
-    #videos_test = np.load(TRIMMED_VIDEO_VALID_FP)
-    #labels_test = np.load(TRIMMED_LABEL_VALID_FP)
+    videos_test = np.load(TRIMMED_VIDEO_VALID_FP)
+    labels_test = np.load(TRIMMED_LABEL_VALID_FP)
     videos_test, labels_test = None, None
 
     global AVAILABLE_SIZE
@@ -125,6 +125,8 @@ def train(model, model_index, limit, valid_limit) :
 
     optim = tor.optim.Adam(model.parameters(), lr=LR)
 
+    lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
+
     loss_func = tor.nn.CrossEntropyLoss().cuda()
 
     loss_total = np.array([])
@@ -149,6 +151,7 @@ def train(model, model_index, limit, valid_limit) :
 
                 loss.backward()
                 optim.step()
+                lr_schedule.step()
                 model.run_step()
 
                 if step == 1 :
