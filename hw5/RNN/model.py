@@ -29,6 +29,7 @@ class RNN(nn.Module) :
             hidden_size=hidden_size,
             num_layers=num_layers,
             dropout=dropout,
+            batch_first=True,
         )
 
         # block_2 FC Layers

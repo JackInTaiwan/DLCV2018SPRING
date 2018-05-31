@@ -137,7 +137,7 @@ def train(model, model_index, limit, valid_limit) :
 
             for step, (x_batch, y_batch) in enumerate(batch_gen, step_start):
                 print("Process: {}/{}".format(step , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
-                x = tor.FloatTensor(x_batch[0]).cuda()
+                x = tor.FloatTensor(x_batch).cuda()
                 y = tor.LongTensor(y_batch).cuda()
 
                 optim.zero_grad()
