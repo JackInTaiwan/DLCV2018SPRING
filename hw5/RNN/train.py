@@ -44,6 +44,8 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = None, None
 
+INPUT_SIZE, HIDDEN_SIZE= None, 100
+
 
 
 
@@ -68,8 +70,9 @@ def load(videos_fp, labels_fp, limit, val_limit) :
     #labels_test = np.load(TRIMMED_LABEL_VALID_FP)
     videos_test, labels_test = None, None
 
-    global AVAILABLE_SIZE
+    global AVAILABLE_SIZE, INPUT_SIZE
     AVAILABLE_SIZE = videos.shape[0]
+    INPUT_SIZE = videos.shape[1]
 
     batch_gen = Batch_generator(
         x=videos,
@@ -200,13 +203,16 @@ if __name__ == "__main__" :
     EPOCH = parser.parse_args().e if parser.parse_args().e else EPOCH
 
 
-    ### Load Model
-    console("Loading Model")
+    ### Building Model
+    console("Building Model")
     if load_model_fp :
         pass
     else :
         Model = model_versions[model_version] if model_version == 0 else model_versions[model_version - 1]
-        model = Model()
+        model = Model(
+            input_size=INPUT_SIZE,
+            hidden_size=HIDDEN_SIZE,
+        )
 
     if not cpu :
         model.cuda()
