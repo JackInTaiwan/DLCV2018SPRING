@@ -116,7 +116,7 @@ if __name__ == "__main__" :
     mode = parser.parse_args().m
     model_fp = parser.parse_args().load
 
-    if model :
+    if model_fp :
         model = tor.load(model_fp)
     else :
         model = Vgg16()
