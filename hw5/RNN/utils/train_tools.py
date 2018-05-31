@@ -45,7 +45,7 @@ def accuracy(model, data, labels) :
 
     for i, (x, label) in enumerate(zip(data, labels), 1) :
         print ("Accuracy Process: {}/{}".format(i, total), end="\r")
-        x = Variable(tor.FloatTensor(x)).permute(0, 3, 1, 2).cuda()
+        x = tor.FloatTensor(x).cuda()
         out = model(x)
         out = out.mean(dim=0).unsqueeze(0)
         pred = model.pred(out)

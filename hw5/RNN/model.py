@@ -6,7 +6,7 @@ import torch.nn as nn
 
 
 class RNN(nn.Module) :
-    def __init__(self, input_size, num_layers=1, dropout=0) :
+    def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
         super(RNN, self).__init__()
 
         self.index = 0
@@ -20,12 +20,13 @@ class RNN(nn.Module) :
 
         # block_1 LSTM
         self.input_size = input_size
+        self.hidden_size = hidden_size
         self.num_layers = num_layers
         self.dropout = dropout
 
         self.lstm = nn.LSTM(
             input_size=input_size,
-            hidden_size=input_size,
+            hidden_size=hidden_size,
             num_layers=num_layers,
             dropout=dropout,
         )
