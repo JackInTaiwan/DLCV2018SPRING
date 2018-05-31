@@ -10,10 +10,12 @@ from torch.optim.lr_scheduler import StepLR
 
 try :
     from .utils import console, accuracy, record, Batch_generator
-    from .model import RNN
+    from .model import RNN as RNN
+    from .model_2 import RNN as RNN_2
 except :
     from utils import console, accuracy, record, Batch_generator
-    from model import RNN
+    from model import RNN as RNN
+    from model_2 import RNN as RNN_2
 
 
 
@@ -25,7 +27,7 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
-model_versions = [RNN]
+model_versions = [RNN, RNN_2]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
