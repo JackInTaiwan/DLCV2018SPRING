@@ -32,7 +32,7 @@ def evaluation(mode, model_fp, limit) :
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
-        x = tor.FloatTensor(x).cuda()
+        x = tor.Tensor(x).unsqueeze(0).cuda()
         pred = model(x)
         pred = tor.max(pred, 1)[1]
 
