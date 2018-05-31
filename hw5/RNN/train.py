@@ -30,10 +30,10 @@ model_versions = [RNN]
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
-CAL_ACC_PERIOD = 500    # steps
+CAL_ACC_PERIOD = 1000    # steps
 SHOW_LOSS_PERIOD = 30   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
-SAVE_JSON_PERIOD = 50  # steps
+SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
