@@ -31,7 +31,7 @@ RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
 CAL_ACC_PERIOD = 300    # steps
-SHOW_LOSS_PERIOD = 30   # steps
+SHOW_LOSS_PERIOD = 100   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 50  # steps
 
@@ -44,7 +44,7 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = None, None
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 100
+INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
 
 
 
