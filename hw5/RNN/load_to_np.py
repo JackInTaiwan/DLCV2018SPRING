@@ -109,17 +109,18 @@ if __name__ == "__main__" :
     parser.add_argument("-m", type=str, default="train", choices=["train", "valid"])
     parser.add_argument("-s", type=str, default="", help="Saving file path")
     parser.add_argument("-l", type=int, default=None, help="Limit of amount of required data")
-    parser.add_argument("--model", type=str, default=None, help="model file path")
+    parser.add_argument("--load", type=str, default=None, help="loaded model file path")
 
     save_fp = parser.parse_args().s
     limit = parser.parse_args().l
     mode = parser.parse_args().m
-    model = parser.parse_args().model
+    model_fp = parser.parse_args().load
 
     if model :
-        pass
+        model = tor.load(model_fp)
     else :
         model = Vgg16()
-        model.cuda()
+
+    model.cuda()
 
     convert_videos_to_np(mode, LABEL_PF[mode], VIDEO_PF[mode], save_fp, limit, model)
