@@ -6,8 +6,10 @@ import torch.nn as nn
 
 
 class RNN(nn.Module) :
-    def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
+    def __init__(self, input_size, hidden_size, num_layers=1, lstm_drop=0, fc_drop=0.5) :
         super(RNN, self).__init__()
+
+        self.training = True
 
         self.index = 0
         self.lr = None
@@ -22,13 +24,13 @@ class RNN(nn.Module) :
         self.input_size = input_size
         self.hidden_size = hidden_size
         self.num_layers = num_layers
-        self.dropout = dropout
+        self.lstm_drop = lstm_drop
 
         self.lstm = nn.LSTM(
             input_size=input_size,
             hidden_size=hidden_size,
             num_layers=num_layers,
-            dropout=dropout,
+            dropout=lstm_drop,
             batch_first=True,
         )
 
@@ -39,6 +41,7 @@ class RNN(nn.Module) :
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
         self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
         self.relu = nn.ReLU(inplace=True)
+        self.drop = nn.Dropout(p=fc_drop)
         self.sig = nn.Sigmoid()
 
 
@@ -48,11 +51,11 @@ class RNN(nn.Module) :
         o = o[0][-1]
         o = o.unsqueeze(0)
         o = self.relu(o)
-        f = self.fc_1(o)
+        f = self.drop(self.fc_1(o)) if self.training == True else self.fc_1(o)
         f = self.relu(f)
-        f = self.fc_2(f)
+        f = self.drop(self.fc_2(o)) if self.training == True else self.fc_2(f)
         f = self.relu(f)
-        f = self.fc_3(f)
+        f = self.drop(self.fc_3(o)) if self.training == True else self.fc_3(f)
         out = self.sig(f)
         return out
 
@@ -63,6 +66,14 @@ class RNN(nn.Module) :
 
     def run_epoch(self) :
         self.epoch += 1
+
+
+    def train(self) :
+        self.training = True
+
+
+    def eval(self) :
+        self.training = False
 
 
     def save(self, save_fp) :
