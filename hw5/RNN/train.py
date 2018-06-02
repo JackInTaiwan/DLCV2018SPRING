@@ -210,7 +210,7 @@ if __name__ == "__main__" :
     ### Building Model
     console("Building Model")
     if load_model_fp :
-        pass
+        model = tor.load(load_model_fp)
     else :
         Model = model_versions[model_version] if model_version == 0 else model_versions[model_version - 1]
         model = Model(
