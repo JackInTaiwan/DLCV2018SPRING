@@ -129,13 +129,13 @@ if __name__ == "__main__" :
     mode = parser.parse_args().m
     model_fp = parser.parse_args().load
     model = None
-    """
+
     if model_fp :
         model = tor.load(model_fp)
     else :
         model = Vgg16()
-    """
-    #model.cuda()
+
+    model.cuda()
 
 
     convert_videos_to_np(mode, LABEL_PF[mode], VIDEO_PF[mode], save_fp, limit, model)
