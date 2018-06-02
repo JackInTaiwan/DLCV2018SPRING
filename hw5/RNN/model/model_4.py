@@ -53,9 +53,9 @@ class RNN(nn.Module) :
         o = self.relu(o)
         f = self.drop(self.fc_1(o)) if self.training == True else self.fc_1(o)
         f = self.relu(f)
-        f = self.drop(self.fc_2(o)) if self.training == True else self.fc_2(f)
+        f = self.drop(self.fc_2(f)) if self.training == True else self.fc_2(f)
         f = self.relu(f)
-        f = self.drop(self.fc_3(o)) if self.training == True else self.fc_3(f)
+        f = self.drop(self.fc_3(f)) if self.training == True else self.fc_3(f)
         out = self.sig(f)
         return out
 
