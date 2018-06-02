@@ -1,22 +1,18 @@
 import os
-import cv2
-import time
 import threading
+from argparse import ArgumentParser
+
 import numpy as np
 import torch as tor
-
-from argparse import ArgumentParser
 from torch.optim.lr_scheduler import StepLR
 
-try :
-    from .utils import console, accuracy, record, Batch_generator
-    from .model import RNN as RNN
-    from .model_2 import RNN as RNN_2
-except :
-    from utils import console, accuracy, record, Batch_generator
-    from model import RNN as RNN
-    from model_2 import RNN as RNN_2
-    from model_3 import RNN as RNN_3
+from utils import console, accuracy, record, Batch_generator
+from model import (
+    RNN_1,
+    RNN_2,
+    RNN_3,
+    RNN_4,
+)
 
 
 
@@ -28,7 +24,7 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
-model_versions = [RNN, RNN_2, RNN_3]
+model_versions = [RNN_1, RNN_2, RNN_3, RNN_4]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
