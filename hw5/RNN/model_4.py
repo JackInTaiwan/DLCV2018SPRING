@@ -33,7 +33,7 @@ class RNN(nn.Module) :
         )
 
         # block_2 FC Layers
-        self.fc_channels = [hidden_size, 2 ** 9, 2 ** 9, 11]
+        self.fc_channels = [hidden_size, 2 ** 9, 2 ** 10, 11]
 
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
