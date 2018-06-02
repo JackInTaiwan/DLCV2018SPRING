@@ -142,6 +142,8 @@ def train(model, model_index, limit, valid_limit) :
 
                     if i == 0 :
                         output, (hidden, cell) = model(x)
+                        print (hidden)
+                        print (cell)
                     else :
                         output, (hidden, cell) = model(x, hidden, cell)
 
