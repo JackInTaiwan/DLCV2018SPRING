@@ -70,7 +70,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
     norm = Normalize(mean, std)
 
 
-    for step, video_fn in enumerate(os.listdir(videos_fp), 1) :
+    for step, video_fn in enumerate(os.listdir(videos_fp)[:limit], 1) :
         print ("Convert videos into numpy: {}/{} \r".format(step, len(os.listdir(videos_fp))), end="")
 
         data = read_pics(os.path.join(videos_fp, video_fn))
@@ -88,7 +88,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
             features = out.cpu().data.numpy()
             video_stack[i] = features
 
-        videos_output.append(features)
+        videos_output.append(video_stack)
 
 
         label_stack = read_labels(os.path.join(labels_fp, "{}.txt".format(video_fn)))
