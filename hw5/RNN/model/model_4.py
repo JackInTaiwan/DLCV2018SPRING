@@ -40,7 +40,7 @@ class RNN(nn.Module) :
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
         self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
-        self.relu = nn.ReLU(inplace=True)
+        self.relu = nn.ReLU(inplace=False)
         self.drop = nn.Dropout(p=fc_drop)
         self.sig = nn.Sigmoid()
 
