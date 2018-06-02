@@ -16,6 +16,7 @@ except :
     from utils import console, accuracy, record, Batch_generator
     from model import RNN as RNN
     from model_2 import RNN as RNN_2
+    from model_3 import RNN as RNN_3
 
 
 
@@ -27,13 +28,13 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./vid
 TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
 
-model_versions = [RNN, RNN_2]
+model_versions = [RNN, RNN_2, RNN_3]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
 CAL_ACC_PERIOD = 1000    # steps
-SHOW_LOSS_PERIOD = 30   # steps
+SHOW_LOSS_PERIOD = 100   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
@@ -46,7 +47,7 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 3000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
+INPUT_SIZE, HIDDEN_SIZE= 1024, 512
 
 
 
