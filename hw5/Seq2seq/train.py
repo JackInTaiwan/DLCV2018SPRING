@@ -141,9 +141,9 @@ def train(model, model_index, limit, valid_limit) :
                     optim.zero_grad()
 
                     if i == 0 :
-                        output, hidden, cell = model(x)
+                        output, (hidden, cell) = model(x)
                     else :
-                        output, hidden, cell = model(x, hidden, cell)
+                        output, (hidden, cell) = model(x, hidden, cell)
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
