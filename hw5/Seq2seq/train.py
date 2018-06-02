@@ -136,7 +136,7 @@ def train(model, model_index, limit, valid_limit) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(y) , len(y)), end="\r")
                     x = tor.FloatTensor(x).cuda()
-                    y = tor.LongTensor(y).cuda()
+                    y = tor.LongTensor(y.astype(np.uint8)).cuda()
 
                     optim.zero_grad()
 
