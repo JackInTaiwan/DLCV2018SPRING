@@ -84,8 +84,7 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         data = data.cuda()
 
         for i, datum in enumerate(data) :
-            print (datum.size())
-            datum.cuda()
+            datum.unsqueeze(0).cuda()
             out = model(datum)
             features = out.cpu().data.numpy()
             video_stack[i] = features
