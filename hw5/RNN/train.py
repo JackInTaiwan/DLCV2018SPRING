@@ -161,8 +161,12 @@ def train(model, model_index, limit, valid_limit) :
                     loss_total = np.array([])
 
                 if step % CAL_ACC_PERIOD == 0 :
+                    model.eval()
+
                     acc_train = accuracy(model, x_eval_train, y_eval_train)
                     acc_test = accuracy(model, x_eval_test, y_eval_test)
+
+                    model.train()
 
                     save_record(model_index, step, optim, None, acc_train, acc_test)
 

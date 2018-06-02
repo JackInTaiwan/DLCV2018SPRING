@@ -8,6 +8,7 @@ import torch.nn as nn
 class RNN(nn.Module) :
     def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
         super(RNN, self).__init__()
+        self.training = True
 
         self.index = 0
         self.lr = None
