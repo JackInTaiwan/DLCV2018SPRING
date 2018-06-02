@@ -1,41 +1,35 @@
 import os
-import cv2
-import time
 import threading
+from argparse import ArgumentParser
+
 import numpy as np
 import torch as tor
-
-from argparse import ArgumentParser
 from torch.optim.lr_scheduler import StepLR
 
-try :
-    from .utils import console, accuracy, record, Batch_generator
-    from .model import RNN as RNN
-    from .model_2 import RNN as RNN_2
-except :
-    from utils import console, accuracy, record, Batch_generator
-    from model import RNN as RNN
-    from model_2 import RNN as RNN_2
+from utils import console, accuracy, record, Batch_generator
+from model import (
+    RNN_1,
+)
 
 
 
 
 """ Parameters """
-TRIMMED_LABEL_TRAIN_FP = ["./labels_train_0.npy", "./labels_train_1.npy", "./labels_train_2.npy", "./labels_train_3.npy"]
-TRIMMED_VIDEO_TRAIN_FP = ["./videos_train_0.npy", "./videos_train_1.npy", "./videos_train_2.npy", "./videos_train_3.npy"]
+TRIMMED_LABEL_TRAIN_FP = ["./labels_train.npy"]
+TRIMMED_VIDEO_TRAIN_FP = ["./videos_train.npy"]
 
-TRIMMED_LABEL_VALID_FP = "./labels_valid_0.npy"
-TRIMMED_VIDEO_VALID_FP = "./videos_valid_0.npy"
+TRIMMED_LABEL_VALID_FP = "./labels_valid.npy"
+TRIMMED_VIDEO_VALID_FP = "./videos_valid.npy"
 
-model_versions = [RNN, RNN_2]
+model_versions = [RNN_1,]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
-CAL_ACC_PERIOD = 500    # steps
-SHOW_LOSS_PERIOD = 30   # steps
+CAL_ACC_PERIOD = 1000    # steps
+SHOW_LOSS_PERIOD = 100   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
-SAVE_JSON_PERIOD = 50  # steps
+SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
@@ -46,7 +40,7 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 3000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
+INPUT_SIZE, HIDDEN_SIZE= 1024, 512
 
 
 
@@ -138,39 +132,47 @@ def train(model, model_index, limit, valid_limit) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
             for (x_batch, y_batch) in batch_gen:
-                step = model.step
-                print("Process: {}/{}".format(step % int(AVAILABLE_SIZE / BATCHSIZE) , int(AVAILABLE_SIZE / BATCHSIZE)), end="\r")
-                x = tor.FloatTensor(x_batch).cuda()
-                y = tor.LongTensor(y_batch).cuda()
+                for i ,(x, y) in enumerate(zip(x_batch, y_batch)) :
+                    step = model.step
+                    print("Process: {}/{}".format(step % len(y) , len(y)), end="\r")
+                    x = tor.FloatTensor(x).cuda()
+                    y = tor.LongTensor(y).cuda()
 
-                optim.zero_grad()
+                    optim.zero_grad()
 
-                pred = model(x)
+                    if i == 0 :
+                        output, hidden, cell = model(x)
+                    else :
+                        output, hidden, cell = model(x, hidden, cell)
 
-                loss = loss_func(pred, y)
-                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                    loss = loss_func(output, y)
+                    loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
-                loss.backward()
-                optim.step()
-                lr_schedule.step()
-                model.run_step()
+                    loss.backward()
+                    optim.step()
+                    lr_schedule.step()
+                    model.run_step()
 
-                if step == 1 :
-                    save_record(model_index, step, optim, None, None, None)
+                    if step == 1 :
+                        save_record(model_index, step, optim, None, None, None)
 
-                if step % SHOW_LOSS_PERIOD == 0 :
-                    print("|Loss: {}".format(loss_total.mean()))
-                    save_record(model_index, step, optim, loss_total.mean(), None, None)
-                    loss_total = np.array([])
+                    if step % SHOW_LOSS_PERIOD == 0 :
+                        print("|Loss: {}".format(loss_total.mean()))
+                        save_record(model_index, step, optim, loss_total.mean(), None, None)
+                        loss_total = np.array([])
 
-                if step % CAL_ACC_PERIOD == 0 :
-                    acc_train = accuracy(model, x_eval_train, y_eval_train)
-                    acc_test = accuracy(model, x_eval_test, y_eval_test)
+                    if step % CAL_ACC_PERIOD == 0 :
+                        model.eval()
 
-                    save_record(model_index, step, optim, None, acc_train, acc_test)
+                        acc_train = accuracy(model, x_eval_train, y_eval_train)
+                        acc_test = accuracy(model, x_eval_test, y_eval_test)
 
-                    print ("|Acc on train data: {}".format(round(acc_train, 5)))
-                    print ("|Acc on test data: {}".format(round(acc_test, 5)))
+                        model.train()
+
+                        save_record(model_index, step, optim, None, acc_train, acc_test)
+
+                        print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                        print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
             if epoch % SAVE_MODEL_PERIOD == 0:
                 save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
@@ -209,7 +211,7 @@ if __name__ == "__main__" :
     ### Building Model
     console("Building Model")
     if load_model_fp :
-        pass
+        model = tor.load(load_model_fp)
     else :
         Model = model_versions[model_version] if model_version == 0 else model_versions[model_version - 1]
         model = Model(

@@ -43,8 +43,8 @@ class RNN(nn.Module) :
 
 
 
-    def forward(self, x) :
-        o, c = self.lstm(x)
+    def forward(self, x, h=None, c=None) :
+        o, h, c = self.lstm(x, h, c)
         o = o[0][-1]
         o = o.unsqueeze(0)
         f = self.fc_1(o)
@@ -53,7 +53,7 @@ class RNN(nn.Module) :
         f = self.relu(f)
         f = self.fc_3(f)
         out = self.sig(f)
-        return out
+        return out, h, c
 
 
     def run_step(self) :
