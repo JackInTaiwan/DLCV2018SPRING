@@ -74,7 +74,6 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         print ("Convert videos into numpy: {}/{} \r".format(step, len(os.listdir(videos_fp))), end="")
 
         data = read_pics(os.path.join(videos_fp, video_fn))
-
         data = tor.Tensor(data).permute(0, 3, 1, 2) / 255.
 
         for i in range(len(data)) :
@@ -96,10 +95,9 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
         labels_output.append(label_stack)
 
 
-
-        videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
-        np.save(os.path.join(save_fp, "videos_{}.npy".format(mode)), videos_output)
-        np.save(os.path.join(save_fp, "labels_{}.npy".format(mode)), labels_output)
+    videos_output, labels_fp = np.array(videos_output), np.array(labels_output)
+    np.save(os.path.join(save_fp, "videos_{}.npy".format(mode)), videos_output)
+    np.save(os.path.join(save_fp, "labels_{}.npy".format(mode)), labels_output)
 
     print ("\nDone !")
 
