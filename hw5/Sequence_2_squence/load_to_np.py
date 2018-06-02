@@ -70,8 +70,8 @@ def convert_videos_to_np(mode, labels_fp, videos_fp, save_fp, limit, model) :
     norm = Normalize(mean, std)
 
 
-    for video_fn in os.listdir(videos_fp) :
-        #print ("Convert videos into numpy: {}/{} \r".format(batch + 1, data_num), end="")
+    for step, video_fn in enumerate(os.listdir(videos_fp), 1) :
+        print ("Convert videos into numpy: {}/{} \r".format(step, len(os.listdir(videos_fp))), end="")
 
         data = read_pics(os.path.join(videos_fp, video_fn))
 
