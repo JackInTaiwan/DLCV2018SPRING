@@ -47,8 +47,14 @@ def accuracy(model, data, labels) :
         print ("Accuracy Process: {}/{}".format(i, total), end="\r")
         print ("!!!!!!!!!!!!!!!!!!", x.shape, label.shape)
         x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
-        o, h = model(x, h[0].detach(), h[1].detach()) if type(h) is tor.Tensor else model(x)
+
+        if i == 1 :
+            o, h = model(x)
+        else :
+            o, h = model(x, h[0].detach(), h[1].detach())
+
         pred = tor.max(o, 1)[1]
+
         if int(pred[0].data) == label :
             correct += 1
 
