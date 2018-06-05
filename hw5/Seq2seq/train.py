@@ -131,8 +131,9 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
 
-            for (x_batch, y_batch) in batch_gen:
-                for i ,(x, y) in enumerate(zip(x_batch, y_batch[0])) :
+            for (x_batch, y_batch) in batch_gen :
+                print (x_batch.shape)
+                for i ,(x, y) in enumerate(zip(x_batch[0], y_batch[0])) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(x_batch) ,len(x_batch)), end="\r")
                     x = tor.FloatTensor(x).unsqueeze(0).cuda()
@@ -143,7 +144,7 @@ def train(model, model_index, limit, valid_limit) :
                     if i == 0 :
                         output, (hidden, cell) = model(x)
                     else :
-                        output, (hidden, cell) = model(x, hidden, cell)
+                        output, (hidden, cell) = model(x, hidden.detach(), cell.detach())
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
