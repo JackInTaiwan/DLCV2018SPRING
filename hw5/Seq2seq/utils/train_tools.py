@@ -43,11 +43,12 @@ class Batch_generator() :
 def accuracy(model, data, labels) :
     correct, total = 0, len(labels)
 
-    for i, (x, label) in enumerate(zip(data, labels), 1) :
+    for i, (x, label) in enumerate(zip(data[0], labels[0]), 1) :
         print ("Accuracy Process: {}/{}".format(i, total), end="\r")
-        x = tor.FloatTensor(x).unsqueeze(0).cuda()
-        pred = model(x)
-        pred = tor.max(pred, 1)[1]
+        print ("!!!!!!!!!!!!!!!!!!", x.shape, label.shape)
+        x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
+        o, h = model(x, h[0].detach(), h[1].detach()) if type(h) is tor.Tensor else model(x)
+        pred = tor.max(o, 1)[1]
         if int(pred[0].data) == label :
             correct += 1
 

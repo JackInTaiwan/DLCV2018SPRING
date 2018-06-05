@@ -32,7 +32,7 @@ SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
-EVAL_TRAIN_SIZE = 100
+EVAL_TRAIN_SIZE = 1
 VIDEOS_MAX_BATCH = 10
 
 EPOCH = 50
@@ -162,14 +162,14 @@ def train(model, model_index, limit, valid_limit) :
                     if step % CAL_ACC_PERIOD == 0 :
                         model.eval()
 
-                        #acc_train = accuracy(model, x_eval_train, y_eval_train)
+                        acc_train = accuracy(model, x_eval_train, y_eval_train)
                         #acc_test = accuracy(model, x_eval_test, y_eval_test)
-
+                        acc_test = 0
                         model.train()
 
-                        #save_record(model_index, step, optim, None, acc_train, acc_test)
+                        save_record(model_index, step, optim, None, acc_train, acc_test)
 
-                        #print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                        print ("|Acc on train data: {}".format(round(acc_train, 5)))
                         #print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
