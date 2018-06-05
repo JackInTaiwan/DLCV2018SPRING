@@ -1,4 +1,5 @@
 import cv2
+import torch as tor
 import torchvision.models
 import torch.nn as nn
 
@@ -43,9 +44,8 @@ class RNN(nn.Module) :
 
 
 
-    def forward(self, x, h) :
-        o, h = self.lstm(x, h)
-        #o, (h, c) = self.lstm(x)
+    def forward(self, x, h=None, c=None) :
+        o, h = self.lstm(x, (h, c)) if type(h) is tor.Tensor else self.lstm(x)
         o = o[0][-1]
         o = o.unsqueeze(0)
         f = self.fc_1(o)
