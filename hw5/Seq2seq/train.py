@@ -135,6 +135,8 @@ def train(model, model_index, limit, valid_limit) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(x_batch[0]) ,len(x_batch[0])), end="\r")
 
+                    optim.zero_grad()
+
                     x = tor.FloatTensor(x).unsqueeze(0).unsqueeze(0).cuda()
                     y = tor.LongTensor(np.array([y]).astype(np.uint8)).cuda()
 
@@ -151,7 +153,6 @@ def train(model, model_index, limit, valid_limit) :
                     lr_schedule.step()
                     model.run_step()
 
-                    optim.zero_grad()
 
                     if step == 1 :
                         save_record(model_index, step, optim, None, None, None)
