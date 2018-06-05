@@ -140,7 +140,7 @@ def train(model, model_index, limit, valid_limit) :
                     if i == 0 :
                         output, hidden = model(x)
                     else :
-                        output, hidden = model(x, (hidden[0].detach(), hidden[1].detach()))
+                        output, hidden = model(x, hidden[0].detach(), hidden[1].detach())
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
