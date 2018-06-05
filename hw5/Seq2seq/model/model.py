@@ -38,13 +38,14 @@ class RNN(nn.Module) :
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
         self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
-        self.relu = nn.ReLU(inplace=True)
+        self.relu = nn.ReLU()
         self.sig = nn.Sigmoid()
 
 
 
-    def forward(self, x, h=None, c=None) :
-        o, (h, c) = self.lstm(x, (h, c)) if h != None else self.lstm(x)
+    def forward(self, x, h) :
+        o, h = self.lstm(x, h)
+        #o, (h, c) = self.lstm(x)
         o = o[0][-1]
         o = o.unsqueeze(0)
         f = self.fc_1(o)
@@ -53,7 +54,7 @@ class RNN(nn.Module) :
         f = self.relu(f)
         f = self.fc_3(f)
         out = self.sig(f)
-        return out, (h, c)
+        return out, h
 
 
     def run_step(self) :

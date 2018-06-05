@@ -130,20 +130,23 @@ def train(model, model_index, limit, valid_limit) :
 
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
-
             for (x_batch, y_batch) in batch_gen:
-                for i ,(x, y) in enumerate(zip(x_batch, y_batch[0])) :
+                for i ,(x, y) in enumerate(zip(x_batch[0], y_batch[0])) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(x_batch) ,len(x_batch)), end="\r")
-                    x = tor.FloatTensor(x).unsqueeze(0).cuda()
+                    x = tor.FloatTensor(x).unsqueeze(0).unsqueeze(0).cuda()
                     y = tor.LongTensor(np.array([y]).astype(np.uint8)).cuda()
 
-                    optim.zero_grad()
-
+                    #optim.zero_grad()
                     if i == 0 :
-                        output, (hidden, cell) = model(x)
+                        hidden = tor.Tensor(2,1,1, 512).cuda()
+                        output, hidden = model(x, hidden)
                     else :
-                        output, (hidden, cell) = model(x, hidden, cell)
+                        #print (hidden.size())
+                        #print (cell.size())
+                        print ("======")
+                        print (x.size())
+                        output, hidden = model(x, (hidden[0].detach(), hidden[1].detach()))
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
@@ -164,15 +167,15 @@ def train(model, model_index, limit, valid_limit) :
                     if step % CAL_ACC_PERIOD == 0 :
                         model.eval()
 
-                        acc_train = accuracy(model, x_eval_train, y_eval_train)
-                        acc_test = accuracy(model, x_eval_test, y_eval_test)
+                        #acc_train = accuracy(model, x_eval_train, y_eval_train)
+                        #acc_test = accuracy(model, x_eval_test, y_eval_test)
 
                         model.train()
 
-                        save_record(model_index, step, optim, None, acc_train, acc_test)
+                        #save_record(model_index, step, optim, None, acc_train, acc_test)
 
-                        print ("|Acc on train data: {}".format(round(acc_train, 5)))
-                        print ("|Acc on test data: {}".format(round(acc_test, 5)))
+                        #print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                        #print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
             save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
