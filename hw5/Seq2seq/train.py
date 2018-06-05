@@ -131,7 +131,6 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
             for (x_batch, y_batch) in batch_gen :
-                print (x_batch.shape)
                 for i ,(x, y) in enumerate(zip(x_batch[0], y_batch[0])) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(x_batch[0]) ,len(x_batch[0])), end="\r")

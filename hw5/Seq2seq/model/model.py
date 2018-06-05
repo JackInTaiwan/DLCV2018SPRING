@@ -45,8 +45,6 @@ class RNN(nn.Module) :
 
 
     def forward(self, x, h=None, c=None) :
-        if type(h) is tor.Tensor : print ("use")
-        print (type(h))
         o, h = self.lstm(x, (h, c)) if type(h) is tor.Tensor else self.lstm(x)
         o = o[0][-1]
         o = o.unsqueeze(0)

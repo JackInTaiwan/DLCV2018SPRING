@@ -41,7 +41,7 @@ class Batch_generator() :
 
 
 def accuracy(model, data, labels) :
-    correct, total = 0, len(labels[1])
+    correct, total = 0, len(labels[0])
 
     for i, (x, label) in enumerate(zip(data[0], labels[0]), 1) :
         print ("Accuracy Process: {}/{}".format(i, total), end="\r")
@@ -54,5 +54,5 @@ def accuracy(model, data, labels) :
 
         if int(pred[0].data) == label :
             correct += 1
-
+    
     return correct / total
