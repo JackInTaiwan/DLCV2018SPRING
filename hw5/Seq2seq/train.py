@@ -117,7 +117,8 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
 
-    optim = tor.optim.Adam(model.parameters(), lr=LR)
+    #optim = tor.optim.Adam(model.parameters(), lr=LR)
+    optim = tor.optim.SGD(model.parameters(), lr=LR)
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
