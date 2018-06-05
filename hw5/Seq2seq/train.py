@@ -133,7 +133,7 @@ def train(model, model_index, limit, valid_limit) :
             for (x_batch, y_batch) in batch_gen :
                 for i ,(x, y) in enumerate(zip(x_batch[0], y_batch[0])) :
                     step = model.step
-                    print("Process: {}/{}".format(step % len(x_batch) ,len(x_batch)), end="\r")
+                    print("Process: {}/{}".format(step % len(x_batch[0]) ,len(x_batch[0])), end="\r")
                     x = tor.FloatTensor(x).unsqueeze(0).unsqueeze(0).cuda()
                     y = tor.LongTensor(np.array([y]).astype(np.uint8)).cuda()
 
