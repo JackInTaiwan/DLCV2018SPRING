@@ -46,7 +46,7 @@ def accuracy(model, data, labels) :
         correct, total = 0, len(labels[d])
 
         for i, (x, label) in enumerate(zip(data[d], labels[d]), 1) :
-            print ("Accuracy Process: {}/{}".format(i, total))
+            print ("Accuracy Process: {}/{}".format(i, total), end="\r")
 
             x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
 
