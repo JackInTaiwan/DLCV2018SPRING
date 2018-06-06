@@ -132,7 +132,7 @@ class RNN_old(nn.Module) :
 
     def forward(self, x) :
         o, c = self.lstm(x)
-        o = o[0][-1]
+        o = o[0]
         o = o.unsqueeze(0)
         f = self.fc_1(o)
         f = self.relu(f)
