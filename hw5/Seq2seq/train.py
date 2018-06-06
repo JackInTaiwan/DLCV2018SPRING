@@ -149,7 +149,7 @@ def train(model, model_index, limit, valid_limit) :
                         loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     elif y[0][_i] != 0 :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif random.randint(0, 1) :
+                    elif not random.randint(0, 6) :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     else :
                         count -= 1
