@@ -35,7 +35,7 @@ class RNN(nn.Module) :
         )
 
         # block_2 FC Layers
-        self.fc_channels = [hidden_size, 2 ** 7, 2 ** 8, 11]
+        self.fc_channels = [hidden_size, 2 ** 9, 2 ** 10, 11]
 
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
@@ -49,6 +49,7 @@ class RNN(nn.Module) :
     def forward(self, x, h=None, c=None) :
         o, h = self.lstm(x, (h, c)) if type(h) is tor.Tensor else self.lstm(x)
         o = o[0]
+        o = self.relu(o)
         f = self.fc_1(o)
         f = self.drop(self.relu(f)) if self.training else self.relu(f)
         f = self.fc_2(f)
