@@ -140,7 +140,8 @@ def train(model, model_index, limit, valid_limit) :
                 optim.zero_grad()
                 seq_max = 100
                 s = random.randint(0, len(x_batch[0]) - seq_max)
-                x = tor.Tensor(x_batch[s: s + seq_max]).cuda()
+                x = x_batch[0][s: s + seq_max]
+                x = tor.Tensor(x).unsqueeze(0).cuda()
                 y = tor.LongTensor(y_batch[s: s + seq_max].astype(np.uint8)).cuda()
 
                 output, hidden = model(x)
