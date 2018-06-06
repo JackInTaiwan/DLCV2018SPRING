@@ -173,7 +173,7 @@ def train(model, model_index, limit, valid_limit) :
 
                         save_record(model_index, step, optim, None, acc_train, acc_test)
 
-                        print ("|Acc on train data: {}".format(round(acc_train, 5)))
+                        print ("|Acc on train data: {}".format(str(acc_train)))
                         #print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
