@@ -1,5 +1,7 @@
 import os
 import threading
+import random
+
 from argparse import ArgumentParser
 
 import numpy as np
@@ -140,12 +142,19 @@ def train(model, model_index, limit, valid_limit) :
                 y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
 
                 output, hidden = model(x)
+                count = 0
                 for _i, o in enumerate(output) :
-                    
-                    if _i == 0 : loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif y[0][_i] != 0 : loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    count += 1
+                    if _i == 0 :
+                        loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    elif y[0][_i] != 0 :
+                        loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    elif random.randint(0, 1) :
+                        loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    else :
+                        count -= 1
 
-                loss = loss / (_i + 1)
+                loss = loss / count
                 print (loss)
                 #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
