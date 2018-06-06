@@ -32,15 +32,15 @@ SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
-EVAL_TRAIN_SIZE = 4
+EVAL_TRAIN_SIZE = 1
 VIDEOS_MAX_BATCH = 10
 
 EPOCH = 50
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 10000, 0.99
+LR_STEPSIZE, LR_GAMMA = 3000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
+INPUT_SIZE, HIDDEN_SIZE= 1024, 512
 
 
 
@@ -148,6 +148,7 @@ def train(model, model_index, limit, valid_limit) :
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+
                     loss.backward()
                     optim.step()
                     lr_schedule.step()
@@ -172,7 +173,7 @@ def train(model, model_index, limit, valid_limit) :
 
                         save_record(model_index, step, optim, None, acc_train, acc_test)
 
-                        print ("|Acc on train data: {}".format(str(acc_train)))
+                        print ("|Acc on train data: {}".format(round(acc_train, 5)))
                         #print ("|Acc on test data: {}".format(round(acc_test, 5)))
 
         if epoch % SAVE_MODEL_PERIOD == 0:

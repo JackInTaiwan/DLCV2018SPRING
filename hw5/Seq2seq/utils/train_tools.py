@@ -41,20 +41,22 @@ class Batch_generator() :
 
 
 def accuracy(model, data, labels) :
-    correct, total = 0, len(labels[0])
+    acc_list = []
+    for d in range(len(data)) :
+        correct, total = 0, len(labels[d])
 
-    for i, (x, label) in enumerate(zip(data[0], labels[0]), 1) :
-        print ("Accuracy Process: {}/{}".format(i, total), end="\r")
+        for i, (x, label) in enumerate(zip(data[d], labels[d]), 1) :
+            print ("Accuracy Process: {}/{}".format(i, total))
 
-        x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
+            x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
 
-        o, h = model(x) if i == 1 else model(x, h[0].detach(), h[1].detach())
+            o, h = model(x) if i == 1 else model(x, h[0].detach(), h[1].detach())
 
-        pred = tor.max(o, 1)[1]
+            pred = tor.max(o, 1)[1]
 
-        if int(pred[0].data) == label :
-            correct += 1
+            if int(pred[0].data) == label :
+                correct += 1
 
-        if int(pred[0].data) != 0 : print ("!!!!!!!!!!!!!!!!")
-    
-    return correct / total
+        acc_list.append(correct / total)
+
+    return acc_list
