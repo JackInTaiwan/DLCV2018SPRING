@@ -117,8 +117,8 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
 
-    #optim = tor.optim.Adam(model.parameters(), lr=LR)
-    optim = tor.optim.SGD(model.parameters(), lr=LR)
+    optim = tor.optim.Adam(model.parameters(), lr=LR)
+    #optim = tor.optim.SGD(model.parameters(), lr=LR)
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
@@ -139,16 +139,16 @@ def train(model, model_index, limit, valid_limit) :
                     optim.zero_grad()
 
                     x = tor.FloatTensor(x).unsqueeze(0).unsqueeze(0).cuda()
+                    print (x)
                     y = tor.LongTensor(np.array([y]).astype(np.uint8)).cuda()
-
                     if i == 0 :
                         output, hidden = model(x)
                     else :
-                        output, hidden = model(x, hidden[0].detach(), hidden[1].detach())
+                        output, hidden = model(x, hidden[0], hidden[1])
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
-                    loss.backward()
+                    loss.backward(retain_graph=True)
                     optim.step()
                     lr_schedule.step()
                     model.run_step()
@@ -164,7 +164,6 @@ def train(model, model_index, limit, valid_limit) :
 
                     if step % CAL_ACC_PERIOD == 0 :
                         model.eval()
-
                         acc_train = accuracy(model, x_eval_train, y_eval_train)
                         acc_test = accuracy(model, x_eval_test, y_eval_test)
                         model.train()
