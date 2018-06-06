@@ -26,8 +26,8 @@ model_versions = [RNN_1,]
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
-CAL_ACC_PERIOD = 1000    # steps
-SHOW_LOSS_PERIOD = 100   # steps
+CAL_ACC_PERIOD = 50    # steps
+SHOW_LOSS_PERIOD = 10   # steps
 SAVE_MODEL_PERIOD = 1   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
@@ -140,13 +140,14 @@ def train(model, model_index, limit, valid_limit) :
                 y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
 
                 output, hidden = model(x)
-
                 for _i, o in enumerate(output) :
-                    if _i == 0 : loss = loss_func(o, y[_i])
-                    else : loss = loss + loss_func(o, y[_i])
+                    
+                    if _i == 0 : loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    else : loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
-                loss = loss_func(output, y)
-                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                loss = loss / (_i + 1)
+                print (loss)
+                #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
                 loss.backward()
                 optim.step()
