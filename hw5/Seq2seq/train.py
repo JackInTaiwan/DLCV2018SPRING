@@ -166,14 +166,13 @@ def train(model, model_index, limit, valid_limit) :
                         model.eval()
 
                         acc_train = accuracy(model, x_eval_train, y_eval_train)
-                        #acc_test = accuracy(model, x_eval_test, y_eval_test)
-                        acc_test = 0
+                        acc_test = accuracy(model, x_eval_test, y_eval_test)
                         model.train()
 
                         save_record(model_index, step, optim, None, acc_train, acc_test)
 
                         print ("|Acc on train data: {}".format(str(acc_train)))
-                        #print ("|Acc on test data: {}".format(round(acc_test, 5)))
+                        print ("|Acc on test data: {}".format(acc_test))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
             save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
