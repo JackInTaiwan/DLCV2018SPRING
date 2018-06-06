@@ -158,7 +158,7 @@ def train(model, model_index, limit, valid_limit) :
                     save_record(model_index, step, optim, None, None, None)
 
                 if step % SHOW_LOSS_PERIOD == 0:
-                    print("|Loss: {}".format(loss_total.mean()))
+                    print("|Loss: {}".format(float(loss.data.cpu())))
                     save_record(model_index, step, optim, loss_total.mean(), None, None)
                     loss_total = np.array([])
 
