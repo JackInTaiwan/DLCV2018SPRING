@@ -93,7 +93,7 @@ class RNN(nn.Module) :
 
 class RNN_old(nn.Module) :
     def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
-        super(RNNold, self).__init__()
+        super(RNN_old, self).__init__()
         self.training = True
 
         self.index = 0
