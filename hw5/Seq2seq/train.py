@@ -38,9 +38,9 @@ VIDEOS_MAX_BATCH = 10
 EPOCH = 50
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 3000, 0.99
+LR_STEPSIZE, LR_GAMMA = 10000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 512
+INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
 
 
 
@@ -148,7 +148,6 @@ def train(model, model_index, limit, valid_limit) :
 
                     loss = loss_func(output, y)
                     loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
-
                     loss.backward()
                     optim.step()
                     lr_schedule.step()

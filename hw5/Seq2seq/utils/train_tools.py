@@ -54,5 +54,7 @@ def accuracy(model, data, labels) :
 
         if int(pred[0].data) == label :
             correct += 1
+
+        if int(pred[0].data) != 0 : print ("!!!!!!!!!!!!!!!!")
     
     return correct / total
