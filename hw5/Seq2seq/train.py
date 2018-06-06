@@ -159,11 +159,10 @@ def train(model, model_index, limit, valid_limit) :
                     else :
                         count -= 1
                 """
+                loss = 0
                 for _i, o in enumerate(output) :
-                    if _i == 0 :
-                        loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    else :
-                        loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    print ("!!")
+                    loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
                 loss = loss / (_i + 1)
                 print (loss)
