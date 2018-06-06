@@ -6,8 +6,10 @@ import torch.nn as nn
 
 
 class RNN(nn.Module) :
-    def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
+    def __init__(self, input_size, hidden_size, num_layers=3, dropout=0) :
         super(RNN, self).__init__()
+
+        self.training = True
 
         self.index = 0
         self.lr = None
@@ -40,6 +42,7 @@ class RNN(nn.Module) :
         self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
         self.relu = nn.ReLU(inplace=True)
         self.sig = nn.Sigmoid()
+        self.drop = nn.Dropout(p=0.5)
 
 
 
@@ -47,9 +50,9 @@ class RNN(nn.Module) :
         o, h = self.lstm(x, (h, c)) if type(h) is tor.Tensor else self.lstm(x)
         o = o[0]
         f = self.fc_1(o)
-        f = self.relu(f)
+        f = self.drop(self.relu(f)) if self.training else self.relu(f)
         f = self.fc_2(f)
-        f = self.relu(f)
+        f = self.drop(self.relu(f)) if self.training else self.relu(f)
         f = self.fc_3(f)
         out = self.sig(f)
         return out, h
@@ -61,6 +64,14 @@ class RNN(nn.Module) :
 
     def run_epoch(self) :
         self.epoch += 1
+
+
+    def train(self) :
+        self.training = True
+
+
+    def eval(self) :
+        self.training = False
 
 
     def save(self, save_fp) :

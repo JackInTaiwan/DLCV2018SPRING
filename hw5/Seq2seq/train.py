@@ -40,7 +40,7 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 10000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 2 ** 5
+INPUT_SIZE, HIDDEN_SIZE= 1024, 2 ** 10
 
 
 
@@ -143,7 +143,7 @@ def train(model, model_index, limit, valid_limit) :
                 for _i, o in enumerate(output) :
                     
                     if _i == 0 : loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    else : loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    elif y[0][_i] != 0 : loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
                 loss = loss / (_i + 1)
                 print (loss)
