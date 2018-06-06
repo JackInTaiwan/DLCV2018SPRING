@@ -45,7 +45,6 @@ def accuracy(model, data, labels) :
 
     for d in range(len(data)) :
         correct, total = 0, len(labels[d])
-        zeros = 0
 
         x = tor.Tensor(data[d]).unsqueeze(0).cuda()
         o, h = model(x)
@@ -54,7 +53,7 @@ def accuracy(model, data, labels) :
         y = tor.LongTensor(labels[d].astype(np.uint8)).cuda()
         correct = tor.sum(y == pred)
         correct = int(correct.data.cpu())
-        zeros = int(tor.sum(y == 0).data.cpu())
+        zeros = int(tor.sum(pred == 0).data.cpu())
         acc_list.append((correct / total, (zeros, total)))
 
     return acc_list
