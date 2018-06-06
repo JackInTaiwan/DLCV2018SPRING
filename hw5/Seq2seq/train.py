@@ -138,17 +138,16 @@ def train(model, model_index, limit, valid_limit) :
                 print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
                 optim.zero_grad()
-                rand_index = sorted(random.sample(list(range(len(x_batch[0]))), 128))
-                x_batch = np.array([x_batch[0][rand_index]])
-                y_batch = np.array([y_batch[0][rand_index]])
-                x = tor.Tensor(x_batch).cuda()
-                y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
+                seq_max = 100
+                s = random.randint(0, len(x_batch) - seq_max)
+                x = tor.Tensor(x_batch[s: s + seq_max]).cuda()
+                y = tor.LongTensor(y_batch[s: s + seq_max].astype(np.uint8)).cuda()
 
-                #output, hidden = model(x)
-                output = model(x)
+                output, hidden = model(x)
+                """
                 count = 0
                 for _i, o in enumerate(output) :
-                    count += 1
+                    #count += 1
                     if _i == 0 :
                         loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     elif y[0][_i] != 0 :
@@ -157,8 +156,14 @@ def train(model, model_index, limit, valid_limit) :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     else :
                         count -= 1
+                """
+                for _i, o in enumerate(output) :
+                    if _i == 0 :
+                        loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                    else :
+                        loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
-                loss = loss / count
+                loss = loss / (_i + 1)
                 print (loss)
                 #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
