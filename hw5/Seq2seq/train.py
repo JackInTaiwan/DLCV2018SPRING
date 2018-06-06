@@ -40,7 +40,7 @@ VIDEOS_MAX_BATCH = 10
 EPOCH = 500
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 100, 0.99
+LR_STEPSIZE, LR_GAMMA = 10000, 0.99
 
 INPUT_SIZE, HIDDEN_SIZE= 1024, 512
 
@@ -119,8 +119,8 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
 
-    optim = tor.optim.Adam(model.parameters(), lr=LR)
-    #optim = tor.optim.SGD(model.parameters(), lr=LR)
+    #optim = tor.optim.Adam(model.parameters(), lr=LR)
+    optim = tor.optim.SGD(model.parameters(), lr=LR)
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
@@ -144,7 +144,8 @@ def train(model, model_index, limit, valid_limit) :
                 x = tor.Tensor(x_batch).cuda()
                 y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
 
-                output, hidden = model(x)
+                #output, hidden = model(x)
+                output = model(x)
                 count = 0
                 for _i, o in enumerate(output) :
                     count += 1
