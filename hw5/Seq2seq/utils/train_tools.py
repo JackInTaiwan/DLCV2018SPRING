@@ -45,22 +45,14 @@ def accuracy(model, data, labels) :
     for d in range(len(data)) :
         correct, total = 0, len(labels[d])
         zeros = 0
-        for i, (x, label) in enumerate(zip(data[d], labels[d]), 1) :
-            print ("Accuracy Process: {}/{}".format(i, total), end="\r")
 
-            x = tor.Tensor(x).unsqueeze(0).unsqueeze(0).cuda()
-
-            o, h = model(x) if i == 1 else model(x, h[0].detach(), h[1].detach())
-
-            pred = tor.max(o, 1)[1]
-            pred = int(pred[0].data)
-
-            if pred == label :
-                correct += 1
-
-            if pred == 0 :
-                zeros += 1
-
-        acc_list.append((correct / total, (zeros, total)))
+        x = tor.Tensor(data[d]).unsqueeze(0).cuda()
+        o, h = model(x)
+        pred = tor.max(o, 1)[1]
+        print (pred)
+        y = tor.LongTensor(labels[d]).cuda()
+        correct = tor.sum(y == pred)
+        print (correct)
+        #acc_list.append((correct / total, (zeros, total)))
 
     return acc_list
