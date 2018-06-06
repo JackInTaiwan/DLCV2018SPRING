@@ -37,7 +37,7 @@ AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 4
 VIDEOS_MAX_BATCH = 10
 
-EPOCH = 50
+EPOCH = 500
 BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 100, 0.99
@@ -139,8 +139,10 @@ def train(model, model_index, limit, valid_limit) :
 
                 optim.zero_grad()
                 rand_index = sorted(random.sample(list(range(len(x_batch[0]))), 128))
-                x = tor.Tensor(x_batch[rand_index]).cuda()
-                y = tor.LongTensor(y_batch[rand_index].astype(np.uint8)).cuda()
+                x_batch = np.array([x_batch[0][rand_index]])
+                y_batch = np.array([y_batch[0][rand_index]])
+                x = tor.Tensor(x_batch).cuda()
+                y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
 
                 output, hidden = model(x)
                 count = 0
@@ -150,7 +152,7 @@ def train(model, model_index, limit, valid_limit) :
                         loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     elif y[0][_i] != 0 :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif not random.randint(0, 6) :
+                    elif not random.randint(0, 1) :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     else :
                         count -= 1
