@@ -138,8 +138,9 @@ def train(model, model_index, limit, valid_limit) :
                 print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
                 optim.zero_grad()
-                x = tor.Tensor(x_batch).cuda()
-                y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
+                rand_index = sorted(random.sample(list(range(len(x_batch[0]))), 128))
+                x = tor.Tensor(x_batch[rand_index]).cuda()
+                y = tor.LongTensor(y_batch[rand_index].astype(np.uint8)).cuda()
 
                 output, hidden = model(x)
                 count = 0
