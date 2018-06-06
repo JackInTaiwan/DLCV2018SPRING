@@ -132,46 +132,42 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
             for (x_batch, y_batch) in batch_gen :
-                for i ,(x, y) in enumerate(zip(x_batch[0], y_batch[0])) :
-                    step = model.step
-                    print("Process: {}/{}".format(step % len(x_batch[0]) ,len(x_batch[0])), end="\r")
+                step = model.step
+                print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
-                    optim.zero_grad()
+                optim.zero_grad()
+                x = tor.Tensor(x_batch).cuda()
+                y = tor.LongTensor(y_batch.astype(np.uint8)).cuda()
 
-                    x = tor.FloatTensor(x).unsqueeze(0).unsqueeze(0).cuda()
-                    print (x)
-                    y = tor.LongTensor(np.array([y]).astype(np.uint8)).cuda()
-                    if i == 0 :
-                        output, hidden = model(x)
-                    else :
-                        output, hidden = model(x, hidden[0], hidden[1])
+                output, hidden = model(x)
 
-                    loss = loss_func(output, y)
-                    loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
-                    loss.backward(retain_graph=True)
-                    optim.step()
-                    lr_schedule.step()
-                    model.run_step()
+                loss = loss_func(output, y)
+                loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
+                loss.backward()
+                optim.step()
+                lr_schedule.step()
+                model.run_step()
 
-                    if step == 1 :
-                        save_record(model_index, step, optim, None, None, None)
+                if step == 1:
+                    save_record(model_index, step, optim, None, None, None)
 
-                    if step % SHOW_LOSS_PERIOD == 0 :
-                        print("|Loss: {}".format(loss_total.mean()))
-                        save_record(model_index, step, optim, loss_total.mean(), None, None)
-                        loss_total = np.array([])
+                if step % SHOW_LOSS_PERIOD == 0:
+                    print("|Loss: {}".format(loss_total.mean()))
+                    save_record(model_index, step, optim, loss_total.mean(), None, None)
+                    loss_total = np.array([])
 
-                    if step % CAL_ACC_PERIOD == 0 :
-                        model.eval()
-                        acc_train = accuracy(model, x_eval_train, y_eval_train)
-                        acc_test = accuracy(model, x_eval_test, y_eval_test)
-                        model.train()
+                if step % CAL_ACC_PERIOD == 0:
+                    model.eval()
 
-                        save_record(model_index, step, optim, None, acc_train, acc_test)
+                    acc_train = accuracy(model, x_eval_train, y_eval_train)
+                    acc_test = accuracy(model, x_eval_test, y_eval_test)
+                    model.train()
 
-                        print ("|Acc on train data: {}".format(str(acc_train)))
-                        print ("|Acc on test data: {}".format(acc_test))
+                    save_record(model_index, step, optim, None, acc_train, acc_test)
+
+                    print("|Acc on train data: {}".format(str(acc_train)))
+                    print("|Acc on test data: {}".format(acc_test))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
             save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
