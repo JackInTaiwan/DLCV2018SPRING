@@ -161,7 +161,7 @@ def train(model, model_index, limit, valid_limit) :
                 """
                 loss = 0
                 for _i, o in enumerate(output) :
-                    print ("!!")
+                    print (_i)
                     loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
                 loss = loss / (_i + 1)
