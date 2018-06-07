@@ -20,9 +20,9 @@ class Batch_generator() :
 
 
     def __iter__(self) :
-        pairs = list(zip(self.x, self.y))
-        random.shuffle(pairs)
-        self.x, self.y = zip(*pairs)
+        #pairs = list(zip(self.x, self.y))
+        #random.shuffle(pairs)
+        #self.x, self.y = zip(*pairs)
         return self
 
 
@@ -47,8 +47,9 @@ def accuracy(model, data, labels) :
 
         x = tor.Tensor(data[d]).unsqueeze(0).cuda()
         o, h = model(x)
-        #print (o[0])
         #o = model(x)
+        #for item in o :
+        #    print (item)
         pred = tor.max(o, 1)[1]
         y = tor.LongTensor(labels[d].astype(np.uint8)).cuda()
         correct = tor.sum(y == pred)

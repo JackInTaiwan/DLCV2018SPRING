@@ -34,15 +34,15 @@ SAVE_MODEL_PERIOD = 10   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
-EVAL_TRAIN_SIZE = 5
+EVAL_TRAIN_SIZE = 1
 VIDEOS_MAX_BATCH = 10
 
-EPOCH = 500
+EPOCH = 5000
 BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 10000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 512
+INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
 
 
 
@@ -119,8 +119,8 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
 
-    #optim = tor.optim.Adam(model.parameters(), lr=LR)
-    optim = tor.optim.SGD(model.parameters(), lr=LR)
+    optim = tor.optim.Adam(model.parameters(), lr=LR)
+    #optim = tor.optim.SGD(model.parameters(), lr=LR)
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
@@ -138,27 +138,27 @@ def train(model, model_index, limit, valid_limit) :
                 print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
                 optim.zero_grad()
-                seq_max = 10
+                seq_max = 50
                 s = random.randint(0, len(x_batch[0]) - seq_max)
                 x = x_batch[0][s: s + seq_max]
                 x = tor.Tensor(x).unsqueeze(0).cuda()
                 y = y_batch[0][s: s + seq_max].astype(np.uint8)
                 y = tor.LongTensor(y).unsqueeze(0).cuda()
-
+                
                 output, hidden = model(x)
-                """
+                
                 count = 0
                 for _i, o in enumerate(output) :
-                    #count += 1
+                    count += 1
                     if _i == 0 :
                         loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     elif y[0][_i] != 0 :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif not random.randint(0, 1) :
+                    elif not random.randint(0, 10) :
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
                     else :
                         count -= 1
-                """
+                loss = loss / count
                 """
                 loss = 0
                 for _i, o in enumerate(output) :
@@ -168,7 +168,9 @@ def train(model, model_index, limit, valid_limit) :
 
                 loss = loss / (_i + 1)
                 """
-                loss = loss_func(output, y[0])
+                #print (output)
+                #print (y[0])
+                #loss = loss_func(output, y[0])
                 print (loss)
                 #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
