@@ -134,71 +134,72 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
             for (x_batch, y_batch) in batch_gen :
-                step = model.step
-                print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
+                for _s in range(10) :
+                    step = model.step
+                    print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
-                optim.zero_grad()
-                seq_max = 50
-                s = random.randint(0, len(x_batch[0]) - seq_max)
-                x = x_batch[0][s: s + seq_max]
-                x = tor.Tensor(x).unsqueeze(0).cuda()
-                y = y_batch[0][s: s + seq_max].astype(np.uint8)
-                y = tor.LongTensor(y).unsqueeze(0).cuda()
-                
-                output, hidden = model(x)
-                
-                count = 0
-                for _i, o in enumerate(output) :
-                    count += 1
-                    if _i == 0 :
-                        loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif y[0][_i] != 0 :
+                    optim.zero_grad()
+                    seq_max = 50
+                    s = random.randint(0, len(x_batch[0]) - seq_max)
+                    x = x_batch[0][s: s + seq_max]
+                    x = tor.Tensor(x).unsqueeze(0).cuda()
+                    y = y_batch[0][s: s + seq_max].astype(np.uint8)
+                    y = tor.LongTensor(y).unsqueeze(0).cuda()
+
+                    output, hidden = model(x)
+
+                    count = 0
+                    for _i, o in enumerate(output) :
+                        count += 1
+                        if _i == 0 :
+                            loss = loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                        elif y[0][_i] != 0 :
+                            loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                        elif not random.randint(0, 10) :
+                            loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+                        else :
+                            count -= 1
+                    loss = loss / count
+                    """
+                    loss = 0
+                    for _i, o in enumerate(output) :
+                        #print (o.unsqueeze(0))
+                        #print (y[0][_i].unsqueeze(0))
                         loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    elif not random.randint(0, 10) :
-                        loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
-                    else :
-                        count -= 1
-                loss = loss / count
-                """
-                loss = 0
-                for _i, o in enumerate(output) :
-                    #print (o.unsqueeze(0))
-                    #print (y[0][_i].unsqueeze(0))
-                    loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
+    
+                    loss = loss / (_i + 1)
+                    """
+                    #print (output)
+                    #print (y[0])
+                    #loss = loss_func(output, y[0])
+                    print (loss)
+                    #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
-                loss = loss / (_i + 1)
-                """
-                #print (output)
-                #print (y[0])
-                #loss = loss_func(output, y[0])
-                print (loss)
-                #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
+                    loss.backward()
+                    optim.step()
+                    optim.zero_grad()
+                    lr_schedule.step()
+                    model.run_step()
 
-                loss.backward()
-                optim.step()
-                optim.zero_grad()
-                lr_schedule.step()
-                model.run_step()
+                    if step == 1:
+                        save_record(model_index, step, optim, None, None, None)
 
-                if step == 1:
-                    save_record(model_index, step, optim, None, None, None)
+                    if step % SHOW_LOSS_PERIOD == 0:
+                        print("|Loss: {}".format(float(loss.data.cpu())))
+                        save_record(model_index, step, optim, loss_total.mean(), None, None)
+                        loss_total = np.array([])
 
-                if step % SHOW_LOSS_PERIOD == 0:
-                    print("|Loss: {}".format(float(loss.data.cpu())))
-                    save_record(model_index, step, optim, loss_total.mean(), None, None)
-                    loss_total = np.array([])
+                    if step % CAL_ACC_PERIOD == 0:
+                        model.eval()
 
-                if step % CAL_ACC_PERIOD == 0:
-                    model.eval()
+                        acc_train = accuracy(model, x_eval_train, y_eval_train)
+                        acc_test = accuracy(model, x_eval_test, y_eval_test)
+                        model.train()
 
-                    acc_train = accuracy(model, x_eval_train, y_eval_train)
-                    acc_test = accuracy(model, x_eval_test, y_eval_test)
-                    model.train()
+                        save_record(model_index, step, optim, None, acc_train, acc_test)
 
-                    save_record(model_index, step, optim, None, acc_train, acc_test)
-
-                    print("|Acc on train data: {}".format(str(acc_train)))
-                    print("|Acc on test data: {}".format(acc_test))
+                        print("|Acc on train data: {}".format(str(acc_train)))
+                        print("|Acc on test data: {}".format(acc_test))
 
         if epoch % SAVE_MODEL_PERIOD == 0:
             save_model_fp = os.path.join(MODEL_FP, "model_{}.pkl".format(model_index))
