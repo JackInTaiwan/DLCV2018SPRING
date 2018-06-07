@@ -30,11 +30,11 @@ MODEL_FP = "./models/"
 
 CAL_ACC_PERIOD = 50    # steps
 SHOW_LOSS_PERIOD = 10   # steps
-SAVE_MODEL_PERIOD = 1   # epochs
+SAVE_MODEL_PERIOD = 10   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
-EVAL_TRAIN_SIZE = 4
+EVAL_TRAIN_SIZE = 5
 VIDEOS_MAX_BATCH = 10
 
 EPOCH = 500
@@ -138,7 +138,7 @@ def train(model, model_index, limit, valid_limit) :
                 print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
                 optim.zero_grad()
-                seq_max = 100
+                seq_max = 10
                 s = random.randint(0, len(x_batch[0]) - seq_max)
                 x = x_batch[0][s: s + seq_max]
                 x = tor.Tensor(x).unsqueeze(0).cuda()
@@ -159,17 +159,22 @@ def train(model, model_index, limit, valid_limit) :
                     else :
                         count -= 1
                 """
+                """
                 loss = 0
                 for _i, o in enumerate(output) :
-                    print (_i)
+                    #print (o.unsqueeze(0))
+                    #print (y[0][_i].unsqueeze(0))
                     loss = loss + loss_func(o.unsqueeze(0), y[0][_i].unsqueeze(0))
 
                 loss = loss / (_i + 1)
+                """
+                loss = loss_func(output, y[0])
                 print (loss)
                 #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
                 loss.backward()
                 optim.step()
+                optim.zero_grad()
                 lr_schedule.step()
                 model.run_step()
 

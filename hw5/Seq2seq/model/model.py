@@ -35,11 +35,11 @@ class RNN(nn.Module) :
         )
 
         # block_2 FC Layers
-        self.fc_channels = [hidden_size, 2 ** 10, 2 ** 11, 11]
+        self.fc_channels = [hidden_size, 2 ** 10, 2 ** 9, 11]
 
-        self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1])
-        self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2])
-        self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
+        self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1], bias=False)
+        self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2], bias=False)
+        self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3], bias=False)
         self.relu = nn.ReLU()
         self.sig = nn.Sigmoid()
         self.drop = nn.Dropout(p=0.5)
