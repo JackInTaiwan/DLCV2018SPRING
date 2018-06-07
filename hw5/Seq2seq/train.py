@@ -12,6 +12,7 @@ from utils import console, accuracy, record, Batch_generator
 from model import (
     RNN_1,
     RNN_2,
+    RNN_3,
 )
 
 
