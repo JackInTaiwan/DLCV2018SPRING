@@ -6,7 +6,7 @@ import torch.nn as nn
 
 
 class RNN(nn.Module) :
-    def __init__(self, input_size, hidden_size, num_layers=3, dropout=0) :
+    def __init__(self, input_size, hidden_size, num_layers=1, dropout=0) :
         super(RNN, self).__init__()
 
         self.training = True
@@ -39,26 +39,29 @@ class RNN(nn.Module) :
 
         self.fc_1 = nn.Linear(self.fc_channels[0], self.fc_channels[1], bias=False)
         self.fc_2 = nn.Linear(self.fc_channels[1], self.fc_channels[2], bias=False)
-        self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3], bias=False)
+        self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[4], bias=False)
         self.fc_4 = nn.Linear(self.fc_channels[3], self.fc_channels[4], bias=False)
         self.relu = nn.ReLU()
         self.sig = nn.Sigmoid()
-        self.drop = nn.Dropout(p=0.5)
+        self.drop = nn.Dropout(p=0)
+        self.softmax = nn.Softmax(dim=1)
 
 
 
     def forward(self, x, h=None, c=None) :
         o, h = self.lstm(x, (h, c)) if type(h) is tor.Tensor else self.lstm(x)
         o = o[0]
-        o = self.relu(o)
+        #o = self.relu(o)
         f = self.fc_1(o)
         f = self.drop(self.relu(f)) if self.training else self.relu(f)
         f = self.fc_2(f)
         f = self.drop(self.relu(f)) if self.training else self.relu(f)
         f = self.fc_3(f)
-        f = self.drop(self.relu(f)) if self.training else self.relu(f)
-        f = self.fc_4(f)
-        out = self.sig(f)
+        out = f
+        #f = self.drop(self.relu(f)) if self.training else self.relu(f)
+        #f = self.fc_4(f)
+        #out = self.sig(f)
+        out = self.softmax(out)
         return out, h
 
 

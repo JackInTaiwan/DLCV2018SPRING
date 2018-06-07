@@ -127,6 +127,7 @@ class RNN_old(nn.Module) :
         self.fc_3 = nn.Linear(self.fc_channels[2], self.fc_channels[3])
         self.relu = nn.ReLU(inplace=True)
         self.sig = nn.Sigmoid()
+        self.softmax = nn.Softmax()
 
 
 
@@ -140,6 +141,7 @@ class RNN_old(nn.Module) :
         f = self.relu(f)
         f = self.fc_3(f)
         out = self.sig(f)
+        out = self.softmax(out)
         return out
 
 

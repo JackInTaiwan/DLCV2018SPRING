@@ -43,7 +43,7 @@ BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 10000, 0.99
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 1024
+INPUT_SIZE, HIDDEN_SIZE= 1024, 2 ** 11
 
 
 
@@ -120,12 +120,13 @@ def save_record(model_index, step, optim, loss, acc_train, acc_test):
 def train(model, model_index, limit, valid_limit) :
     epoch_start = model.epoch
 
-    #optim = tor.optim.Adam(model.parameters(), lr=LR)
-    optim = tor.optim.SGD(model.parameters(), lr=LR)
+    optim = tor.optim.Adam(model.parameters(), lr=LR)
+    #optim = tor.optim.SGD(model.parameters(), lr=LR)
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
-    loss_func = tor.nn.CrossEntropyLoss().cuda()
+    loss_w = tor.Tensor([0.1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+    loss_func = tor.nn.CrossEntropyLoss(loss_w).cuda()
 
     loss_total = np.array([])
 
@@ -135,7 +136,7 @@ def train(model, model_index, limit, valid_limit) :
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
             for (x_batch, y_batch) in batch_gen :
-                for _s in range(10) :
+                for _s in range(50) :
                     step = model.step
                     print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
 
@@ -148,6 +149,10 @@ def train(model, model_index, limit, valid_limit) :
                     y = tor.LongTensor(y).unsqueeze(0).cuda()
 
                     output, hidden = model(x)
+                    if _s == 9 :
+                        print (output[0:4])
+                        print (y)
+                    
                     """
                     count = 0
                     for _i, o in enumerate(output) :
