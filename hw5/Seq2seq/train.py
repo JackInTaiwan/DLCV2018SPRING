@@ -11,6 +11,7 @@ from torch.optim.lr_scheduler import StepLR
 from utils import console, accuracy, record, Batch_generator
 from model import (
     RNN_1,
+    RNN_2,
 )
 
 
@@ -23,7 +24,7 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train.npy"]
 TRIMMED_LABEL_VALID_FP = "./labels_valid.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid.npy"
 
-model_versions = [RNN_1,]
+model_versions = [RNN_1, RNN_2]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
