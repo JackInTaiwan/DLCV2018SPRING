@@ -147,7 +147,7 @@ def train(model, model_index, limit, valid_limit) :
                     y = tor.LongTensor(y).unsqueeze(0).cuda()
 
                     output, hidden = model(x)
-
+                    """
                     count = 0
                     for _i, o in enumerate(output) :
                         count += 1
@@ -161,6 +161,7 @@ def train(model, model_index, limit, valid_limit) :
                             count -= 1
                     loss = loss / count
                     """
+                    """
                     loss = 0
                     for _i, o in enumerate(output) :
                         #print (o.unsqueeze(0))
@@ -171,7 +172,7 @@ def train(model, model_index, limit, valid_limit) :
                     """
                     #print (output)
                     #print (y[0])
-                    #loss = loss_func(output, y[0])
+                    loss = loss_func(output, y[0])
                     print (loss)
                     #loss_total = np.concatenate((loss_total, [loss.data.cpu().numpy()]))
 
