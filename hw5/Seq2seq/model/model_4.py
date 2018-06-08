@@ -26,7 +26,7 @@ class RNN(nn.Module) :
         self.num_layers = num_layers
         self.dropout = dropout
 
-        self.lstm = nn.LSTM(
+        self.lstm = nn.RNN(
             input_size=input_size,
             hidden_size=hidden_size,
             num_layers=num_layers,
@@ -53,8 +53,10 @@ class RNN(nn.Module) :
     def forward(self, x, h=None, c=None) :
         x = self.fc_in(x)
         #x = self.sig(x)
+        #x = x * 100
         o, h = self.lstm(x)
         o = o[0]
+        #print (o)
         #o = self.relu(o)
         f = self.fc_1(o)
         f = self.drop(self.relu(f)) if self.training else self.relu(f)
@@ -65,7 +67,7 @@ class RNN(nn.Module) :
         #f = self.drop(self.relu(f)) if self.training else self.relu(f)
         #f = self.fc_4(f)
         #out = self.sig(f)
-        out = self.softmax(out)
+        #out = self.softmax(out)
         return out, h
 
 

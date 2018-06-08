@@ -13,6 +13,7 @@ from model import (
     RNN_1,
     RNN_2,
     RNN_3,
+    RNN_4,
 )
 
 
@@ -25,7 +26,7 @@ TRIMMED_VIDEO_TRAIN_FP = ["./videos_train.npy"]
 TRIMMED_LABEL_VALID_FP = "./labels_valid.npy"
 TRIMMED_VIDEO_VALID_FP = "./videos_valid.npy"
 
-model_versions = [RNN_1, RNN_2]
+model_versions = [RNN_1, RNN_2, RNN_3, RNN_4,]
 
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
@@ -42,9 +43,9 @@ VIDEOS_MAX_BATCH = 10
 EPOCH = 5000
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 10000, 0.99
+LR_STEPSIZE, LR_GAMMA = 5000, 0.98
 
-INPUT_SIZE, HIDDEN_SIZE= 1024, 2 ** 11
+INPUT_SIZE, HIDDEN_SIZE= 1024, 2 ** 10
 
 
 
@@ -136,13 +137,13 @@ def train(model, model_index, limit, valid_limit) :
 
         for videos_fp, labels_fp in zip(TRIMMED_VIDEO_TRAIN_FP, TRIMMED_LABEL_TRAIN_FP) :
             batch_gen, x_eval_train, y_eval_train, x_eval_test, y_eval_test = load(videos_fp, labels_fp, limit, valid_limit)
-            for (x_batch, y_batch) in batch_gen :
+            for b, (x_batch, y_batch) in enumerate(batch_gen) :
                 for _s in range(50) :
                     step = model.step
-                    print("Process: {}/{}".format(step % len(x_batch[0]), len(x_batch[0])), end="\r")
+                    print("Process: {}".format(step), end="\r")
 
                     optim.zero_grad()
-                    seq_max = 50
+                    seq_max = 250
                     s = random.randint(0, len(x_batch[0]) - seq_max)
                     x = x_batch[0][s: s + seq_max]
                     x = tor.Tensor(x).unsqueeze(0).cuda()
@@ -150,7 +151,7 @@ def train(model, model_index, limit, valid_limit) :
                     y = tor.LongTensor(y).unsqueeze(0).cuda()
 
                     output, hidden = model(x)
-                    if _s == 9 :
+                    if _s == 9 and b % 5 == 0:
                         print (output[0:4])
                         print (y)
                     
