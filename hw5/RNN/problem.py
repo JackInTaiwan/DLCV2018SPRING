@@ -78,10 +78,6 @@ def prediction(model_fp, vgg_fp, data_fp, label_fp, output_fp, limit) :
         if pred == label :
             correct += 1
 
-    acc = correct / total
-
-    print ("|Acc: {}".format(round(acc, 6)))
-
 
     ### Ouput file
     with open(os.path.join(output_fp, "p2_result.txt"), "w") as f :
