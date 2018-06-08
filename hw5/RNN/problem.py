@@ -63,21 +63,32 @@ def prediction(model_fp, vgg_fp, data_fp, label_fp, output_fp, limit) :
     model.cuda()
 
     correct, total = 0, len(labels)
+    preds = []
 
     for i, (x, label) in enumerate(zip(features, labels), 1) :
         print ("Process: {}/{}".format(i, total))
         x = tor.Tensor(x).unsqueeze(0).cuda()
         pred = model(x)
         pred = tor.max(pred, 1)[1]
+        pred = int(pred[0].data)
 
-        if int(pred[0].data) == label :
+        preds.append(pred)
+
+        if pred == label :
             correct += 1
 
     acc = correct / total
 
     print ("|Acc: {}".format(round(acc, 6)))
 
-    return acc
+
+    ### Ouput file
+    with open(os.path.join(output_fp, "p1_valid.txt"), "w") as f :
+        for i, item in enumerate(preds) :
+            if i != len(preds)-1 :
+                f.write(str(item) + "\n")
+            else :
+                f.write(str(item))
 
 
 
