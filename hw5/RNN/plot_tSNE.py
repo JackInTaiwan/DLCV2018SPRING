@@ -19,7 +19,7 @@ LABELS_TEST_FP = "./labels_valid_0.npy"
 
 
 
-def plot_tsne(model_fp, output_fp, limit) :
+def plot_tsne(model_fp, output_fp, limit, mode) :
 
     videos = np.load(VIDEOS_TEST_FP)
     labels = np.load(LABELS_TEST_FP)
@@ -48,9 +48,10 @@ def plot_tsne(model_fp, output_fp, limit) :
     for i in range(11) :
         plt.scatter(f_tsne[labels == i, 0], f_tsne[labels == i, 1])
 
-    #plt.legend(["Not {}".format(attr_selected), attr_selected])
+    plt.legend(["Label {}".format(i) for i in range(11)])
 
-    plt.savefig(os.path.join(output_fp, "tSNE_RNN.jpg"))
+    fn = "tSNE_RNN.jpg" if mode == "rnn" else "tSNE_CNN.jpg"
+    plt.savefig(os.path.join(output_fp, fn))
 
 
 
@@ -60,9 +61,11 @@ if __name__ == "__main__" :
     parser.add_argument("-l", type=int, default=None, help="limitation of amount of data")
     parser.add_argument("--load", type=str, required=True, help="loaded model file path")
     parser.add_argument("--output", type=str, default=None)
+    parser.add_argument("--mode", type=str, required=True, choices=["rnn", "cnn"])
 
     model_fp = parser.parse_args().load
     output_fp = parser.parse_args().output
     limit = parser.parse_args().l
+    mode = parser.parse_args().mode
 
-    plot_tsne(model_fp, output_fp, limit)
+    plot_tsne(model_fp, output_fp, limit, mode)
