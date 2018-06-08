@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 
 
 """ Parameters """
-VIDEOS_TEST_FP = "../RNN/videos_valid_0.npy"
-LABELS_TEST_FP = "../RNN/labels_valid_0.npy"
+VIDEOS_TEST_FP = "./videos_valid_0.npy"
+LABELS_TEST_FP = "./labels_valid_0.npy"
 
 
 
