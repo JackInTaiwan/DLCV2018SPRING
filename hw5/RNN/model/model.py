@@ -56,6 +56,15 @@ class RNN(nn.Module) :
         out = self.sig(f)
         return out
 
+    def get_feature(self, x) :
+        o, c = self.lstm(x)
+        o = o[0][-1]
+        o = o.unsqueeze(0)
+        f = self.fc_1(o)
+        f = self.relu(f)
+        f = self.fc_2(f)
+        return f
+
 
     def run_step(self) :
         self.step += 1
