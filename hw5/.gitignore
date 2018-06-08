@@ -1,7 +1,7 @@
 ### Dir
 HW5_data/
 __pycache__/
-models/
+#models/
 .idea/
 
 
