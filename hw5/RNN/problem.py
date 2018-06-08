@@ -84,7 +84,7 @@ def prediction(model_fp, vgg_fp, data_fp, label_fp, output_fp, limit) :
 
 
     ### Ouput file
-    with open(os.path.join(output_fp, "p1_valid.txt"), "w") as f :
+    with open(os.path.join(output_fp, "p2_result.txt"), "w") as f :
         for i, item in enumerate(preds) :
             if i != len(preds)-1 :
                 f.write(str(item) + "\n")

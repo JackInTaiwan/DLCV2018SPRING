@@ -65,7 +65,6 @@ if __name__ == "__main__" :
     parser.add_argument("--load", type=str, required=True, help="loaded model file path")
     parser.add_argument("--output", type=str, default=None)
 
-    mode = parser.parse_args().m
     model_fp = parser.parse_args().load
     output_fp = parser.parse_args().output
     limit = parser.parse_args().l
