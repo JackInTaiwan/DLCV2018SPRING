@@ -34,7 +34,10 @@ def plot_tsne(model_fp, output_fp, limit, mode) :
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
         x = tor.Tensor(x).unsqueeze(0).cuda()
-        f = model.get_feature(x).cpu().data.numpy()
+        if mode == "rnn" :
+            f = model.get_feature(x).cpu().data.numpy()
+        else :
+            f = model(x).cpu().data.numpy()
         features_rnn.append(f[0])
 
     features_rnn = np.array(features_rnn)
