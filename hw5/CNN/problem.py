@@ -23,7 +23,7 @@ def prediction(model_fp, data_fp, label_fp) :
         name = l["Video_name"][i]
         label = l["Action_labels"][i]
         data = readShortVideo(data_fp, cat, name, downsample_factor=12).astype(np.int8)
-
+        print (data)
         videos_output.append(data)
         labels_output.append(int(label))
 
