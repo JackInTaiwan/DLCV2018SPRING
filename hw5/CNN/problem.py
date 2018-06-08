@@ -58,7 +58,7 @@ def prediction(model_fp, data_fp, label_fp, output_fp, limit) :
     acc = correct / total
     print (acc)
 
-    with open(os.path.join(output_fp, "p1_valid.txt"), "a+") as f :
+    with open(os.path.join(output_fp, "p1_valid.txt"), "w") as f :
         for i, item in enumerate(preds) :
             if i != len(preds)-1 :
                 f.write(str(item) + "\n")
