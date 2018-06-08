@@ -32,17 +32,14 @@ def plot_tsne(model_fp, output_fp, limit) :
     correct, total = 0, len(labels)
 
     features_rnn = []
-    labels = []
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
         x = tor.Tensor(x).unsqueeze(0).cuda()
-        f = model.get_feature(x)
-        features_rnn.append(f)
+        f = model.get_feature(x).cpu().data.numpy()
+        features_rnn.append(f[0])
 
-        labels.append(int(label))
-
-
+    features_rnn = np.array(features_rnn)
     ### tSNE
     tsne = TSNE(
         n_components=2,
