@@ -28,7 +28,7 @@ def prediction(model_fp, data_fp, label_fp) :
         labels_output.append(int(label))
 
 
-    videos, labels = np.array(videos_output), np.array(labels_output)
+    videos, labels = np.array(videos_output), np.array(labels_output).astype(np.uint8)
 
 
     ### Prediction
