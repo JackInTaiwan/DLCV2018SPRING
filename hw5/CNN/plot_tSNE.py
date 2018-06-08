@@ -5,6 +5,8 @@ import torch as tor
 
 from argparse import ArgumentParser
 from sklearn.manifold.t_sne import TSNE
+from utils import normalize, select_data
+from train import VIDEOS_MAX_BATCH
 
 import matplotlib
 matplotlib.use('Agg')
@@ -27,13 +29,16 @@ def plot_tsne(model_fp, output_fp, limit, mode) :
     model = tor.load(model_fp)
     model.cuda()
 
+    videos = normalize(videos / 255.)
+    videos = select_data(videos, VIDEOS_MAX_BATCH)
+
     correct, total = 0, len(labels)
 
     features_rnn = []
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
-        x = tor.Tensor(x).unsqueeze(0).cuda()
+        x = tor.Tensor(x).permute(0, 3, 1, 2).cuda()
         if mode == "rnn" :
             f = model.get_feature(x).cpu().data.numpy()
         else :
