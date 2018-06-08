@@ -3,4 +3,4 @@ wget https://www.dropbox.com/s/mrbcos72kt0hhob/model_2.pkl?dl=0 -O model_2.pkl
 mv model_1.pkl ./CNN/models/
 mv model_2.pkl ./RNN/models/
 
-python3 ./RNN/problem.py --data $1 --label $2 --output $3 --vgg ./CNN/models/model_1.pkl --load ./RNN/models/model_2.pkl
+python3 ./RNN/problem.py --data $1 --label $2 --output $3 --vgg ./CNN/models/model_1.pkl --load ./RNN/models/model_3.pkl
