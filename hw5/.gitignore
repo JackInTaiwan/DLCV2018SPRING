@@ -16,7 +16,7 @@ models/
 *.out
 *.png
 *.jpg
-*.json
+#*.json
 *.npy
 *.swp
 *.xml

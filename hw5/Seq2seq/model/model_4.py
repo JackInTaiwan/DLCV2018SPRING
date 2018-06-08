@@ -52,7 +52,7 @@ class RNN(nn.Module) :
 
     def forward(self, x, h=None, c=None) :
         x = self.fc_in(x)
-        #x = self.sig(x)
+        x = self.sig(x)
         #x = x * 100
         o, h = self.lstm(x)
         o = o[0]

@@ -31,13 +31,13 @@ model_versions = [RNN_1, RNN_2, RNN_3, RNN_4,]
 RECORD_FP = "./record/"
 MODEL_FP = "./models/"
 
-CAL_ACC_PERIOD = 50    # steps
-SHOW_LOSS_PERIOD = 10   # steps
-SAVE_MODEL_PERIOD = 10   # epochs
+CAL_ACC_PERIOD = 500    # steps
+SHOW_LOSS_PERIOD = 100   # steps
+SAVE_MODEL_PERIOD = 2   # epochs
 SAVE_JSON_PERIOD = 500  # steps
 
 AVAILABLE_SIZE = None
-EVAL_TRAIN_SIZE = 1
+EVAL_TRAIN_SIZE = 5
 VIDEOS_MAX_BATCH = 10
 
 EPOCH = 5000
@@ -127,7 +127,7 @@ def train(model, model_index, limit, valid_limit) :
 
     lr_schedule = StepLR(optimizer=optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
-    loss_w = tor.Tensor([0.1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
+    loss_w = tor.Tensor([1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1])
     loss_func = tor.nn.CrossEntropyLoss(loss_w).cuda()
 
     loss_total = np.array([])
@@ -152,7 +152,7 @@ def train(model, model_index, limit, valid_limit) :
 
                     output, hidden = model(x)
                     if _s == 9 and b % 5 == 0:
-                        print (output[0:4])
+                        print (output[:20])
                         print (y)
                     
                     """
@@ -195,7 +195,7 @@ def train(model, model_index, limit, valid_limit) :
 
                     if step % SHOW_LOSS_PERIOD == 0:
                         print("|Loss: {}".format(float(loss.data.cpu())))
-                        save_record(model_index, step, optim, loss_total.mean(), None, None)
+                        save_record(model_index, step, optim, float(loss.data.cpu()), None, None)
                         loss_total = np.array([])
 
                     if step % CAL_ACC_PERIOD == 0:
