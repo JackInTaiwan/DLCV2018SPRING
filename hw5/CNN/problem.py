@@ -1,4 +1,5 @@
 import cv2
+import os
 import torch as tor
 import numpy as np
 
@@ -8,7 +9,7 @@ from reader import getVideoList, readShortVideo
 
 
 
-def prediction(model_fp, data_fp, label_fp) :
+def prediction(model_fp, data_fp, label_fp, output_fp) :
     model = tor.load(model_fp)
     model.cuda()
 
@@ -33,6 +34,7 @@ def prediction(model_fp, data_fp, label_fp) :
 
     ### Prediction
     correct, total = 0, len(labels)
+    preds = []
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, len(videos)))
@@ -41,23 +43,33 @@ def prediction(model_fp, data_fp, label_fp) :
         out = out.mean(dim=0).unsqueeze(0)
         pred = model.pred(out)
         y = tor.max(pred, 1)[1]
-        if int(y[0].data) == label :
+        pred = int(y[0].data)
+        if pred == label :
             correct += 1
+
+        preds.append(pred)
 
     acc = correct / total
     print (acc)
+
+    with open(os.path.join(output_fp, "p1_valid.txt")) as f :
+        for item in preds :
+            f.write(item)
+
 
 
 
 
 if __name__ == "__main__" :
     parse = ArgumentParser()
-    parse.add_argument("--data", required=True)
+    parse.add_argument("--data", required=True, type=str)
     parse.add_argument("--load", required=True, type=str)
     parse.add_argument("--label", required=True, type=str)
+    parse.add_argument("--output", required=True, type=str)
 
     data_fp = parse.parse_args().data
     model_fp = parse.parse_args().load
     label_fp = parse.parse_args().label
+    output_fp = parse.parse_args().output
 
-    pred = prediction(model_fp, data_fp, label_fp)
+    pred = prediction(model_fp, data_fp, label_fp, output_fp)
