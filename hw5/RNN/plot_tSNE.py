@@ -35,9 +35,9 @@ def plot_tsne(model_fp, output_fp, limit, mode) :
         print ("Process: {}/{}".format(i, total))
         x = tor.Tensor(x).unsqueeze(0).cuda()
         f = model.get_feature(x).cpu().data.numpy()
-        features_rnn.append(f)
+        features_rnn.append(f[0])
 
-
+    features_rnn = np.array(features_rnn)
     ### tSNE
     tsne = TSNE(
         n_components=2,
@@ -69,3 +69,4 @@ if __name__ == "__main__" :
     mode = parser.parse_args().mode
 
     plot_tsne(model_fp, output_fp, limit, mode)
+
