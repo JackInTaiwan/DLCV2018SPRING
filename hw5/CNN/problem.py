@@ -5,6 +5,8 @@ import numpy as np
 
 from argparse import ArgumentParser
 from reader import getVideoList, readShortVideo
+from utils import normalize, select_data
+from train import VIDEOS_MAX_BATCH
 
 
 
@@ -35,6 +37,9 @@ def prediction(model_fp, data_fp, label_fp, output_fp) :
     ### Prediction
     correct, total = 0, len(labels)
     preds = []
+
+    videos = normalize(videos / 255.)
+    videos = select_data(videos, VIDEOS_MAX_BATCH)
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, len(videos)))
