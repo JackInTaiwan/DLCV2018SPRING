@@ -1,6 +1,5 @@
 import cv2
 import os
-import matplotlib.pyplot as plt
 import numpy as np
 import torch as tor
 
@@ -10,7 +9,6 @@ from sklearn.manifold.t_sne import TSNE
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
-
 
 
 
@@ -32,15 +30,12 @@ def plot_tsne(model_fp, output_fp, limit) :
     correct, total = 0, len(labels)
 
     features_rnn = []
-    labels = []
 
     for i, (x, label) in enumerate(zip(videos, labels), 1) :
         print ("Process: {}/{}".format(i, total))
         x = tor.Tensor(x).unsqueeze(0).cuda()
-        f = model.get_feature(x)
+        f = model.get_feature(x).cpu().data.numpy()
         features_rnn.append(f)
-
-        labels.append(int(label))
 
 
     ### tSNE
@@ -50,8 +45,9 @@ def plot_tsne(model_fp, output_fp, limit) :
     )
     f_tsne = tsne.fit_transform(features_rnn)
 
-    plt.scatter(f_tsne[labels == 0, 0], f_tsne[labels == 0, 1], c="r")
-    plt.scatter(f_tsne[labels == 1, 0], f_tsne[labels == 1, 1], c="b")
+    for i in range(11) :
+        plt.scatter(f_tsne[labels == i, 0], f_tsne[labels == i, 1])
+
     #plt.legend(["Not {}".format(attr_selected), attr_selected])
 
     plt.savefig(os.path.join(output_fp, "tSNE_RNN.jpg"))

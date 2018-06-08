@@ -1,5 +1,5 @@
 wget https://www.dropbox.com/s/4bawd51d5v4702l/model_1.pkl?dl=0 -O model_1.pkl
-wget https://www.dropbox.com/s/mrbcos72kt0hhob/model_3.pkl?dl=0 -O model_3.pkl
+wget https://www.dropbox.com/s/hb7k1i6m8g12lp4/model_3.pkl?dl=0 -O model_3.pkl
 mv model_1.pkl ./CNN/models/
 mv model_3.pkl ./RNN/models/
 
