@@ -61,6 +61,7 @@ def prediction(model_fp, vgg_fp, data_fp, label_fp, output_fp, limit) :
     ### Prediction
     model = tor.load(model_fp)
     model.cuda()
+    model.eval()
 
     correct, total = 0, len(labels)
     preds = []
