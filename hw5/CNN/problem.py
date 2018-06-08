@@ -11,7 +11,7 @@ from train import VIDEOS_MAX_BATCH
 
 
 
-def prediction(model_fp, data_fp, label_fp, output_fp) :
+def prediction(model_fp, data_fp, label_fp, output_fp, limit) :
     model = tor.load(model_fp)
     model.cuda()
 
@@ -19,7 +19,9 @@ def prediction(model_fp, data_fp, label_fp, output_fp) :
     l = getVideoList(label_fp)
     videos_output, labels_output = [], []
 
-    for i in range(len(l["Video_category"])):
+    total = len(l["Video_category"]) if not limit else limit
+
+    for i in range(total):
         print("Convert videos into numpy: {}/{} \r".format(i + 1, len(l["Video_category"])), end="")
 
         cat = l["Video_category"][i]
@@ -67,6 +69,7 @@ def prediction(model_fp, data_fp, label_fp, output_fp) :
 
 if __name__ == "__main__" :
     parse = ArgumentParser()
+    parse.add_argument("-l", required=True, type=int, default=None)
     parse.add_argument("--data", required=True, type=str)
     parse.add_argument("--load", required=True, type=str)
     parse.add_argument("--label", required=True, type=str)
@@ -76,5 +79,6 @@ if __name__ == "__main__" :
     model_fp = parse.parse_args().load
     label_fp = parse.parse_args().label
     output_fp = parse.parse_args().output
+    limit = parse.parse_args().limit
 
-    pred = prediction(model_fp, data_fp, label_fp, output_fp)
+    pred = prediction(model_fp, data_fp, label_fp, output_fp, limit)
