@@ -1,0 +1,23 @@
+### Dir
+__pycache__/
+.idea/
+task2-dataset/
+
+
+### Files
+*notes*
+
+
+### Types
+*.zip
+*.pkl
+*.txt
+*.out
+*.png
+*.jpg
+#*.json
+*.npy
+*.swp
+*.xml
+*.gz
+*.zip
