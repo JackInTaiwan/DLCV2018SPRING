@@ -68,7 +68,7 @@ class Trainer :
             y_query = tor.Tensor(y_query)
 
 
-            pred = model(x, x_query)
+            pred = model(x, x_query, y_query)
 
             loss = loss_func(pred, y_query)
             loss = float(loss.data)
