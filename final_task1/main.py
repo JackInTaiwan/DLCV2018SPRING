@@ -127,6 +127,7 @@ if __name__ == "__main__" :
         novel_test=novel_test,
         shot=SHOT,
         cpu=cpu,
+        lr=LR,
     )
 
     trainer.train()

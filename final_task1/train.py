@@ -27,7 +27,7 @@ LR_STEPSIZE, LR_GAMMA = None, None
 
 
 class Trainer :
-    def __init__(self, recorder, base_train, novel_support, novel_test, shot, cpu=False) :
+    def __init__(self, recorder, base_train, novel_support, novel_test, shot, cpu=False, lr=LR) :
         self.recorder = recorder
         self.base_train = base_train
         self.novel_support = novel_support
