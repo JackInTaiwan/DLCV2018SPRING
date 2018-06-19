@@ -43,7 +43,7 @@ class Trainer :
         x = self.base_train[way_pick][:, shot_pick[:-1]]
 
         query_pick = random.choice(way_pick)
-        x_query = self.base_train[query_pick, shot_pick[-1]][:]
+        x_query = self.base_train[query_pick, shot_pick[-1]]
         y_query = np.array(way_pick.index(query_pick))
 
         return  x, x_query, y_query
@@ -63,9 +63,8 @@ class Trainer :
             optim.zero_grad()
 
             x, x_query, y_query = self.dump_novel_train()
-            print (x_query.shape)
             x = tor.Tensor(x)
-            x_query = tor.Tensor(x_query)
+            x_query = tor.Tensor(x_query).unsqueeze(0)
             y_query = tor.Tensor(y_query)
 
             if not self.cpu :

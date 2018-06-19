@@ -65,7 +65,6 @@ class MatchNet(nn.Module) :
         x = self.vgg16(x)
         x = x.view(20, 5, -1)
         x = tor.mean(x, dim=1)
-        print (x.size())
         x_query = self.vgg16(x_query)
 
         score = tor.mm(x, x_query)
