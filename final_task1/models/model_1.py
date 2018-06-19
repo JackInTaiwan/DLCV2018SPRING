@@ -31,7 +31,6 @@ class MatchNet(nn.Module) :
             self.conv(channels[11], channels[12], 2, 1),
             self.conv(channels[12], channels[13], 2, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.flatten,
         )
 
 
@@ -64,7 +63,7 @@ class MatchNet(nn.Module) :
     def forward(self, x, x_query, y_query) :
         x = x.view(100, 3, 32, 32)
         x = self.vgg16(x)
-        #x = x.view(self)
+        x = self.flatten(x)
         x = tor.mean(x, axis=1)
         x_query = self.vgg16(x_query)
 
