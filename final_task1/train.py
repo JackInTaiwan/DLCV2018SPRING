@@ -44,7 +44,7 @@ class Trainer :
 
         query_pick = random.choice(way_pick)
         x_query = self.base_train[query_pick, shot_pick[-1]]
-        y_query = np.array(way_pick.index(query_pick))
+        y_query = np.array([way_pick.index(query_pick)])
 
         return  x, x_query, y_query
 
