@@ -72,12 +72,19 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             pred = self.model(x, x_query, y_query)
+            print ("pred, y", pred, y_query)
 
             loss = self.loss_func(pred, y_query)
             loss.backward()
 
             if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0 :
                 print("|Loss: {:<8}".format(float(loss.data)))
+
+            if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0 :
+                self.recorder.save_checkpoints()
+
+            if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0 :
+                self.recorder.save_models()
 
             self.optim.step()
             self.recorder.step()
