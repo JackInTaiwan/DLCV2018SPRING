@@ -61,10 +61,11 @@ class MatchNet(nn.Module) :
 
 
     def forward(self, x, x_query, y_query) :
-        #x = x.view(100, 3, 32, 32)
+        x = x.view(100, 3, 32, 32)
         x = self.vgg16(x)
-        x = self.flatten(x)
-        x = tor.mean(x, axis=1)
+        x = x.view(20, 5, -1)
+        x = tor.mean(x, dim=1)
+        print (x.size())
         x_query = self.vgg16(x_query)
 
         score = tor.mm(x, x_query)
