@@ -23,15 +23,16 @@ class MatchNet(nn.Module) :
             self.conv(channels[5], channels[6], 3, 1),
             self.conv(channels[6], channels[7], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            #self.conv(channels[7], channels[8], 3, 1),
-            #self.conv(channels[8], channels[9], 3, 1),
-            #self.conv(channels[9], channels[10], 3, 1),
-            #nn.MaxPool2d(kernel_size=2),
+            self.conv(channels[7], channels[8], 3, 1),
+            self.conv(channels[8], channels[9], 3, 1),
+            self.conv(channels[9], channels[10], 3, 1),
+            nn.MaxPool2d(kernel_size=2),
             #self.conv(channels[10], channels[11], 2, 1),
             #self.conv(channels[11], channels[12], 2, 1),
             #self.conv(channels[12], channels[13], 2, 1),
             #nn.MaxPool2d(kernel_size=2),
         )
+
 
 
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
@@ -70,7 +71,7 @@ class MatchNet(nn.Module) :
         #print (x)
         #print (x_query)
         #print (y_query)
-        pred = tor.nn.functional.cosine_similarity(x, x_query)
+        pred = nn.functional.cosine_similarity(x, x_query)
         pred = pred.view(1, -1)
 
         return pred
