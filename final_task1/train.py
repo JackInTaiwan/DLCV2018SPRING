@@ -74,8 +74,7 @@ class Trainer :
 
             print (pred.size(), y_query.size())
             loss = loss_func(pred, y_query)
-            loss = float(loss.data)
-            print("|Loss: {:<8}".format(loss))
+            print("|Loss: {:<8}".format(float(loss.data)))
 
             loss.backward()
             optim.step()
