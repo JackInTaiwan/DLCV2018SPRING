@@ -27,10 +27,10 @@ class MatchNet(nn.Module) :
             self.conv(channels[8], channels[9], 3, 1),
             self.conv(channels[9], channels[10], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(channels[10], channels[11], 2, 1),
-            self.conv(channels[11], channels[12], 2, 1),
-            self.conv(channels[12], channels[13], 2, 1),
-            nn.MaxPool2d(kernel_size=2),
+            #self.conv(channels[10], channels[11], 2, 1),
+            #self.conv(channels[11], channels[12], 2, 1),
+            #self.conv(channels[12], channels[13], 2, 1),
+            #nn.MaxPool2d(kernel_size=2),
         )
 
 
