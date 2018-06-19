@@ -63,6 +63,7 @@ class Trainer :
             optim.zero_grad()
 
             x, x_query, y_query = self.dump_novel_train()
+            print (x.shape)
             x = tor.Tensor(x)
             x_query = tor.Tensor(x_query)
             y_query = tor.Tensor(y_query)
