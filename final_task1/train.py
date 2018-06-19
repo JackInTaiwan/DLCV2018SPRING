@@ -60,7 +60,7 @@ class Trainer :
     def train(self) :
 
         for i in range(STEPS) :
-            print("|Steps: {:>5} |".format(self.recorder.get_steps()))
+            print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
 
             x, x_query, y_query = self.dump_novel_train()
