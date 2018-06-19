@@ -72,7 +72,6 @@ class Trainer :
 
             pred = model(x, x_query, y_query)
 
-            print (pred.size(), y_query.size())
             loss = loss_func(pred, y_query)
             print("|Loss: {:<8}".format(float(loss.data)))
 
