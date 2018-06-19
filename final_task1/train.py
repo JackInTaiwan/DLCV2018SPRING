@@ -40,7 +40,7 @@ class Trainer :
             self.model.cuda()
 
         # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
-        self.optim = tor.optim.Adam(model.parameters(), lr=LR)
+        self.optim = tor.optim.Adam(self.model.parameters(), lr=LR)
         self.loss_func = tor.nn.CrossEntropyLoss().cuda()
 
 
