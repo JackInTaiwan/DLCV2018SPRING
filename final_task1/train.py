@@ -18,7 +18,7 @@ VIDEOS_MAX_BATCH = 10
 WAY = 20
 
 EPOCH = 30
-STEPS = 1000
+STEPS = 100000
 BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = None, None
@@ -35,6 +35,14 @@ class Trainer :
         self.shot = shot
         self.cpu = cpu
 
+        model = self.recorder.models["matchnet"]
+        if not self.cpu :
+            model.cuda()
+
+        # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
+        self.optim = tor.optim.Adam(model.parameters(), lr=LR)
+        self.loss_func = tor.nn.CrossEntropyLoss().cuda()
+
 
     def dump_novel_train(self) :
         way_pick = random.sample(range(self.base_train.shape[0]), WAY)
@@ -50,17 +58,10 @@ class Trainer :
 
 
     def train(self) :
-        model = self.recorder.models["matchnet"]
-        if not self.cpu :
-            model.cuda()
-
-        # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
-        optim = tor.optim.Adam(model.parameters(), lr=LR)
-        loss_func = tor.nn.CrossEntropyLoss().cuda()
 
         for i in range(STEPS) :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()))
-            optim.zero_grad()
+            self.optim.zero_grad()
 
             x, x_query, y_query = self.dump_novel_train()
             x = tor.Tensor(x)
@@ -70,15 +71,15 @@ class Trainer :
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
-            pred = model(x, x_query, y_query)
+            pred = self.model(x, x_query, y_query)
 
-            loss = loss_func(pred, y_query)
-            print("|Loss: {:<8}".format(float(loss.data)))
-
+            loss = self.loss_func(pred, y_query)
             loss.backward()
-            optim.step()
 
+            if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0 :
+                print("|Loss: {:<8}".format(float(loss.data)))
 
+            self.optim.step()
             self.recorder.step()
 
 
