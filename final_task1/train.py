@@ -67,6 +67,8 @@ class Trainer :
             x_query = tor.Tensor(x_query)
             y_query = tor.Tensor(y_query)
 
+            if not self.cpu :
+                x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             pred = model(x, x_query, y_query)
 
