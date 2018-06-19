@@ -35,9 +35,9 @@ class Trainer :
         self.shot = shot
         self.cpu = cpu
 
-        model = self.recorder.models["matchnet"]
+        self.model = self.recorder.models["matchnet"]
         if not self.cpu :
-            model.cuda()
+            self.model.cuda()
 
         # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
         self.optim = tor.optim.Adam(model.parameters(), lr=LR)
