@@ -68,6 +68,6 @@ class MatchNet(nn.Module) :
         x_query = self.vgg16(x_query)
         x_query = x_query.view(1, -1)
         pred = tor.nn.functional.cosine_similarity(x, x_query)
-        pred = pred.view(-1)
+        pred = pred.view(1, -1)
 
         return pred
