@@ -65,7 +65,7 @@ class Trainer :
             x, x_query, y_query = self.dump_novel_train()
             x = tor.Tensor(x)
             x_query = tor.Tensor(x_query).unsqueeze(0)
-            y_query = tor.Tensor(y_query)
+            y_query = tor.LongTensor(y_query)
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
