@@ -9,28 +9,33 @@ import numpy as np
 class MatchNet(nn.Module) :
     def __init__(self):
         super(MatchNet, self).__init__()
-        channels = np.array([3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10])
-        channels = [int(num) for num in channels]    # transform type
+        conv_chls = [3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
+        dense_chls = [conv_chls[10] * 1 * 1, 2 ** 10, 2 ** 10]
 
         self.vgg16 = nn.Sequential(
-            self.conv(channels[0], channels[1], 3, 1),
-            self.conv(channels[1], channels[2], 3, 1),
+            self.conv(conv_chls[0], conv_chls[1], 3, 1),
+            self.conv(conv_chls[1], conv_chls[2], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(channels[2], channels[3], 3, 1),
-            self.conv(channels[3], channels[4], 3, 1),
+            self.conv(conv_chls[2], conv_chls[3], 3, 1),
+            self.conv(conv_chls[3], conv_chls[4], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(channels[4], channels[5], 3, 1),
-            self.conv(channels[5], channels[6], 3, 1),
-            self.conv(channels[6], channels[7], 3, 1),
+            self.conv(conv_chls[4], conv_chls[5], 3, 1),
+            self.conv(conv_chls[5], conv_chls[6], 3, 1),
+            self.conv(conv_chls[6], conv_chls[7], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(channels[7], channels[8], 3, 1),
-            self.conv(channels[8], channels[9], 3, 1),
-            self.conv(channels[9], channels[10], 3, 1),
-            nn.MaxPool2d(kernel_size=2),
-            #self.conv(channels[10], channels[11], 2, 1),
-            #self.conv(channels[11], channels[12], 2, 1),
-            #self.conv(channels[12], channels[13], 2, 1),
+            self.conv(conv_chls[7], conv_chls[8], 3, 1),
+            self.conv(conv_chls[8], conv_chls[9], 3, 1),
+            self.conv(conv_chls[9], conv_chls[10], 3, 1),
+            nn.MaxPool2d(kernel_size=4),
+            #self.conv(conv_chls[10], conv_chls[11], 2, 1),
+            #self.conv(conv_chls[11], conv_chls[12], 2, 1),
+            #self.conv(conv_chls[12], conv_chls[13], 2, 1),
             #nn.MaxPool2d(kernel_size=2),
+        )
+
+        self.dense = nn.Sequential(
+            self.fc(dense_chls[0], dense_chls[1]),
+            self.fc(dense_chls[1], dense_chls[2])
         )
 
 
