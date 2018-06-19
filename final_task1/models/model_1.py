@@ -69,13 +69,13 @@ class MatchNet(nn.Module) :
     def forward(self, x, x_query, y_query) :
         x = x.view(100, 3, 32, 32)
         x = self.vgg16(x)
+        x = self.dense(x)
         x = x.view(20, 5, -1)
         x = tor.mean(x, dim=1)
         x_query = self.vgg16(x_query)
+        x_query = self.dense(x_query)
         x_query = x_query.view(1, -1)
-        #print (x)
-        #print (x_query)
-        #print (y_query)
+
         pred = nn.functional.cosine_similarity(x, x_query)
         pred = pred.view(1, -1)
 
