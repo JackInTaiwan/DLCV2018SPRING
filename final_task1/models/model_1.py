@@ -66,6 +66,7 @@ class MatchNet(nn.Module) :
         x = x.view(20, 5, -1)
         x = tor.mean(x, dim=1)
         x_query = self.vgg16(x_query)
+        x_query = x_query.view(-1, 1)
 
         score = tor.mm(x, x_query)
         pred = tor.nn.functional.cosine_similarity(score, x_query)
