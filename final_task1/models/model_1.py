@@ -31,7 +31,7 @@ class MatchNet(nn.Module) :
             self.conv(channels[11], channels[12], 2, 1),
             self.conv(channels[12], channels[13], 2, 1),
             nn.MaxPool2d(kernel_size=2),
-
+            self.flatten,
         )
 
 
@@ -55,6 +55,10 @@ class MatchNet(nn.Module) :
             #nn.ReLU(inplace=True)
         )
         return fc
+
+
+    def flatten(self, x) :
+        return x.view(-1)
 
 
     def forward(self, x, x_query, y_query) :
