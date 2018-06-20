@@ -11,6 +11,7 @@ from train import Trainer
 
 from models import (
     model_1,
+    model_2,
 )
 
 
@@ -86,7 +87,10 @@ if __name__ == "__main__" :
     BASE_DIR_FP = "./task2-dataset/base/"
     RECORDS_FP = "./records/"
 
-    MODELS = [model_1,]
+    MODELS = [
+        model_1,
+        model_2,
+    ]
 
     SHOT = 5
     LR = 0.0001
