@@ -94,7 +94,7 @@ if __name__ == "__main__" :
     ]
 
     WAY = 5
-    SHOT = 5
+    SHOT = 1
     LR = 0.0001
     EPOCH = 50
 
