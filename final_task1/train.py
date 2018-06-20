@@ -67,6 +67,9 @@ class Trainer :
         self.novel_support_tr = tor.Tensor(self.novel_support).cuda()
         correct, total = 0, self.novel_test.shape[0] * EVAL_TEST_SIZE
 
+        for item in self.model.parameters() :
+            print (item)
+
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).cuda()
