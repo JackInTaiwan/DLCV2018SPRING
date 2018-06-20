@@ -81,7 +81,9 @@ class RelationNet(nn.Module) :
 
 
     def forward(self, x, x_query, y_query) :
+        print (x.size()) 
         x = x.view(x.size(0) * x.size(1), 3, 32, 32)
+        print (x.size())
         x = self.vgg16(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
