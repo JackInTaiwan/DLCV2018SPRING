@@ -61,6 +61,24 @@ class Trainer :
 
 
 
+    def eval(self) :
+        self.model.way = 20
+        self.model.shot = 5
+        self.novel_support_tr = tor.Tensor(self.novel_support).cuda()
+        correct, total = 0, self.novel_support.shape[0] * self.novel_support.shape[1]
+
+        for label_idx, data in self.novel_test :
+            for img in data :
+                img = tor.Tensor(img).unsqueeze(0).cuda()
+                scores = self.model(self.novel_support_tr, img)
+                pred = int(tor.argmax(scores))
+                if pred == label_idx :
+                    correct += 1
+
+        return correct / total
+
+
+
     def train(self) :
 
         for i in range(STEPS) :
@@ -76,9 +94,9 @@ class Trainer :
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
-            pred = self.model(x, x_query, y_query)
+            scores = self.model(x, x_query)
 
-            loss = self.loss_fn(pred, y_query)
+            loss = self.loss_fn(scores, y_query)
             loss.backward()
 
 
@@ -90,6 +108,10 @@ class Trainer :
 
             if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0 :
                 self.recorder.save_models()
+
+            if self.recorder.get_steps() % CAL_ACC_PERIOD == 0 :
+                acc = self.eval()
+                print("|Acc: {:<8}".format(round(acc, 5)))
 
             self.optim.step()
             self.recorder.step()
