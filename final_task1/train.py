@@ -35,7 +35,7 @@ class Trainer :
         self.shot = shot
         self.cpu = cpu
 
-        self.model = self.recorder.models["matchnet"]
+        self.model = self.recorder.models["relationnet"]
         self.model.way, self.model.shot = self.way, self.shot
         if not self.cpu :
             self.model.cuda()
