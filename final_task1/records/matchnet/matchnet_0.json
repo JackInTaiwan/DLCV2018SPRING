@@ -1,1 +1,1 @@
-"{\"data\": {}, \"steps\": 0, \"model_names\": [\"matchnet\"], \"desp\": \"\", \"id\": \"33390d6c72f911e88afd4cbb58bc5109\", \"epochs\": 0, \"save_path\": \"./records/matchnet\", \"recorder_name\": \"matchnet_0\", \"mode\": \"torch\"}"
+"{\"id\": \"353cb1d873bf11e8b796000d3a01525d\", \"recorder_name\": \"matchnet_0\", \"save_path\": \"./records/matchnet\", \"mode\": \"torch\", \"model_names\": [\"matchnet\"], \"desp\": \"\", \"steps\": 4750, \"epochs\": 0, \"data\": {}}"

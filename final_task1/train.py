@@ -73,7 +73,7 @@ class Trainer :
 
             pred = self.model(x, x_query, y_query)
             print (pred)
-            print ("pred, y", tor.argmax(pred)[1], y_query)
+            print ("pred, y", tor.argmax(pred), y_query)
 
             loss = self.loss_func(pred, y_query)
             loss.backward()
