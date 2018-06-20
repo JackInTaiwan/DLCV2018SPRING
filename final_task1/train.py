@@ -14,7 +14,7 @@ SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
-EVAL_TEST_SIZE = 50
+EVAL_TEST_SIZE = 25
 
 EPOCH = 30
 STEPS = 100000
@@ -65,7 +65,7 @@ class Trainer :
         self.model.way = 20
         self.model.shot = 5
         self.novel_support_tr = tor.Tensor(self.novel_support).cuda()
-        correct, total = 0, self.novel_support.shape[0] * self.novel_support.shape[1]
+        correct, total = 0, self.novel_test.shape[0] * self.novel_test.shape[1]
 
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
