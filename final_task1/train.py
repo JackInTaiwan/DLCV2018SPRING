@@ -7,7 +7,7 @@ import numpy as np
 
 
 """ Parameters """
-CAL_ACC_PERIOD = 500    # steps
+CAL_ACC_PERIOD = 100    # steps
 SHOW_LOSS_PERIOD = 10   # steps
 SAVE_MODEL_PERIOD = 1000   # epochs
 SAVE_JSON_PERIOD = 50  # steps
@@ -67,9 +67,6 @@ class Trainer :
         self.novel_support_tr = tor.Tensor(self.novel_support).cuda()
         correct, total = 0, self.novel_test.shape[0] * EVAL_TEST_SIZE
 
-        for item in self.model.parameters() :
-            print (item)
-
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).cuda()
@@ -101,6 +98,7 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             scores = self.model(x, x_query)
+            print (tor.argmax(scores), y_query_idx)
 
             loss = self.loss_fn(scores, y_query)
             loss.backward()

@@ -96,5 +96,4 @@ class RelationNet(nn.Module) :
         x_query = x_query[0].repeat(x.size(0), 1)
         cat = tor.cat((x, x_query), 1)
         score = self.score_dense(cat)
-        print (score)
         return score

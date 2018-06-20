@@ -1,1 +1,1 @@
-"{\"id\": \"eb595fae748511e8b796000d3a01525d\", \"recorder_name\": \"relationnet_2\", \"save_path\": \"./records/relationnet/\", \"mode\": \"torch\", \"model_names\": [\"relationnet\"], \"desp\": \"\", \"steps\": 1000, \"epochs\": 0, \"data\": {}}"
+"{\"id\": \"8c8aa4c4748a11e8b796000d3a01525d\", \"recorder_name\": \"relationnet_2\", \"save_path\": \"./records/relationnet/\", \"mode\": \"torch\", \"model_names\": [\"relationnet\"], \"desp\": \"\", \"steps\": 9550, \"epochs\": 0, \"data\": {}}"
