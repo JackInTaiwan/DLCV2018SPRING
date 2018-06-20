@@ -92,6 +92,7 @@ if __name__ == "__main__" :
         model_2,
     ]
 
+    WAY = 5
     SHOT = 5
     LR = 0.0001
     EPOCH = 50
@@ -129,6 +130,7 @@ if __name__ == "__main__" :
         base_train=base_train,
         novel_support=novel_support,
         novel_test=novel_test,
+        way=WAY,
         shot=SHOT,
         cpu=cpu,
         lr=LR,
