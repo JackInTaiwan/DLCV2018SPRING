@@ -57,6 +57,7 @@ class RelationNet(nn.Module) :
                 kernel_size=kernel_size,
                 stride=stride,
                 padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
+                bias=False,
             ),
             nn.ReLU(inplace=True),
         )
