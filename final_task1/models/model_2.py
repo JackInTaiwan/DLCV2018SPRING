@@ -34,8 +34,9 @@ class RelationNet(nn.Module) :
             #self.conv(conv_chls[11], conv_chls[12], 2, 1),
             #self.conv(conv_chls[12], conv_chls[13], 2, 1),
             #nn.MaxPool2d(kernel_size=2),
-            self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False),
         )
+
+        self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False),
 
         score_dense_chls = [2 ** 10, 2 ** 10, 1]
 
@@ -81,12 +82,17 @@ class RelationNet(nn.Module) :
 
 
     def forward(self, x, x_query, y_query) :
-        x = x.view(x.size(0) * x.size(1), 3, 32, 32)
+        way, shot = x.size(0), x.size(1)
+        x = x.view(way * shot, 3, 32, 32)
         x = self.vgg16(x)
+        x = x.view(way * shot, -1)
+        x = self.vgg16_dense(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
 
         x_query = self.vgg16(x_query)
+        x_query = x_query.view(way * shot, -1)
+        x_query = self.vgg16_dense(x_query)
         x_query = x_query[0].repeat(x.size(0), 1)
 
         cat = tor.cat((x, x_query), 1)
