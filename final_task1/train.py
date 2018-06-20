@@ -94,15 +94,9 @@ class Trainer :
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
-<<<<<<< HEAD
-            pred = self.model(x, x_query, y_query)
-            print (tor.argmax(pred), y_query_idx)
-            loss = self.loss_fn(pred, y_query)
-=======
             scores = self.model(x, x_query)
 
             loss = self.loss_fn(scores, y_query)
->>>>>>> 1357c83157e7a3721e2bf65152e6886ddfc9255d
             loss.backward()
 
 
