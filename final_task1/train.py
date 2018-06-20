@@ -41,7 +41,9 @@ class Trainer :
 
         # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
         self.optim = tor.optim.Adam(self.model.parameters(), lr=LR)
-        self.loss_func = tor.nn.CrossEntropyLoss().cuda()
+        #self.loss_func = tor.nn.CrossEntropyLoss().cuda()
+        self.loss_fn = tor.nn.MSELoss().cuda()
+
 
 
     def dump_novel_train(self) :
@@ -57,6 +59,7 @@ class Trainer :
         return  x, x_query, y_query
 
 
+
     def train(self) :
 
         for i in range(STEPS) :
@@ -66,17 +69,17 @@ class Trainer :
             x, x_query, y_query = self.dump_novel_train()
             x = tor.Tensor(x)
             x_query = tor.Tensor(x_query).unsqueeze(0)
-            y_query = tor.LongTensor(y_query)
+            y_query = tor.zeros(WAY, 1)
+            y_query[y_query] = 1
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             pred = self.model(x, x_query, y_query)
-            print (pred)
-            print ("pred, y", tor.argmax(pred)[1], y_query)
 
-            loss = self.loss_func(pred, y_query)
+            loss = self.loss_fn(pred, y_query)
             loss.backward()
+
 
             if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0 :
                 print("|Loss: {:<8}".format(float(loss.data)))
