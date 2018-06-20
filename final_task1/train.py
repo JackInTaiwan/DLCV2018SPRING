@@ -14,7 +14,7 @@ SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
-VIDEOS_MAX_BATCH = 10
+EVAL_TEST_SIZE = 50
 
 EPOCH = 30
 STEPS = 100000
@@ -68,7 +68,7 @@ class Trainer :
         correct, total = 0, self.novel_support.shape[0] * self.novel_support.shape[1]
 
         for label_idx, data in enumerate(self.novel_test) :
-            for img in data :
+            for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).cuda()
                 scores = self.model(self.novel_support_tr, img)
                 pred = int(tor.argmax(scores))
