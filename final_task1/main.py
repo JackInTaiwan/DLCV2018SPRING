@@ -53,7 +53,7 @@ def load_data(base_dp, novel_dp, shot=5) :
 
 def load_recorder(Model, model_index, record_dp, json_fn) :
     model = Model()
-    recorder_name = "matchnet_{}".format(model_index)
+    recorder_name = "relationnet_{}".format(model_index)
 
     if json_fn == None :
         recorder = Recorder(
@@ -62,7 +62,7 @@ def load_recorder(Model, model_index, record_dp, json_fn) :
             recorder_name=recorder_name,
             save_path=record_dp,
             models={
-                "matchnet": model,
+                "relationnet": model,
             }
         )
 
@@ -72,7 +72,7 @@ def load_recorder(Model, model_index, record_dp, json_fn) :
             save_mode="state_dict",
             save_path=record_dp,
             models={
-                "matchnet": model,
+                "relationnet": model,
             }
         )
         recorder.load(json_fn)
