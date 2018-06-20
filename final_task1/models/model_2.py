@@ -36,7 +36,7 @@ class RelationNet(nn.Module) :
             #nn.MaxPool2d(kernel_size=2),
         )
 
-        self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False),
+        self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
 
         score_dense_chls = [2 ** 10, 2 ** 10, 1]
 
