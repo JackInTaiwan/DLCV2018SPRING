@@ -70,6 +70,7 @@ def load_recorder(Model, model_index, record_dp, json_fn) :
         recorder = Recorder(
             mode="torch",
             save_mode="state_dict",
+            save_path=record_dp,
             models={
                 "matchnet": model,
             }
@@ -113,7 +114,6 @@ if __name__ == "__main__" :
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
     model_index = parser.parse_args().i
-    load_model_fp = parser.parse_args().load
     cpu = parser.parse_args().cpu
     model_version = parser.parse_args().version
     record_dp = parser.parse_args().record
