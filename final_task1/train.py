@@ -66,13 +66,11 @@ class Trainer :
         self.model.shot = 5
         self.novel_support_tr = tor.Tensor(self.novel_support).cuda()
         correct, total = 0, self.novel_support.shape[0] * self.novel_support.shape[1]
-
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).cuda()
                 scores = self.model(self.novel_support_tr, img)
                 pred = int(tor.argmax(scores))
-                print (pred, label_idx)
                 if pred == label_idx :
                     correct += 1
 
