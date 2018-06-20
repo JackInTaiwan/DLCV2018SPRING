@@ -92,7 +92,7 @@ class RelationNet(nn.Module) :
         x = tor.mean(x, dim=1)
 
         x_query = self.vgg16(x_query)
-        x_query = x_query.view(way * shot, -1)
+        x_query = x_query.view(1, -1)
         x_query = self.vgg16_dense(x_query)
         x_query = x_query[0].repeat(x.size(0), 1)
 
