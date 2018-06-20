@@ -69,7 +69,7 @@ class Trainer :
             x, x_query, y_query_idx = self.dump_novel_train()
             x = tor.Tensor(x)
             x_query = tor.Tensor(x_query).unsqueeze(0)
-            y_query = tor.zeros(WAY, 1)
+            y_query = tor.zeros(self.way, 1)
             y_query[y_query_idx] = 1
 
             if not self.cpu :
