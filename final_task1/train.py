@@ -8,8 +8,8 @@ import numpy as np
 
 """ Parameters """
 CAL_ACC_PERIOD = 300    # steps
-SHOW_LOSS_PERIOD = 30   # steps
-SAVE_MODEL_PERIOD = 1   # epochs
+SHOW_LOSS_PERIOD = 10   # steps
+SAVE_MODEL_PERIOD = 1000   # epochs
 SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
