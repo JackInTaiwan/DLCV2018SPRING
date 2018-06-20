@@ -122,7 +122,7 @@ if __name__ == "__main__" :
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
-    recorder = load_recorder(MODELS[model_version], model_index, record_dp, json_fn)
+    recorder = load_recorder(MODELS[model_version - 1], model_index, record_dp, json_fn)
 
     trainer = Trainer(
         recorder=recorder,
