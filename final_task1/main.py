@@ -107,6 +107,8 @@ if __name__ == "__main__" :
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning rate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
+    parser.add_argument("--way", action="store", type=int, default=None, help="number of way")
+    parser.add_argument("--shot", action="store", type=int, default=None, help="number of shot")
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
@@ -119,6 +121,8 @@ if __name__ == "__main__" :
     record_dp = parser.parse_args().record
     json_fn = parser.parse_args().load
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
+    WAY = parser.parse_args().way if parser.parse_args().way else WAY
+    SHOT = parser.parse_args().shot if parser.parse_args().shot else SHOT
 
 
     """ Main """
