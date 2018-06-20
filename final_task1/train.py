@@ -72,7 +72,7 @@ class Trainer :
                 img = tor.Tensor(img).unsqueeze(0).cuda()
                 scores = self.model(self.novel_support_tr, img)
                 pred = int(tor.argmax(scores))
-                print (scores, pred)
+                print (pred, label_idx)
                 if pred == label_idx :
                     correct += 1
 
