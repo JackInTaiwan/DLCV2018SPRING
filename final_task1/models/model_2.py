@@ -6,8 +6,11 @@ import torch.nn as nn
 
 
 class RelationNet(nn.Module) :
-    def __init__(self):
+    def __init__(self, way=20, shot=5):
         super(RelationNet, self).__init__()
+
+        self.way = way
+        self.shot = shot
 
         conv_chls = [3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
         vgg16_dense_chls = [conv_chls[10] * 1 * 1, 2 ** 10]
@@ -78,8 +81,9 @@ class RelationNet(nn.Module) :
 
 
     def forward(self, x, x_query, y_query) :
+        x = x.view(x.size(0) * x.size(1), 3, 32, 32)
         x = self.vgg16(x)
-        x = x.view(20, 5, -1)
+        x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
 
         x_query = self.vgg16(x_query)
