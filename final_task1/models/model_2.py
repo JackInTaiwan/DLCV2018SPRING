@@ -36,9 +36,9 @@ class RelationNet(nn.Module) :
             #nn.MaxPool2d(kernel_size=2),
         )
 
-        self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
+        self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], sig=True, relu=False)
 
-        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 9, 1]
+        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 9, 2 ** 9, 1]
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
@@ -64,17 +64,22 @@ class RelationNet(nn.Module) :
         return conv
 
 
-    def fc(self, num_in, num_out, relu=True) :
-        if relu == True :
+    def fc(self, num_in, num_out, sig=False, relu=True) :
+        if relu :
             fc = nn.Sequential(
                 nn.Linear(num_in, num_out, bias=False),
+                nn.ReLU(inplace=True)
             )
-            return fc
+        elif sig :
+            fc = nn.Sequential(
+                nn.Linear(num_in, num_out, bias=False),
+                nn.Sigmoid(),
+            )
         else :
             fc = nn.Sequential(
                 nn.Linear(num_in, num_out, bias=False),
             )
-            return fc
+        return fc
 
 
     def flatten(self, x) :
