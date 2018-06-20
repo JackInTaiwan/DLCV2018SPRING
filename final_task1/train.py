@@ -66,11 +66,11 @@ class Trainer :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
 
-            x, x_query, y_query = self.dump_novel_train()
+            x, x_query, y_query_idx = self.dump_novel_train()
             x = tor.Tensor(x)
             x_query = tor.Tensor(x_query).unsqueeze(0)
             y_query = tor.zeros(WAY, 1)
-            y_query[y_query] = 1
+            y_query[y_query_idx] = 1
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
