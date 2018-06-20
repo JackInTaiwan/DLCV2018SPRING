@@ -76,6 +76,9 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             pred = self.model(x, x_query, y_query)
+            print (pred)
+            #print (y_query)
+            loss = self.loss_fn(pred, y_query)
             loss.backward()
 
 
