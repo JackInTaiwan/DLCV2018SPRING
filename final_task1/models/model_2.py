@@ -67,13 +67,13 @@ class RelationNet(nn.Module) :
     def fc(self, num_in, num_out, relu=True) :
         if relu == True :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out),
+                nn.Linear(num_in, num_out, bias=False),
                 nn.ReLU(inplace=True)
             )
             return fc
         else :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out),
+                nn.Linear(num_in, num_out, bias=False),
             )
             return fc
 
@@ -87,7 +87,6 @@ class RelationNet(nn.Module) :
         x = x.view(way * shot, 3, 32, 32)
         x = self.vgg16(x)
         x = x.view(way * shot, -1)
-        print (x)
         x = self.vgg16_dense(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
@@ -98,5 +97,4 @@ class RelationNet(nn.Module) :
 
         cat = tor.cat((x, x_query), 1)
         score = self.score_dense(cat)
-
         return score
