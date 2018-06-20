@@ -15,7 +15,6 @@ SAVE_JSON_PERIOD = 50  # steps
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 VIDEOS_MAX_BATCH = 10
-WAY = 20
 
 EPOCH = 30
 STEPS = 100000
@@ -27,11 +26,12 @@ LR_STEPSIZE, LR_GAMMA = None, None
 
 
 class Trainer :
-    def __init__(self, recorder, base_train, novel_support, novel_test, shot, cpu=False, lr=LR) :
+    def __init__(self, recorder, base_train, novel_support, novel_test, shot, way, cpu=False, lr=LR) :
         self.recorder = recorder
         self.base_train = base_train
         self.novel_support = novel_support
         self.novel_test = novel_test
+        self.way = way
         self.shot = shot
         self.cpu = cpu
 
@@ -47,7 +47,7 @@ class Trainer :
 
 
     def dump_novel_train(self) :
-        way_pick = random.sample(range(self.base_train.shape[0]), WAY)
+        way_pick = random.sample(range(self.base_train.shape[0]), self.way)
         shot_pick = random.sample(range(self.base_train.shape[1]), self.shot + 1)
 
         x = self.base_train[way_pick][:, shot_pick[:-1]]
