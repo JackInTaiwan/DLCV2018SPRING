@@ -8,7 +8,7 @@ import numpy as np
 
 """ Parameters """
 CAL_ACC_PERIOD = 500    # steps
-SHOW_LOSS_PERIOD = 10   # steps
+SHOW_LOSS_PERIOD = 100   # steps
 SAVE_MODEL_PERIOD = 1000   # epochs
 SAVE_JSON_PERIOD = 50  # steps
 
@@ -17,10 +17,10 @@ EVAL_TRAIN_SIZE = 100
 EVAL_TEST_SIZE = 5
 
 EPOCH = 30
-STEPS = 100000
+STEPS = 500000
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = None, None
+LR_STEPSIZE, LR_GAMMA = 5000, 0.98
 
 
 
@@ -34,6 +34,7 @@ class Trainer :
         self.way = way
         self.shot = shot
         self.cpu = cpu
+        self.lr = lr
 
         self.model = self.recorder.models["relationnet"]
         self.model.way, self.model.shot = self.way, self.shot
@@ -41,9 +42,10 @@ class Trainer :
             self.model.cuda()
 
         # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
-        self.optim = tor.optim.Adam(self.model.parameters(), lr=LR)
+        self.optim = tor.optim.Adam(self.model.parameters(), lr=self.lr)
         #self.loss_func = tor.nn.CrossEntropyLoss().cuda()
         self.loss_fn = tor.nn.MSELoss().cuda()
+        self.lr_schedule = tor.optim.lr_scheduler.StepLR(optimizer=self.optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
 
 
@@ -83,6 +85,7 @@ class Trainer :
 
 
     def train(self) :
+        loss_list = []
 
         for i in range(STEPS) :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
@@ -103,9 +106,17 @@ class Trainer :
             loss = self.loss_fn(scores, y_query)
             loss.backward()
 
+            loss_list.append(float(loss.data))
+
 
             if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0 :
-                print("|Loss: {:<8}".format(float(loss.data)))
+                loss_avg = round(float(np.mean(np.array(loss_list))), 6)
+                self.recorder.checkpoint({
+                    "loss": loss_avg,
+                })
+                print("|Loss: {:<8}".format(loss_avg))
+
+                loss_list = []
 
             if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0 :
                 self.recorder.save_checkpoints()
@@ -115,9 +126,14 @@ class Trainer :
 
             if self.recorder.get_steps() % CAL_ACC_PERIOD == 0 :
                 acc = self.eval()
+                self.recorder.checkpoint({
+                    "acc": acc,
+                })
                 print("|Acc: {:<8}".format(round(acc, 5)))
 
+
             self.optim.step()
+            self.lr_schedule.step()
             self.recorder.step()
 
 
