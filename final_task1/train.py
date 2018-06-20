@@ -77,7 +77,7 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             pred = self.model(x, x_query, y_query)
-            print (tor.argmax(pred), y_query_idx)
+            #print (tor.argmax(pred), y_query_idx)
             loss = self.loss_fn(pred, y_query)
             loss.backward()
 
