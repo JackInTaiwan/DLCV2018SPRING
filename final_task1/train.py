@@ -101,7 +101,6 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             scores = self.model(x, x_query)
-            print (tor.argmax(scores), y_query_idx)
 
             loss = self.loss_fn(scores, y_query)
             loss.backward()
