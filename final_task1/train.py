@@ -7,7 +7,7 @@ import numpy as np
 
 
 """ Parameters """
-CAL_ACC_PERIOD = 100    # steps
+CAL_ACC_PERIOD = 500    # steps
 SHOW_LOSS_PERIOD = 10   # steps
 SAVE_MODEL_PERIOD = 1000   # epochs
 SAVE_JSON_PERIOD = 50  # steps
