@@ -119,6 +119,7 @@ if __name__ == "__main__" :
     parser.add_argument("-v", action="store", type=int, default=None, help="amount of validation data")
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
     parser.add_argument("--init", action="store_true", default=False, help="init weights of model")
+    parser.add_argument("--step", type=int, default=None, help="limitation of steps for training")
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning rate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
     parser.add_argument("--way", action="store", type=int, default=None, help="number of way")
@@ -132,6 +133,7 @@ if __name__ == "__main__" :
     model_index = parser.parse_args().i
     cpu = parser.parse_args().cpu
     init = parser.parse_args().init
+    step = parser.parse_args().step
     model_version = parser.parse_args().version
     record_dp = parser.parse_args().record
     json_fn = parser.parse_args().load
@@ -153,6 +155,7 @@ if __name__ == "__main__" :
         shot=SHOT,
         cpu=cpu,
         lr=LR,
+        step=step,
     )
 
     trainer.train()

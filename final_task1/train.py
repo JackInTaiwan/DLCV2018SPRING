@@ -17,7 +17,7 @@ EVAL_TRAIN_SIZE = 100
 EVAL_TEST_SIZE = 25
 
 EPOCH = 30
-STEPS = 5000
+STEP = 5000
 BATCHSIZE = 1
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 5000, 0.98
@@ -26,7 +26,7 @@ LR_STEPSIZE, LR_GAMMA = 5000, 0.98
 
 
 class Trainer :
-    def __init__(self, recorder, base_train, novel_support, novel_test, shot, way, cpu=False, lr=LR) :
+    def __init__(self, recorder, base_train, novel_support, novel_test, shot, way, cpu=False, lr=LR, step=None) :
         self.recorder = recorder
         self.base_train = base_train
         self.novel_support = novel_support
@@ -35,6 +35,7 @@ class Trainer :
         self.shot = shot
         self.cpu = cpu
         self.lr = lr
+        self.step = step if step else STEP
 
         self.model = self.recorder.models["relationnet"]
         self.model.way, self.model.shot = self.way, self.shot
@@ -89,7 +90,7 @@ class Trainer :
     def train(self) :
         loss_list = []
 
-        for i in range(STEPS) :
+        for i in range(self.step) :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
 
