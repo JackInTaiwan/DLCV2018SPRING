@@ -91,7 +91,7 @@ class RelationNet(nn.Module) :
         x = x.view(way * shot, 3, 32, 32)
         x = self.vgg16(x)
         x = x.view(way * shot, -1)
-        x = self.vgg16_dense(x)
+        #x = self.vgg16_dense(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
 
