@@ -85,7 +85,6 @@ def load_recorder(Model, model_index, record_dp, json_fn, init) :
             }
         )
         recorder.load(json_fn)
-        LR = recorder.lr
 
     return recorder
 
