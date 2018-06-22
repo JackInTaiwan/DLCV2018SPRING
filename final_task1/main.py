@@ -12,6 +12,10 @@ from train import Trainer
 from models import (
     model_1,
     model_2,
+    model_3,
+    model_4,
+    model_5,
+    model_6,
 )
 
 
@@ -19,7 +23,7 @@ from models import (
 
 def load_data(base_dp, novel_dp, shot=5) :
     # base_train loading
-    base_train = np.empty((80, 500, 32, 32, 3))
+    base_train = np.zeros((80, 500, 32, 32, 3))
 
     for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
         train_fp = os.path.join(base_dp, dir_name, "train")
@@ -32,8 +36,8 @@ def load_data(base_dp, novel_dp, shot=5) :
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
-    novel_support = np.empty((20, shot, 32, 32, 3))
-    novel_test = np.empty((20, 500 - shot, 32, 32, 3))
+    novel_support = np.zeros((20, shot, 32, 32, 3))
+    novel_test = np.zeros((20, 500 - shot, 32, 32, 3))
     for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))):
         train_fp = os.path.join(novel_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
@@ -80,6 +84,7 @@ def load_recorder(Model, model_index, record_dp, json_fn, init) :
             }
         )
         recorder.load(json_fn)
+        LR = recorder.lr
 
     return recorder
 
@@ -95,6 +100,10 @@ if __name__ == "__main__" :
     MODELS = [
         model_1,
         model_2,
+        model_3,
+        model_4,
+        model_5,
+        model_6,
     ]
 
     WAY = 5
