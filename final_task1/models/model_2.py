@@ -106,14 +106,11 @@ class RelationNet(nn.Module) :
     def params_init(self, m) :
         classname = m.__class__.__name__
         if classname.lower() == "linear" :
-            print ("use linear init")
             tor.nn.init.normal(m.weight, 0, 0.001)
             tor.nn.init.normal(m.bias, 0, 0.001)
         elif classname.find("Conv") != -1:
-            print ("use conv init")
             m.weight.data.normal_(0.00, 0.001)
-            m.bias.data.normal_(0.00, 0.001)
-        self.index += 1
+            #m.bias.data.normal_(0.00, 0.001)
 
 
     def init_weight(self) :
