@@ -12,6 +12,10 @@ from train import Trainer
 from models import (
     model_1,
     model_2,
+    model_3,
+    model_4,
+    model_5,
+    model_6,
 )
 
 
@@ -81,6 +85,7 @@ def load_recorder(Model, model_index, record_dp, json_fn, init) :
             }
         )
         recorder.load(json_fn)
+        LR = recorder.lr
 
     return recorder
 
@@ -96,6 +101,10 @@ if __name__ == "__main__" :
     MODELS = [
         model_1,
         model_2,
+        model_3,
+        model_4,
+        model_5,
+        model_6,
     ]
 
     WAY = 5
