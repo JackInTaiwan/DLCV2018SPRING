@@ -42,7 +42,7 @@ class RelationNet(nn.Module) :
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
-            self.fc(score_dense_chls[1], score_dense_chls[2]),
+            #self.fc(score_dense_chls[1], score_dense_chls[2]),
             self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
             nn.Sigmoid(),
         )
@@ -104,20 +104,3 @@ class RelationNet(nn.Module) :
         score = self.score_dense(cat)
 
         return score
-
-
-    def params_init(self, m) :
-        classname = m.__class__.__name__
-        if classname.lower() == "linear" :
-            print ("use linear init")
-            tor.nn.init.normal(m.weight, 0, 0.001)
-            tor.nn.init.normal(m.bias, 0, 0.001)
-        elif classname.find("Conv") != -1:
-            print ("use conv init")
-            m.weight.data.normal_(0.00, 0.001)
-            m.bias.data.normal_(0.00, 0.001)
-        self.index += 1
-
-
-    def init_weight(self) :
-        self.apply(self.params_init)

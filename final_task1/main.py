@@ -19,26 +19,26 @@ from models import (
 
 def load_data(base_dp, novel_dp, shot=5) :
     # base_train loading
-    base_train = np.empty((80, 500, 3, 32, 32))
+    base_train = np.empty((80, 500, 32, 32, 3))
 
     for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
         train_fp = os.path.join(base_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
-            img = plt.imread(img_fp).transpose(2, 0, 1)
+            img = plt.imread(img_fp)
             img = (img - 0.5) * 2
 
             base_train[label_idx][i-shot] = img
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
-    novel_support = np.empty((20, shot, 3, 32, 32))
-    novel_test = np.empty((20, 500 - shot, 3, 32, 32))
+    novel_support = np.empty((20, shot, 32, 32, 3))
+    novel_test = np.empty((20, 500 - shot, 32, 32, 3))
     for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))):
         train_fp = os.path.join(novel_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
             img_fp = os.path.join(train_fp, img_fn)
-            img = plt.imread(img_fp).transpose(2, 0, 1)
+            img = plt.imread(img_fp)
             img = (img - 0.5) * 2
 
             if i < shot:
@@ -53,8 +53,10 @@ def load_data(base_dp, novel_dp, shot=5) :
 
 
 
-def load_recorder(Model, model_index, record_dp, json_fn) :
+def load_recorder(Model, model_index, record_dp, json_fn, init) :
     model = Model()
+    if init :
+        model.init_weight()
     recorder_name = "relationnet_{}".format(model_index)
 
     if json_fn == None :
@@ -96,7 +98,7 @@ if __name__ == "__main__" :
     ]
 
     WAY = 5
-    SHOT = 1
+    SHOT = 5
     LR = 0.0001
     EPOCH = 50
 
@@ -107,6 +109,7 @@ if __name__ == "__main__" :
     parser.add_argument("-l", action="store", type=int, default=None, help="limitation of data for training")
     parser.add_argument("-v", action="store", type=int, default=None, help="amount of validation data")
     parser.add_argument("--cpu", action="store_true", default=False, help="use cpu")
+    parser.add_argument("--init", action="store_true", default=False, help="init weights of model")
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning rate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
     parser.add_argument("--way", action="store", type=int, default=None, help="number of way")
@@ -119,6 +122,7 @@ if __name__ == "__main__" :
     valid_limit = parser.parse_args().v
     model_index = parser.parse_args().i
     cpu = parser.parse_args().cpu
+    init = parser.parse_args().init
     model_version = parser.parse_args().version
     record_dp = parser.parse_args().record
     json_fn = parser.parse_args().load
@@ -129,7 +133,7 @@ if __name__ == "__main__" :
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
-    recorder = load_recorder(MODELS[model_version - 1], model_index, record_dp, json_fn)
+    recorder = load_recorder(MODELS[model_version - 1], model_index, record_dp, json_fn, init)
 
     trainer = Trainer(
         recorder=recorder,

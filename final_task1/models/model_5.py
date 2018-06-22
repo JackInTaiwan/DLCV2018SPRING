@@ -9,6 +9,8 @@ class RelationNet(nn.Module) :
     def __init__(self, way=20, shot=5):
         super(RelationNet, self).__init__()
 
+        self.training = True
+
         self.way = way
         self.shot = shot
 
@@ -40,13 +42,12 @@ class RelationNet(nn.Module) :
 
         score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 10, 1]
 
-        self.score_dense = nn.Sequential(
-            self.fc(score_dense_chls[0], score_dense_chls[1]),
-            self.fc(score_dense_chls[1], score_dense_chls[2]),
-            self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
-            nn.Sigmoid(),
-        )
 
+        self.fc_1(score_dense_chls[0], score_dense_chls[1]),
+        self.fc_2(score_dense_chls[1], score_dense_chls[2]),
+        self.fc_3(score_dense_chls[2], score_dense_chls[3], relu=False),
+        self.sig = nn.Sigmoid()
+        self.drop = nn.Dropout(p=0.5)
 
 
     def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
@@ -101,23 +102,9 @@ class RelationNet(nn.Module) :
         x_query = x_query[0].repeat(x.size(0), 1)
 
         cat = tor.cat((x, x_query), 1)
-        score = self.score_dense(cat)
+        score = self.fc_1(cat) if not self.training else self.drop(self.fc_1(cat))
+        score = self.fc_2(score) if not self.training else self.drop(self.fc_2(score))
+        score = self.fc_3(score)
+        score = self.sig(score)
 
         return score
-
-
-    def params_init(self, m) :
-        classname = m.__class__.__name__
-        if classname.lower() == "linear" :
-            print ("use linear init")
-            tor.nn.init.normal(m.weight, 0, 0.001)
-            tor.nn.init.normal(m.bias, 0, 0.001)
-        elif classname.find("Conv") != -1:
-            print ("use conv init")
-            m.weight.data.normal_(0.00, 0.001)
-            m.bias.data.normal_(0.00, 0.001)
-        self.index += 1
-
-
-    def init_weight(self) :
-        self.apply(self.params_init)
