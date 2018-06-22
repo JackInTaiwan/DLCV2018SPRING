@@ -38,11 +38,11 @@ class RelationNet(nn.Module) :
 
         self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
 
-        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 11, 1]
+        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 10, 1]
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
-            self.fc(score_dense_chls[1], score_dense_chls[2]),
+            #self.fc(score_dense_chls[1], score_dense_chls[2]),
             self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
             nn.Sigmoid(),
         )
@@ -67,17 +67,17 @@ class RelationNet(nn.Module) :
     def fc(self, num_in, num_out, sig=False, relu=True) :
         if relu :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
                 nn.ReLU(inplace=True)
             )
         elif sig :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
                 nn.Sigmoid(),
             )
         else :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
             )
         return fc
 
@@ -94,27 +94,13 @@ class RelationNet(nn.Module) :
         x = self.vgg16_dense(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
+
         x_query = self.vgg16(x_query)
         x_query = x_query.view(1, -1)
         x_query = self.vgg16_dense(x_query)
         x_query = x_query[0].repeat(x.size(0), 1)
+
         cat = tor.cat((x, x_query), 1)
         score = self.score_dense(cat)
+
         return score
-
-
-    def params_init(self, m) :
-        classname = m.__class__.__name__
-        if classname.lower() == "linear" :
-            print ("use linear init")
-            tor.nn.init.normal(m.weight, 0, 0.001)
-            tor.nn.init.normal(m.bias, 0, 0.001)
-        elif classname.find("Conv") != -1:
-            print ("use conv init")
-            m.weight.data.normal_(0.00, 0.001)
-            m.bias.data.normal_(0.00, 0.001)
-        self.index += 1
-
-
-    def init_weight(self) :
-        self.apply(self.params_init)
