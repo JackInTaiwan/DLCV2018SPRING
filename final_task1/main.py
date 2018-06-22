@@ -19,25 +19,27 @@ from models import (
 
 def load_data(base_dp, novel_dp, shot=5) :
     # base_train loading
-    base_train = np.zeros((80, 500, 3, 32, 32))
+    base_train = np.zeros((80, 500, 32, 32, 3))
 
     for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
         train_fp = os.path.join(base_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
-            img = plt.imread(img_fp).transpose(2, 0, 1)
+            img = plt.imread(img_fp)
+            #img = img.transpose(2, 0, 1)
             img = (img - 0.5) * 2
             base_train[label_idx][i-shot] = img
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
-    novel_support = np.zeros((20, shot, 3, 32, 32))
-    novel_test = np.zeros((20, 500 - shot, 3, 32, 32))
+    novel_support = np.zeros((20, shot, 32, 32, 3))
+    novel_test = np.zeros((20, 500 - shot, 32, 32, 3))
     for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))):
         train_fp = os.path.join(novel_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
             img_fp = os.path.join(train_fp, img_fn)
-            img = plt.imread(img_fp).transpose(2, 0, 1)
+            img = plt.imread(img_fp)
+            #img = img.transpose(2, 0, 1)
             img = (img - 0.5) * 2
 
             if i < shot:
