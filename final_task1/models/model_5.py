@@ -43,9 +43,9 @@ class RelationNet(nn.Module) :
         score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 10, 1]
 
 
-        self.fc_1(score_dense_chls[0], score_dense_chls[1]),
-        self.fc_2(score_dense_chls[1], score_dense_chls[2]),
-        self.fc_3(score_dense_chls[2], score_dense_chls[3], relu=False),
+        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1]),
+        self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2]),
+        self.fc_3 = self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
         self.sig = nn.Sigmoid()
         self.drop = nn.Dropout(p=0.5)
 
