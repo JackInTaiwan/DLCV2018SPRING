@@ -43,7 +43,7 @@ class RelationNet(nn.Module) :
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
             #self.fc(score_dense_chls[1], score_dense_chls[2]),
-            self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
+            self.fc(score_dense_chls[1], score_dense_chls[3], relu=False),
             nn.Sigmoid(),
         )
 
