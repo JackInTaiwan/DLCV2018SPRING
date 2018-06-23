@@ -1,8 +1,8 @@
 echo "========== 50 =========="
-python3 main.py -i 50 --version 10 --way 3 --shot 5 --lr 0.00001 --record ./records/relationnet
+python3 main.py -i 50 --version 11 --way 3 --shot 5 --lr 0.00001 --record ./records/relationnet
 
 echo "========== 51 =========="
-python3 main.py -i 51 --version 10 --way 3 --shot 5 --lr 0.000001 --record ./records/relationnet
+python3 main.py -i 51 --version 11 --way 3 --shot 5 --lr 0.000001 --record ./records/relationnet
 
 echo "========== 52 =========="
 python3 main.py -i 52 --version 7 --way 2 --shot 1 --lr 0.00001 --record ./records/relationnet
