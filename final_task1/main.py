@@ -1,8 +1,5 @@
 import os
-import cv2
 import numpy as np
-import torch as tor
-import torchvision.datasets as datasets
 import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser
@@ -19,6 +16,7 @@ from models import (
     model_7,
     model_8,
     model_9,
+    model_10,
 )
 
 
@@ -111,6 +109,7 @@ if __name__ == "__main__" :
         model_7,
         model_8,
         model_9,
+        model_10,
     ]
 
     WAY = 5
