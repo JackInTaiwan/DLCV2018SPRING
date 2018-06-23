@@ -7,3 +7,4 @@ from .model_6 import RelationNet as model_6
 from .model_7 import RelationNet as model_7
 from .model_8 import RelationNet as model_8
 from .model_9 import RelationNet as model_9
+from .model_10 import RelationNet as model_10
