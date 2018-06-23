@@ -42,8 +42,8 @@ class Trainer :
         if not self.cpu :
             self.model.cuda()
 
-        self.optim = tor.optim.SGD(self.model.parameters(), lr=self.lr)
-        #self.optim = tor.optim.Adam(self.model.parameters(), lr=self.lr)
+        #self.optim = tor.optim.SGD(self.model.parameters(), lr=self.lr)
+        self.optim = tor.optim.Adam(self.model.parameters(), lr=self.lr)
         #self.loss_func = tor.nn.CrossEntropyLoss().cuda()
         self.loss_fn = tor.nn.MSELoss().cuda()
         self.lr_schedule = tor.optim.lr_scheduler.StepLR(optimizer=self.optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
