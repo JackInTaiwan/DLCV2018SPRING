@@ -31,7 +31,8 @@ def load_data(base_dp, novel_dp, shot=5) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
             #img = img.transpose(2, 0, 1)
-            img = (img - 0.5) * 2
+            img = (img - 0.5) * 2.
+            #img = img * 225.
             base_train[label_idx][i-shot] = img
 
     # novel loading
@@ -44,8 +45,8 @@ def load_data(base_dp, novel_dp, shot=5) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
             #img = img.transpose(2, 0, 1)
-            img = (img - 0.5) * 2
-
+            img = (img - 0.5) * 2.
+            #img = img * 225.
             if i < shot:
                 novel_support[label_idx][i] = img
 
