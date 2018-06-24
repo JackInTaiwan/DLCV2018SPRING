@@ -16,8 +16,9 @@ python3 main.py -i 54 --version 7 --way 10 --shot 1 --lr 0.00001 --record ./reco
 echo "========== 55 =========="
 python3 main.py -i 55 --version 7 --way 2 --shot 5 --lr 0.00001 --record ./records/relationnet
 
-echo "========== 56 =========="
+echo "========== 56 =========="cd
 python3 main.py -i 56 --version 7 --way 5 --shot 5 --lr 0.00001 --record ./records/relationnet
+#0.16199
 
 echo "========== 57 =========="
 python3 main.py -i 57 --version 7 --way 10 --shot 5 --lr 0.00001 --record ./records/relationnet
