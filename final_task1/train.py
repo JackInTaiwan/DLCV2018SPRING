@@ -105,8 +105,9 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             scores = self.model(x, x_query)
+
+            # calculate training accuracy
             if int(tor.argmax(scores)) == y_query_idx[0] :
-                print ("use")
                 train_acc_list.append(1)
             else :
                 train_acc_list.append(0)
