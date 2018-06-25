@@ -140,6 +140,7 @@ class Trainer :
                 acc = self.eval()
                 self.recorder.checkpoint({
                     "acc": acc,
+                    "lr": self.optim.param_groups[0]["lr"]
                 })
                 print("|Acc: {:<8}".format(round(acc, 5)))
 
