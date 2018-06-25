@@ -21,6 +21,7 @@ from models import (
     model_12,
     model_13,
     model_14,
+    model_15,
 )
 
 
@@ -116,6 +117,7 @@ if __name__ == "__main__" :
         model_12,
         model_13,
         model_14,
+        model_15,
     ]
 
     WAY = 5
