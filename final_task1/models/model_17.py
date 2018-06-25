@@ -12,24 +12,27 @@ class RelationNet(nn.Module) :
         self.way = way
         self.shot = shot
 
-        conv_chls = [3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
-        vgg16_dense_chls = [conv_chls[10] * 1 * 1, 2 ** 10]
+        conv_chls = [3, 2 ** 6, 2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9, 2 ** 8, 2 ** 7, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
+        vgg16_dense_chls = [conv_chls[5] * 1 * 1, 2 ** 10]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
+            nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[1], conv_chls[2], 3, 1),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1),
+            nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[3], conv_chls[4], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(conv_chls[4], conv_chls[5], 3, 1),
-            self.conv(conv_chls[5], conv_chls[6], 3, 1),
-            self.conv(conv_chls[6], conv_chls[7], 3, 1),
+            self.conv(conv_chls[4], conv_chls[5], 3, 1, relu=False),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(conv_chls[7], conv_chls[8], 3, 1),
-            self.conv(conv_chls[8], conv_chls[9], 3, 1),
-            self.conv(conv_chls[9], conv_chls[10], 3, 1),
-            nn.MaxPool2d(kernel_size=4),
+            #self.conv(conv_chls[5], conv_chls[6], 3, 1),
+            #self.conv(conv_chls[6], conv_chls[7], 3, 1),
+
+            #self.conv(conv_chls[7], conv_chls[8], 3, 1),
+            #self.conv(conv_chls[8], conv_chls[9], 3, 1),
+            #self.conv(conv_chls[9], conv_chls[10], 3, 1),
+            #nn.MaxPool2d(kernel_size=4),
             #self.conv(conv_chls[10], conv_chls[11], 2, 1),
             #self.conv(conv_chls[11], conv_chls[12], 2, 1),
             #self.conv(conv_chls[12], conv_chls[13], 2, 1),
@@ -40,26 +43,37 @@ class RelationNet(nn.Module) :
 
         score_dense_chls = [vgg16_dense_chls[0] * 2, 2 ** 10, 2 ** 10, 1]
 
+
         self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1])
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[3], relu=False)
         self.sig = nn.Sigmoid()
         self.drop = nn.Dropout(p=0.5)
 
 
-
-
-    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
-        conv = nn.Sequential(
-            nn.Conv2d(
-                in_channels=in_conv_channels,
-                out_channels=out_conv_channels,
-                kernel_size=kernel_size,
-                stride=stride,
-                padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
-                bias=False,
-            ),
-            nn.ReLU(inplace=True),
-        )
+    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride, relu=True):
+        if relu :
+            conv = nn.Sequential(
+                nn.Conv2d(
+                    in_channels=in_conv_channels,
+                    out_channels=out_conv_channels,
+                    kernel_size=kernel_size,
+                    stride=stride,
+                    padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
+                    bias=False,
+                ),
+                nn.ReLU(inplace=True),
+            )
+        else :
+            conv = nn.Sequential(
+                nn.Conv2d(
+                    in_channels=in_conv_channels,
+                    out_channels=out_conv_channels,
+                    kernel_size=kernel_size,
+                    stride=stride,
+                    padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
+                    bias=False,
+                )
+            )
         return conv
 
 
@@ -100,7 +114,6 @@ class RelationNet(nn.Module) :
         x_query = x_query[0].repeat(x.size(0), 1)
 
         cat = tor.cat((x, x_query), 1)
-
         score = self.fc_1(cat) if not self.training else self.drop(self.fc_1(cat))
         score = self.fc_2(score)
         score = self.sig(score)
