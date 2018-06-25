@@ -11,3 +11,4 @@ from .model_10 import RelationNet as model_10
 from .model_12 import RelationNet as model_12
 from .model_13 import RelationNet as model_13
 from .model_14 import RelationNet as model_14
+from .model_15 import RelationNet as model_15
