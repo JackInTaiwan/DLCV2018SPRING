@@ -90,6 +90,7 @@ class Trainer :
 
     def train(self) :
         loss_list = []
+        train_acc_list = []
 
         for i in range(self.step) :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
@@ -105,6 +106,11 @@ class Trainer :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
 
             scores = self.model(x, x_query)
+            if tor.argmax(scores) == y_query_idx :
+                print ("use")
+                train_acc_list.append(1)
+            else :
+                train_acc_list.append(0)
 
             loss = self.loss_fn(scores, y_query)
             loss.backward()
@@ -114,12 +120,15 @@ class Trainer :
 
             if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0 :
                 loss_avg = round(float(np.mean(np.array(loss_list))), 6)
+                train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
                 self.recorder.checkpoint({
                     "loss": loss_avg,
+                    "train_acc": train_acc_avg
                 })
-                print("|Loss: {:<8}".format(loss_avg))
+                print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
 
                 loss_list = []
+                train_acc_list = []
 
             if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0 :
                 self.recorder.save_checkpoints()
