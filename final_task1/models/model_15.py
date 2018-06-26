@@ -49,7 +49,7 @@ class RelationNet(nn.Module) :
 
 
 
-    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride):
+    def conv(self, in_conv_channels, out_conv_channels, kernel_size, stride, relu=True):
         if relu :
             conv = nn.Sequential(
                 nn.Conv2d(
