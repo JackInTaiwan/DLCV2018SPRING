@@ -107,7 +107,7 @@ class RelationNet(nn.Module) :
 
             cat = tor.cat([x, x_query], 1)
             score = self.score_dense(cat)
-            factor = ( 0.5 + 0.5 * nn.functional.cosine_similarity(x, x_query) )
+            factor = ( 0.5 + 0.5 * nn.functional.cosine_similarity(x, x_query) ).view(score.size(0), 1)
             score = tor.nn.functional.conv1d(score, factor)
             return score
 
@@ -125,7 +125,7 @@ class RelationNet(nn.Module) :
 
             cat = tor.cat([x, x_query], 1)
             score = self.score_dense(cat)
-            factor = ( 0.5 + 0.5 * nn.functional.cosine_similarity(x, x_query) )
+            factor = ( 0.5 + 0.5 * nn.functional.cosine_similarity(x, x_query) ).view(score.size(0), 1)
             score = tor.nn.functional.conv1d(score, factor)
 
             return score
