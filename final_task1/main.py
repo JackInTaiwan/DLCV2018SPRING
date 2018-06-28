@@ -43,8 +43,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            #img = (img - 0.5) * 2
-            img = img * 225.
+            img = (img - 0.5) * 2
+            #img = img * 225.
 
             base_train[label_idx][i-shot] = img
 
@@ -57,8 +57,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            #img = (img - 0.5) * 2
-            img = img * 225.
+            img = (img - 0.5) * 2
+            #img = img * 225.
 
             if i < shot:
                 novel_support[label_idx][i] = img
@@ -163,7 +163,7 @@ if __name__ == "__main__" :
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
-    parser.add_argument("--trainer", action="store", type=int, default=0, help="version of trainer")
+    parser.add_argument("--trainer", action="store", type=int, default=1, help="version of trainer")
 
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
