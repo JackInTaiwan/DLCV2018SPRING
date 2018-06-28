@@ -96,18 +96,18 @@ class RelationNet(nn.Module) :
             x = x.view(way * shot, 3, 32, 32)
             x = self.vgg16(x)
             x = x.view(way * shot, -1)
-            x = x.view(self.way, self.shot, -1)
-            x = tor.mean(x, dim=1)
+            #x = x.view(self.way, self.shot, -1)
+            #x = tor.mean(x, dim=1)
             x = x.repeat(way * 5, 1)
 
             x_query = self.vgg16(x_query)
             x_query = x_query.view(x_query.size(0), -1)
             x_query = x_query.view(x_query.size(0), 1, -1)
-            x_query = x_query.repeat(1, way, 1).view(way * way * 5, -1)
+            x_query = x_query.repeat(1, 25, 1).view(way * way * 5 * 5, -1)
 
             cat = tor.cat([x, x_query], 1)
-            cat = cat * (x - x_query) ** 2
             score = self.score_dense(cat)
+            score = tor.mean(score.view(5, 5, 5), dim=2)
 
             return score
 
@@ -116,15 +116,15 @@ class RelationNet(nn.Module) :
             x = x.view(way * shot, 3, 32, 32)
             x = self.vgg16(x)
             x = x.view(way * shot, -1)
-            x = x.view(self.way, self.shot, -1)
-            x = tor.mean(x, dim=1)
+            #x = x.view(self.way, self.shot, -1)
+            #x = tor.mean(x, dim=1)
 
             x_query = self.vgg16(x_query)
             x_query = x_query.view(1, -1)
-            x_query = x_query[0].repeat(x.size(0), 1)
+            x_query = x_query.repeat(x.size(0) ** 2, 1)
 
             cat = tor.cat([x, x_query], 1)
-            cat = cat * (x - x_query) ** 2
             score = self.score_dense(cat)
+            score = tor.mean(score.view(5, 5), dim=1)
 
             return score
