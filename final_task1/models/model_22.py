@@ -12,7 +12,7 @@ class RelationNet(nn.Module) :
         self.way = way
         self.shot = shot
 
-        conv_chls = [3, 2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 8, 2 ** 7, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
+        conv_chls = [3, 2 ** 6, 2 ** 7, 2 ** 8, 2 ** 8, 2 ** 9, 2 ** 8, 2 ** 7, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
         vgg16_dense_chls = [conv_chls[4] * 1 * 1, 2 ** 10]
 
         self.vgg16 = nn.Sequential(
