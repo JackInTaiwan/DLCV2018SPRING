@@ -20,7 +20,7 @@ EPOCH = 30
 STEP = 50000
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 5000, 0.95
+LR_STEPSIZE, LR_GAMMA = 10000, 0.95
 
 
 
@@ -103,9 +103,8 @@ class Trainer :
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
-
+             
             scores = self.model(x, x_query)
-
             # calculate training accuracy
             if int(tor.argmax(scores)) == y_query_idx[0] :
                 train_acc_list.append(1)
