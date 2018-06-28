@@ -86,7 +86,7 @@ def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
             models={
                 "relationnet": model,
             },
-            info="model_version: {}".format(model_version),
+            desp="model_version: {}".format(model_version),
         )
 
     else :
@@ -97,7 +97,7 @@ def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
             models={
                 "relationnet": model,
             },
-            info="model_version: {}".format(model_version),
+            desp="model_version: {}".format(model_version),
         )
         recorder.load(json_fn)
 
