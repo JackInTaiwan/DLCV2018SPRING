@@ -99,8 +99,9 @@ class Trainer :
             x = tor.Tensor(x).permute(0, 1, 4, 2, 3)
             x_query = tor.Tensor(x_query).unsqueeze(0).permute(0, 3, 1, 2) if x_query.ndim == 3 else tor.Tensor(x_query).permute(0, 3, 1, 2)
             y_query = tor.zeros(self.way * 5 * 5, 1)
+            print (y_query_idx)
             y_query[y_query_idx] = 1
-            print (y_query)
+            #print (y_query)
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
