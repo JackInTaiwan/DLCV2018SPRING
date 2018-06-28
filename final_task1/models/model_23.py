@@ -17,13 +17,10 @@ class RelationNet(nn.Module) :
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
-            nn.BatchNorm2d(num_features=conv_chls[1]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[1], conv_chls[2], 3, 1),
-            nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1),
-            nn.BatchNorm2d(num_features=conv_chls[3]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[3], conv_chls[4], 3, 1, relu=False),
             nn.MaxPool2d(kernel_size=4),
@@ -108,7 +105,8 @@ class RelationNet(nn.Module) :
             x_query = x_query.view(x_query.size(0), 1, -1)
             x_query = x_query.repeat(1, way, 1).view(way * way * 5, -1)
 
-            cat = tor.cat((x, x_query), 1)
+            cat = tor.cat([x, x_query], 1)
+            cat = cat * (x - x_query) ** 2
             score = self.score_dense(cat)
 
             return score
@@ -125,7 +123,8 @@ class RelationNet(nn.Module) :
             x_query = x_query.view(1, -1)
             x_query = x_query[0].repeat(x.size(0), 1)
 
-            cat = tor.cat((x, x_query), 1)
+            cat = tor.cat([x, x_query], 1)
+            cat = cat * (x - x_query) ** 2
             score = self.score_dense(cat)
 
             return score
