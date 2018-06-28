@@ -29,6 +29,7 @@ from models import (
     model_19,
     model_20,
     model_21,
+    model_22,
 )
 
 
@@ -135,6 +136,7 @@ if __name__ == "__main__" :
         model_19,
         model_20,
         model_21,
+        model_22,
     ]
 
     TRAINERS = [
