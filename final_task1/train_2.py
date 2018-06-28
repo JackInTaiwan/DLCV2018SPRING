@@ -56,10 +56,11 @@ class Trainer :
 
         x = self.base_train[way_pick][:, shot_pick[:-5]]
 
-        x = np.vstack((x, self.novel_support[random.randrange(20)].reshape(1, 5, 32, 32, 3)))
+        novel_pick = random.randrange(20)
+        x = np.vstack((x, self.novel_support[novel_pick].reshape(1, 5, 32, 32, 3)))
 
         x_query = self.base_train[way_pick][:, shot_pick[-5:]]
-        x_query = np.vstack((x_query, self.novel_support[random.randrange(20)].reshape(1, 5, 32, 32, 3)))
+        x_query = np.vstack((x_query, self.novel_support[novel_pick].reshape(1, 5, 32, 32, 3)))
         y_query = np.array([i // 25 for i in range(self.way * 25)])
 
         return  x, x_query, y_query
