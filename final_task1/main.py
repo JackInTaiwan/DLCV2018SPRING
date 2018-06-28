@@ -27,6 +27,7 @@ from models import (
     model_18,
     model_19,
     model_20,
+    model_21,
 )
 
 
@@ -70,7 +71,7 @@ def load_data(base_dp, novel_dp, shot=5) :
 
 
 
-def load_recorder(Model, model_index, record_dp, json_fn, init) :
+def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
     model = Model()
     if init :
         model.init_weight()
@@ -84,7 +85,8 @@ def load_recorder(Model, model_index, record_dp, json_fn, init) :
             save_path=record_dp,
             models={
                 "relationnet": model,
-            }
+            },
+            info="model_version: {}".format(model_version),
         )
 
     else :
@@ -94,7 +96,8 @@ def load_recorder(Model, model_index, record_dp, json_fn, init) :
             save_path=record_dp,
             models={
                 "relationnet": model,
-            }
+            },
+            info="model_version: {}".format(model_version),
         )
         recorder.load(json_fn)
 
@@ -130,6 +133,7 @@ if __name__ == "__main__" :
         model_18,
         model_19,
         model_20,
+        model_21,
     ]
 
     WAY = 5
@@ -170,7 +174,7 @@ if __name__ == "__main__" :
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
-    recorder = load_recorder(MODELS[model_version - 1], model_index, record_dp, json_fn, init)
+    recorder = load_recorder(MODELS[model_version - 1], model_version, model_index, record_dp, json_fn, init)
 
     trainer = Trainer(
         recorder=recorder,
