@@ -163,7 +163,7 @@ if __name__ == "__main__" :
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
-    parser.add_argument("--trainer", action="store", type=int, default=0, help="version of trainer")
+    parser.add_argument("--trainer", action="store", type=int, default=1, help="version of trainer")
 
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
