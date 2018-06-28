@@ -33,7 +33,7 @@ class RelationNet(nn.Module) :
 
         #self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
 
-        score_dense_chls = [vgg16_dense_chls[0] * 2, 2 ** 10, 2 ** 9, 2 ** 8, 1]
+        score_dense_chls = [vgg16_dense_chls[0] * 2, 2 ** 10, 2 ** 9, 1]
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
