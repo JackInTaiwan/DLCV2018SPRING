@@ -4,7 +4,8 @@ import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser
 from butirecorder import Recorder
-from train import Trainer
+from train import Trainer as Trainer_1
+from train_2 import Trainer as Trainer_2
 
 from models import (
     model_1,
@@ -136,6 +137,11 @@ if __name__ == "__main__" :
         model_21,
     ]
 
+    TRAINERS = [
+        Trainer_1,
+        Trainer_2,
+    ]
+
     WAY = 5
     SHOT = 5
     LR = 0.0001
@@ -157,6 +163,7 @@ if __name__ == "__main__" :
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
+    parser.add_argument("--trainer", action="store", type=int, default=0, help="version of trainer")
 
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
@@ -165,6 +172,7 @@ if __name__ == "__main__" :
     init = parser.parse_args().init
     step = parser.parse_args().step
     model_version = parser.parse_args().version
+    trainer_version = parser.parse_args().trainer
     record_dp = parser.parse_args().record
     json_fn = parser.parse_args().load
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
@@ -176,6 +184,7 @@ if __name__ == "__main__" :
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
     recorder = load_recorder(MODELS[model_version - 1], model_version, model_index, record_dp, json_fn, init)
 
+    Trainer = TRAINERS[trainer_version - 1]
     trainer = Trainer(
         recorder=recorder,
         base_train=base_train,
