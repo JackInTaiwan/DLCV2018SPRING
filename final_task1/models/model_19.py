@@ -98,7 +98,9 @@ class RelationNet(nn.Module) :
             x = x.view(way * shot, -1)
             x = x.view(self.way, self.shot, -1)
             x = tor.mean(x, dim=1)
-            x = x.repeat(5 * 5 * way, 1)
+            print (x.size())
+            x = x.repeat(way * 5, 1)
+            print (x.size())
 
             x_query = self.vgg16(x_query)
             print (x_query.size())
