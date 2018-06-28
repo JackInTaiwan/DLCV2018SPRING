@@ -91,20 +91,20 @@ class RelationNet(nn.Module) :
 
 
     def forward(self, x, x_query) :
-        way, shot = x.size(0), x.size(1)
-        x = x.view(way * shot, 3, 32, 32)
-        x = self.vgg16(x)
-        x = x.view(way * shot, -1)
-        #x = self.vgg16_dense(x)
-        x = x.view(self.way, self.shot, -1)
-        x = tor.mean(x, dim=1)
+        if self.training :
+            way, shot = x.size(0), x.size(1)
+            x = x.view(way * shot, 3, 32, 32)
+            x = self.vgg16(x)
+            x = x.view(way * shot, -1)
+            x = x.view(self.way, self.shot, -1)
+            x = tor.mean(x, dim=1)
+            x = x.repeat(5 * 5 * way, 1)
 
-        x_query = self.vgg16(x_query)
-        x_query = x_query.view(1, -1)
-        #x_query = self.vgg16_dense(x_query)
-        x_query = x_query[0].repeat(x.size(0), 1)
+            x_query = self.vgg16(x_query)
+            x_query = x_query.view(1, -1)
+            x_query = x_query[0].repeat(way, 1)
 
-        cat = tor.cat((x, x_query), 1)
-        score = self.score_dense(cat)
+            cat = tor.cat((x, x_query), 1)
+            score = self.score_dense(cat)
 
-        return score
+            return score
