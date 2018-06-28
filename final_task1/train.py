@@ -106,7 +106,7 @@ class Trainer :
             scores = self.model(x, x_query)
 
             # calculate training accuracy
-            acc = tor.argmax(scores.view(25, 5), dim=1) == tor.Tensor(np.array([i // 5 for i in range(25)]))
+            acc = tor.argmax(scores.view(25, 5), dim=1) == tor.LongTensor(np.array([i // 5 for i in range(25)]))
             print (acc)
 
             loss = self.loss_fn(scores, y_query)
