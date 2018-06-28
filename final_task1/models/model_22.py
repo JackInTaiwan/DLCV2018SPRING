@@ -105,7 +105,7 @@ class RelationNet(nn.Module) :
             x_query = x_query.view(x_query.size(0), 1, -1)
             x_query = x_query.repeat(1, way, 1).view(way * way * 5, -1)
 
-            cat = tor.cat([x, x_query, x - x_query], 1)
+            cat = tor.cat([x, x_query, (x - x_query) ** 2], 1)
             score = self.score_dense(cat)
 
             return score
@@ -122,7 +122,7 @@ class RelationNet(nn.Module) :
             x_query = x_query.view(1, -1)
             x_query = x_query[0].repeat(x.size(0), 1)
 
-            cat = tor.cat((x, x_query), 1)
+            cat = tor.cat([x, x_query, (x - x_query) ** 2], 1)
             score = self.score_dense(cat)
 
             return score
