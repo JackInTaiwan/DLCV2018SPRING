@@ -107,7 +107,7 @@ class RelationNet(nn.Module) :
 
             cat = tor.cat([x, x_query], 1)
             score = self.score_dense(cat)
-            score = tor.mean(score.view(25, 5, 5), dim=2)
+            score = tor.mean(score.view(25, 5, 5), dim=2).view(125, 1)
 
             return score
 
@@ -125,6 +125,6 @@ class RelationNet(nn.Module) :
 
             cat = tor.cat([x, x_query], 1)
             score = self.score_dense(cat)
-            score = tor.mean(score.view(1, 5, 5), dim=2)
+            score = tor.mean(score.view(1, 5, 5), dim=2).view(5, 1)
 
             return score
