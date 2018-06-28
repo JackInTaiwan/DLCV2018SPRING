@@ -56,7 +56,7 @@ class Trainer :
 
         x = self.base_train[way_pick][:, shot_pick[:-5]]
 
-        x_query = self.base_train[way_pick][:, shot_pick[-5:]].reshape(self.way * 5, 32, 32, 3)
+        x_query = self.base_train[way_pick][:, shot_pick[-5:]]
         y_query = np.array([i // 25 for i in range(self.way * 25)])
 
         return  x, x_query, y_query
@@ -97,7 +97,7 @@ class Trainer :
 
             x, x_query, y_query_idx = self.dump_novel_train()
             x = tor.Tensor(x).permute(0, 1, 4, 2, 3)
-            x_query = tor.Tensor(x_query).unsqueeze(0).permute(0, 3, 1, 2) if x_query.ndim == 3 else tor.Tensor(x_query).permute(0, 3, 1, 2)
+            x_query = tor.Tensor(x_query).unsqueeze(0).permute(0, 3, 1, 2) if x_query.ndim == 3 else tor.Tensor(x_query).view(25, 32, 32, 3).permute(0, 3, 1, 2)
             y_query = tor.Tensor((np.array(y_query_idx) == np.array((list(range(5))*25))).astype(np.uint8))
             y_query = y_query.view(y_query.size(0), 1)
 
