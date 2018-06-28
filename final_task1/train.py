@@ -98,7 +98,7 @@ class Trainer :
             x, x_query, y_query_idx = self.dump_novel_train()
             x = tor.Tensor(x).permute(0, 1, 4, 2, 3)
             x_query = tor.Tensor(x_query).unsqueeze(0).permute(0, 3, 1, 2) if x_query.ndim == 3 else tor.Tensor(x_query).permute(0, 3, 1, 2)
-            y_query = tor.Tensor(np.array(y_query_idx) == np.array(list(range(5))*5))
+            y_query = tor.Tensor((np.array(y_query_idx) == np.array(list(range(5))*5)).astype(np.uint8))
             y_query = y_query.view(y_query.size(0), 1)
             print (y_query)
 
