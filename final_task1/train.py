@@ -52,13 +52,12 @@ class Trainer :
 
     def dump_novel_train(self) :
         way_pick = random.sample(range(self.base_train.shape[0]), self.way)
-        shot_pick = random.sample(range(self.base_train.shape[1]), self.shot + 1)
+        shot_pick = random.sample(range(self.base_train.shape[1]), self.shot + 5)
 
-        x = self.base_train[way_pick][:, shot_pick[:-1]]
+        x = self.base_train[way_pick][:, shot_pick[:-5]]
 
-        query_pick = random.choice(way_pick)
-        x_query = self.base_train[query_pick, shot_pick[-1]]
-        y_query = np.array([way_pick.index(query_pick)])
+        x_query = self.base_train[:, shot_pick[-5:]]
+        y_query = np.array([i // 5 for i in range(self.way * 5)])
 
         return  x, x_query, y_query
 
