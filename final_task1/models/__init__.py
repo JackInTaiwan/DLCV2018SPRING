@@ -20,3 +20,5 @@ from .model_20 import RelationNet as model_20
 from .model_21 import RelationNet as model_21
 from .model_22 import RelationNet as model_22
 from .model_23 import RelationNet as model_23
+from .model_24 import RelationNet as model_24
+from .model_25 import RelationNet as model_25

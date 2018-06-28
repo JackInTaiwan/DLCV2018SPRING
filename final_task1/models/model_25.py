@@ -2,10 +2,7 @@ import cv2
 import torch as tor
 import torch.nn as nn
 
-"""
-conv -1 layer
-fc +1 layer
-"""
+
 
 
 class RelationNet(nn.Module) :
@@ -16,31 +13,29 @@ class RelationNet(nn.Module) :
         self.shot = shot
 
         conv_chls = [3, 2 ** 6, 2 ** 7, 2 ** 8, 2 ** 9, 2 ** 9, 2 ** 8, 2 ** 7, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 9, 2 ** 10]
-        vgg16_dense_chls = [conv_chls[4] * 4 * 4, 2 ** 10]
+        vgg16_dense_chls = [conv_chls[4] * 2 * 2, 2 ** 10]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[1], conv_chls[2], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
+            self.conv(conv_chls[2], conv_chls[3], 3, 1),
             nn.MaxPool2d(kernel_size=2),
-            #self.conv(conv_chls[3], conv_chls[4], 3, 1, relu=False),
-            #nn.MaxPool2d(kernel_size=2),
+            self.conv(conv_chls[3], conv_chls[4], 3, 1, relu=False),
+            nn.MaxPool2d(kernel_size=2),
             #self.conv(conv_chls[4], conv_chls[5], 3, 1, relu=False),
             #nn.MaxPool2d(kernel_size=2),
         )
 
         #self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
 
-        score_dense_chls = [vgg16_dense_chls[0] * 2, 2 ** 10, 2 ** 9, 2 ** 8, 1]
+        score_dense_chls = [vgg16_dense_chls[0] * 2, 2 ** 10, 2 ** 10, 1]
 
-        self.score_dense = nn.Sequential(
-            self.fc(score_dense_chls[0], score_dense_chls[1]),
-            self.fc(score_dense_chls[1], score_dense_chls[2]),
-            self.fc(score_dense_chls[2], score_dense_chls[3], relu=False),
-            nn.Sigmoid(),
-        )
+        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1])
+        self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[3], relu=False)
+        self.sig = nn.Sigmoid()
+        self.drop = nn.Dropout(p=0.5)
 
 
 
@@ -109,7 +104,10 @@ class RelationNet(nn.Module) :
             x_query = x_query.repeat(1, way, 1).view(way * way * 5, -1)
 
             cat = tor.cat((x, x_query), 1)
-            score = self.score_dense(cat)
+
+            score = self.fc_1(cat) if not self.training else self.drop(self.fc_1(cat))
+            score = self.fc_2(score)
+            score = self.sig(score)
 
             return score
 
@@ -126,6 +124,9 @@ class RelationNet(nn.Module) :
             x_query = x_query[0].repeat(x.size(0), 1)
 
             cat = tor.cat((x, x_query), 1)
-            score = self.score_dense(cat)
+
+            score = self.fc_1(cat) if not self.training else self.drop(self.fc_1(cat))
+            score = self.fc_2(score)
+            score = self.sig(score)
 
             return score
