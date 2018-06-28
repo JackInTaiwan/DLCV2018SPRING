@@ -101,9 +101,9 @@ class RelationNet(nn.Module) :
             x = x.repeat(5 * 5 * way, 1)
 
             x_query = self.vgg16(x_query)
-            x_query = x_query.view(1, -1)
+            print (x_query.size())
+            #x_query = x_query.view(1, -1)
             x_query = x_query.repeat(way, 1)
-            print (x.size())
             print (x_query.size())
 
             cat = tor.cat((x, x_query), 1)
