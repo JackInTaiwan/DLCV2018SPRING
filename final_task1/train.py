@@ -14,13 +14,13 @@ SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
-EVAL_TEST_SIZE = 25
+EVAL_TEST_SIZE = 15
 
 EPOCH = 30
 STEP = 50000
 BATCHSIZE = 1
 LR = 0.0001
-LR_STEPSIZE, LR_GAMMA = 5000, 0.95
+LR_STEPSIZE, LR_GAMMA = 10000, 0.95
 
 
 
@@ -42,7 +42,7 @@ class Trainer :
         if not self.cpu :
             self.model.cuda()
 
-        # optim = tor.optim.SGD(model.fc_1.parameters(), lr=LR)
+        #self.optim = tor.optim.SGD(self.model.parameters(), lr=self.lr)
         self.optim = tor.optim.Adam(self.model.parameters(), lr=self.lr)
         #self.loss_func = tor.nn.CrossEntropyLoss().cuda()
         self.loss_fn = tor.nn.MSELoss().cuda()
@@ -77,6 +77,7 @@ class Trainer :
                 pred = int(tor.argmax(scores))
                 if pred == label_idx :
                     correct += 1
+        self.novel_support_tr = self.novel_support_tr.cpu()
 
         self.model.train()
         self.model.way = self.way
@@ -102,9 +103,8 @@ class Trainer :
 
             if not self.cpu :
                 x, x_query, y_query = x.cuda(), x_query.cuda(), y_query.cuda()
-
+             
             scores = self.model(x, x_query)
-
             # calculate training accuracy
             acc = tor.argmax(scores.view(25, 5), dim=1) == tor.LongTensor(np.array([i // 5 for i in range(25)])).cuda()
             acc = np.mean(acc.cpu().numpy())

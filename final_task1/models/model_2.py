@@ -38,7 +38,7 @@ class RelationNet(nn.Module) :
 
         self.vgg16_dense = self.fc(vgg16_dense_chls[0], vgg16_dense_chls[1], relu=False)
 
-        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 10, 1]
+        score_dense_chls = [vgg16_dense_chls[-1] * 2, 2 ** 10, 2 ** 11, 1]
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
@@ -67,17 +67,17 @@ class RelationNet(nn.Module) :
     def fc(self, num_in, num_out, sig=False, relu=True) :
         if relu :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
                 nn.ReLU(inplace=True)
             )
         elif sig :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
                 nn.Sigmoid(),
             )
         else :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
             )
         return fc
 
@@ -94,15 +94,12 @@ class RelationNet(nn.Module) :
         x = self.vgg16_dense(x)
         x = x.view(self.way, self.shot, -1)
         x = tor.mean(x, dim=1)
-
         x_query = self.vgg16(x_query)
         x_query = x_query.view(1, -1)
         x_query = self.vgg16_dense(x_query)
         x_query = x_query[0].repeat(x.size(0), 1)
-
         cat = tor.cat((x, x_query), 1)
         score = self.score_dense(cat)
-
         return score
 
 

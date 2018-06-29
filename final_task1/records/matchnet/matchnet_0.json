@@ -1,1 +1,0 @@
-"{\"data\": {}, \"steps\": 0, \"model_names\": [\"matchnet\"], \"desp\": \"\", \"id\": \"33390d6c72f911e88afd4cbb58bc5109\", \"epochs\": 0, \"save_path\": \"./records/matchnet\", \"recorder_name\": \"matchnet_0\", \"mode\": \"torch\"}"

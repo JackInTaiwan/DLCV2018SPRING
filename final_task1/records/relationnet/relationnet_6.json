@@ -1,0 +1,1 @@
+"{\"id\": \"c605d74274a211e8b796000d3a01525d\", \"recorder_name\": \"relationnet_6\", \"save_path\": \"./records/relationnet\", \"mode\": \"torch\", \"model_names\": [\"relationnet\"], \"desp\": \"\", \"steps\": 13800, \"epochs\": 0, \"data\": {}}"
