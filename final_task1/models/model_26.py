@@ -1,9 +1,11 @@
-import cv2
 import torch as tor
 import torch.nn as nn
 
 
 
+"""
+model_19 + cosine similarity
+"""
 
 class RelationNet(nn.Module) :
     def __init__(self, way=20, shot=5):

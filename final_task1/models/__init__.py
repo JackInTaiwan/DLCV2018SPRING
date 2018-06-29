@@ -24,3 +24,33 @@ from .model_24 import RelationNet as model_24
 from .model_25 import RelationNet as model_25
 from .model_26 import RelationNet as model_26
 from .model_27 import RelationNet as model_27
+
+MODELS = [
+    model_1,
+    model_2,
+    model_3,
+    model_4,
+    model_5,
+    model_6,
+    model_7,
+    model_8,
+    model_9,
+    model_10,
+    model_11,
+    model_12,
+    model_13,
+    model_14,
+    model_15,
+    model_16,
+    model_17,
+    model_18,
+    model_19,
+    model_20,
+    model_21,
+    model_22,
+    model_23,
+    model_24,
+    model_25,
+    model_26,
+    model_27,
+]

@@ -3,7 +3,8 @@ import torch as tor
 import matplotlib.pyplot as plt
 from main import MODELS
 from argparse import ArgumentParser
-from butirecorder import Recorder
+
+from models import MODELS
 
 
 
