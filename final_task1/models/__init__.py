@@ -25,6 +25,7 @@ from .model_24 import RelationNet as model_24
 from .model_25 import RelationNet as model_25
 from .model_26 import RelationNet as model_26
 from .model_27 import RelationNet as model_27
+from .model_28 import Classifier as model_28
 
 MODELS = [
     model_1,
@@ -54,4 +55,5 @@ MODELS = [
     model_25,
     model_26,
     model_27,
+    model_28,
 ]

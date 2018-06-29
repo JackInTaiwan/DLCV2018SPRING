@@ -6,6 +6,7 @@ from argparse import ArgumentParser
 from butirecorder import Recorder
 from train import Trainer as Trainer_1
 from train_2 import Trainer as Trainer_2
+from train_3 import Trainer as Trainer_3
 from models import MODELS
 
 
@@ -20,8 +21,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            #img = (img - 0.5) * 2
-            img = img * 225.
+            img = (img - 0.5) * 2
+            #img = img * 225.
 
             base_train[label_idx][i-shot] = img
 
@@ -34,8 +35,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            #img = (img - 0.5) * 2
-            img = img * 225.
+            img = (img - 0.5) * 2
+            #img = img * 225.
 
             if i < shot:
                 novel_support[label_idx][i] = img
@@ -93,6 +94,7 @@ if __name__ == "__main__" :
     TRAINERS = [
         Trainer_1,
         Trainer_2,
+        Trainer_3,
     ]
 
     WAY = 5
