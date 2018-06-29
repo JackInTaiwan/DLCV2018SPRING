@@ -46,8 +46,8 @@ def evaluation(model, support_data, data_fp, output_fp) :
     support_data = tor.Tensor(support_data).permute(0, 1, 4, 2, 3).cuda()
     pred_num = len(sorted(os.listdir(data_fp)))
 
-    for i, fn in enumerate(sorted(os.listdir(data_fp))):
-        print ("|Process: {}/{}".format(i + 1, pred_num), end="\r")
+    for i, fn in enumerate(os.listdir(data_fp)):
+        #print ("|Process: {}/{}".format(i + 1, pred_num), end="\r")
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
         img = (img - 0.5) * 2
