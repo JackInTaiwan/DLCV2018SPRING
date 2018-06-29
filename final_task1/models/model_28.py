@@ -78,7 +78,7 @@ class Classifier(nn.Module) :
         return x.view(-1)
 
 
-    def forward(self, x, x_query) :
+    def forward(self, x) :
             x = self.vgg16(x)
             x = x.view(x.size(0), -1)
             score = self.score_dense(x)
