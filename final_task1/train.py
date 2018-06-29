@@ -68,7 +68,7 @@ class Trainer :
         self.model.shot = 5
         self.novel_support_tr = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3).cuda()
         correct, total = 0, self.novel_test.shape[0] * EVAL_TEST_SIZE
-        self.model.training = False
+        self.model.eval()
 
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
@@ -79,7 +79,7 @@ class Trainer :
                     correct += 1
         self.novel_support_tr = self.novel_support_tr.cpu()
 
-        self.model.training = True
+        self.model.train()
         self.model.way = self.way
         self.model.shot = self.shot
 
