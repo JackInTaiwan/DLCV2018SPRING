@@ -55,7 +55,6 @@ def evaluation(model, support_data, data_fp, output_fp) :
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
         pred = tor.argmax(pred, dim=0).cpu()
-        print (i, fn)
         pred_list.append([i, table[int(pred)]])
 
     pred_df = pd.DataFrame(pred_list)
