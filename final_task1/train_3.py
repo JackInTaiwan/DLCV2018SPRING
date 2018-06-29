@@ -58,7 +58,6 @@ class Trainer:
                 pred = int(tor.argmax(scores))
                 if pred == label_idx:
                     correct += 1
-        self.novel_support_tr = self.novel_support_tr.cpu()
 
         self.model.train()
         self.model.way = self.way
@@ -77,14 +76,12 @@ class Trainer:
 
             x = self.novel_support
             x = tor.Tensor(x).permute(0, 1, 4, 2, 3).view(-1, 3, 32, 32)
-            y = tor.LongTensor(np.array([i // 20 for i in range(20 * 5)])).view(-1)
+            y = tor.LongTensor(np.array([i // 5 for i in range(20 * 5)]))
 
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()
 
             scores = self.model(x)
-            print (scores)
-            print (y)
             # calculate training accuracy
             #acc = tor.argmax(scores.view(25, 5), dim=1) == tor.LongTensor(np.array([i // 5 for i in range(25)])).cuda()
             #acc = np.mean(acc.cpu().numpy())
