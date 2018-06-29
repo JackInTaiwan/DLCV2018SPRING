@@ -50,11 +50,11 @@ def load_data(base_dp, novel_dp, shot=5) :
 
 
 
-def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
+def load_recorder(net_name, Model, model_version, model_index, record_dp, json_fn, init) :
     model = Model()
     if init :
         model.init_weight()
-    recorder_name = "relationnet_{}".format(model_index)
+    recorder_name = "{}_{}".format(net_name, model_index)
 
     if json_fn == None :
         recorder = Recorder(
@@ -63,7 +63,7 @@ def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
             recorder_name=recorder_name,
             save_path=record_dp,
             models={
-                "relationnet": model,
+                net_name: model,
             },
             desp="model_version: {}".format(model_version),
         )
@@ -74,7 +74,7 @@ def load_recorder(Model, model_version, model_index, record_dp, json_fn, init) :
             save_mode="state_dict",
             save_path=record_dp,
             models={
-                "relationnet": model,
+                net_name: model,
             },
             desp="model_version: {}".format(model_version),
         )
@@ -117,6 +117,7 @@ if __name__ == "__main__" :
     parser.add_argument("--shot", action="store", type=int, default=None, help="number of shot")
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
+    parser.add_argument("--net", action="store", type=str, required=True, help="name of model")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
     parser.add_argument("--trainer", action="store", type=int, default=1, help="version of trainer")
 
@@ -126,6 +127,7 @@ if __name__ == "__main__" :
     cpu = parser.parse_args().cpu
     init = parser.parse_args().init
     step = parser.parse_args().step
+    net_name = parser.parse_args().net
     model_version = parser.parse_args().version
     trainer_version = parser.parse_args().trainer
     record_dp = parser.parse_args().record
@@ -137,7 +139,7 @@ if __name__ == "__main__" :
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
-    recorder = load_recorder(MODELS[model_version - 1], model_version, model_index, record_dp, json_fn, init)
+    recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, record_dp, json_fn, init)
 
     Trainer = TRAINERS[trainer_version - 1]
     trainer = Trainer(
