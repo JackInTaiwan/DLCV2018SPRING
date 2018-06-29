@@ -42,15 +42,16 @@ def evaluation(model, support_data, data_fp, output_fp) :
     pred_list = []
 
     support_data = tor.Tensor(support_data).permute(0, 1, 4, 2, 3).cuda()
+    pred_num = len(sorted(os.listdir(data_fp)))
 
-    for fn in sorted(os.listdir(data_fp)):
+    for i, fn in enumerate(sorted(os.listdir(data_fp))):
+        print ("|Process: {}/{}".format(i + 1, pred_num), end="\r")
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
         img = (img - 0.5) * 2
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
-        pred = tor.argmax(pred, dim=1).cpu()
-        print (pred)
+        pred = tor.argmax(pred, dim=0).cpu()
         pred_list.append(int(pred))
 
     print (pred_list)
