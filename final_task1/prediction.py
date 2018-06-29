@@ -1,5 +1,6 @@
 import os
 import torch as tor
+import numpy as np
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from models import MODELS
@@ -16,16 +17,37 @@ def load_model(model_version, model_fp) :
 
 
 
-def evaluation(model, data_fp, output_fp) :
+def load_novel_class(shot) :
+    novel_data_dp = "./task2-dataset/novel/"
+
+    novel_support = np.zeros((20, shot, 32, 32, 3))
+
+    for label_idx, dir_name in enumerate(sorted(os.listdir(novel_data_dp))):
+        train_fp = os.path.join(novel_data_dp, dir_name, "train")
+        for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
+            img_fp = os.path.join(train_fp, img_fn)
+            img = plt.imread(img_fp)
+            img = (img - 0.5) * 2
+            #img = img * 225.
+            novel_support[label_idx][i] = img
+
+    return novel_support
+
+
+
+def evaluation(model, support_data, data_fp, output_fp) :
     model.cuda()
     model.eval()
 
     pred_list = []
 
+    support_data = tor.Tensor(support_data).permute(0, 1, 4, 2, 3).cuda()
+
     for fn in sorted(os.listdir(data_fp)):
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
-        pred = model(img)
+        img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
+        pred = model(support_data, img)
         pred = tor.argmax(pred, dim=1).cpu()
         print (pred)
         pred_list.append(int(pred))
@@ -54,6 +76,6 @@ if __name__ == "__main__" :
     output_fp = parser.parse_args().output
 
     model = load_model(model_version, model_fp)
-
-    evaluation(model, data_fp, output_fp)
+    support_data = load_novel_class(shot)
+    evaluation(model, support_data, data_fp, output_fp)
 
