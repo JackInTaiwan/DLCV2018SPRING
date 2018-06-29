@@ -100,7 +100,7 @@ class Trainer:
                     "loss": loss_avg,
                     #"train_acc": train_acc_avg
                 })
-                #print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
+                print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
 
                 loss_list = []
                 train_acc_list = []
