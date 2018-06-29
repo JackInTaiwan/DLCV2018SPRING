@@ -46,6 +46,7 @@ def evaluation(model, support_data, data_fp, output_fp) :
     for fn in sorted(os.listdir(data_fp)):
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
+        img = (img - 0.5) * 2
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
         pred = tor.argmax(pred, dim=1).cpu()
