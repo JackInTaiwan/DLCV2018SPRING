@@ -76,7 +76,7 @@ class Trainer:
 
             x = self.novel_support
             x = tor.Tensor(x).permute(0, 1, 4, 2, 3).view(-1, 3, 32, 32)
-            y = tor.LongTensor(np.array([i // 5 for i in range(20 * 5)])).view(-1, 1)
+            y = tor.LongTensor(np.array([i // 5 for i in range(20 * 5)]))
 
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()
