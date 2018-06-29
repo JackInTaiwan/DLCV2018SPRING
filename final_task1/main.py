@@ -6,36 +6,7 @@ from argparse import ArgumentParser
 from butirecorder import Recorder
 from train import Trainer as Trainer_1
 from train_2 import Trainer as Trainer_2
-
-from models import (
-    model_1,
-    model_2,
-    model_3,
-    model_4,
-    model_5,
-    model_6,
-    model_7,
-    model_8,
-    model_9,
-    model_10,
-    model_11,
-    model_12,
-    model_13,
-    model_14,
-    model_15,
-    model_16,
-    model_17,
-    model_18,
-    model_19,
-    model_20,
-    model_21,
-    model_22,
-    model_23,
-    model_24,
-    model_25,
-    model_26,
-    model_27,
-)
+from models import MODELS
 
 
 
@@ -118,36 +89,6 @@ if __name__ == "__main__" :
     NOVEL_DIR_FP = "./task2-dataset/novel/"
     BASE_DIR_FP = "./task2-dataset/base/"
     RECORDS_FP = "./records/"
-
-    MODELS = [
-        model_1,
-        model_2,
-        model_3,
-        model_4,
-        model_5,
-        model_6,
-        model_7,
-        model_8,
-        model_9,
-        model_10,
-        model_11,
-        model_12,
-        model_13,
-        model_14,
-        model_15,
-        model_16,
-        model_17,
-        model_18,
-        model_19,
-        model_20,
-        model_21,
-        model_22,
-        model_23,
-        model_24,
-        model_25,
-        model_26,
-        model_27,
-    ]
 
     TRAINERS = [
         Trainer_1,

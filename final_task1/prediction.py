@@ -9,7 +9,7 @@ from models import MODELS
 
 def load_model(model_version, model_fp) :
     Model = MODELS[model_version - 1]
-    model = Model
+    model = Model()
     model.load_state_dict(state_dict=tor.load(model_fp))
 
     return model
