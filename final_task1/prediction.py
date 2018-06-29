@@ -24,7 +24,7 @@ def load_novel_class(shot) :
 
     for label_idx, dir_name in enumerate(sorted(os.listdir(novel_data_dp))):
         train_fp = os.path.join(novel_data_dp, dir_name, "train")
-        for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
+        for i, img_fn in enumerate(sorted(os.listdir(train_fp))[:shot]):
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
             img = (img - 0.5) * 2
