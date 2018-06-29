@@ -1,6 +1,7 @@
 import os
 import torch as tor
 import numpy as np
+import pandas as pd
 import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from models import MODELS
@@ -38,6 +39,7 @@ def load_novel_class(shot) :
 def evaluation(model, support_data, data_fp, output_fp) :
     model.cuda()
     model.eval()
+    table = [0, 10, 23, 30, 32, 35, 48, 54, 57, 59, 60, 64, 66, 69, 71, 82, 91, 92, 93, 95 ]
 
     pred_list = []
 
@@ -52,7 +54,11 @@ def evaluation(model, support_data, data_fp, output_fp) :
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
         pred = tor.argmax(pred, dim=0).cpu()
-        pred_list.append(int(pred))
+        print (i, fn)
+        pred_list.append([i, table[int(pred)]])
+
+    pred_df = pd.DataFrame(pred_list)
+    pred_df.to_csv(output_fp, header=["image_id", "predicted_label"])
 
     print (pred_list)
     print (len(pred_list))
