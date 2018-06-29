@@ -28,8 +28,8 @@ def load_novel_class(shot) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))[:shot]):
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            img = (img - 0.5) * 2
-            #img = img * 225.
+            #img = (img - 0.5) * 2
+            img = img * 225.
             novel_support[label_idx][i] = img
 
     return novel_support
@@ -51,17 +51,15 @@ def evaluation(model, support_data, data_fp, output_fp) :
         fn = "{}.png".format(i)
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
-        img = (img - 0.5) * 2
+        #img = (img - 0.5) * 2
+        img = img * 225.
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
         pred = tor.argmax(pred, dim=0).cpu()
         pred_list.append([i, table[int(pred)]])
 
     pred_df = pd.DataFrame(pred_list)
-    pred_df.to_csv(output_fp, header=["image_id", "predicted_label"])
-
-    print (pred_list)
-    print (len(pred_list))
+    pred_df.to_csv(output_fp, header=["image_id", "predicted_label"], index=None)
 
 
 

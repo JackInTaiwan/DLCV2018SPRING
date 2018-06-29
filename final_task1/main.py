@@ -20,8 +20,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            img = (img - 0.5) * 2
-            #img = img * 225.
+            #img = (img - 0.5) * 2
+            img = img * 225.
 
             base_train[label_idx][i-shot] = img
 
@@ -34,8 +34,8 @@ def load_data(base_dp, novel_dp, shot=5) :
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
-            img = (img - 0.5) * 2
-            #img = img * 225.
+            #img = (img - 0.5) * 2
+            img = img * 225.
 
             if i < shot:
                 novel_support[label_idx][i] = img
