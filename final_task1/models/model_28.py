@@ -97,7 +97,8 @@ class Classifier(nn.Module) :
         )
 
         x_support = x_support.view(-1, 3, 32, 32)
-        x_support = self.vgg16(x_support).cpu().detach().numpy()
+        x_support = self.vgg16(x_support)
+        x_support = x_support.view(x_support.size(0), -1).cpu().detach().numpy()
         y_support = np.array([i // 5 for i in range(shot * way)])
 
         knn.fit(x_support, y_support)
@@ -106,7 +107,7 @@ class Classifier(nn.Module) :
 
         for query in x_query.view(-1, 3, 32, 32) :
             query_feature = self.vgg16(query.view(1, 3, 32, 32))
-            query_feature = query_feature.cpu().detach().numpy()
+            query_feature = query_feature.view(query_feature.size(0), -1).cpu().detach().numpy()
             pred = knn.predict(query_feature)
             pred_list.append(int(pred[0][0]))
 
