@@ -1,5 +1,5 @@
-import torch as tor
 import torch.nn as nn
+from sklearn.neighbors import KNeighborsClassifier as KNN
 
 
 
@@ -18,6 +18,7 @@ class Classifier(nn.Module) :
             nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
+            nn.Tanh(),
             nn.MaxPool2d(kernel_size=4),
         )
 
@@ -85,3 +86,12 @@ class Classifier(nn.Module) :
             x = x.view(x.size(0), -1)
             score = self.score_dense(x)
             return score
+
+
+    def pred(self, x_support) :
+        knn = KNN(
+            n_neighbors=20,
+        )
+        x_support = x_support.view(-1, 3, 32, 32)
+        x_support = self.vgg16(x_support)
+
