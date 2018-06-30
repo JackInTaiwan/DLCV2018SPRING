@@ -12,8 +12,10 @@ class Classifier(nn.Module) :
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
+            nn.BatchNorm2d(num_features=conv_chls[1]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[1], conv_chls[2], 3, 1),
+            nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
             nn.MaxPool2d(kernel_size=4),
