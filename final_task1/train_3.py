@@ -1,4 +1,3 @@
-import random
 import torch as tor
 import numpy as np
 from torch.utils.data import DataLoader, TensorDataset
