@@ -29,7 +29,7 @@ class Classifier(nn.Module) :
 
         score_dense_chls = [conv_chls[-1] * 4 * 4, 2 ** 9, 100]
 
-        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False)
+        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
         self.sig = nn.Sigmoid()
 
