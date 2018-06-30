@@ -67,13 +67,15 @@ class Trainer :
         self.model.way = 20
         self.model.shot = 5
         self.model.eval()
+        self.model.training = False
 
         correct, total = 0, self.novel_test.shape[0] * EVAL_TEST_SIZE
 
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).permute(0, 3, 1, 2).cuda()
-                scores = self.model(self.novel_support, img)
+                novel_support = tor.Tensor(novel_support).cuda()
+                scores = self.model(novel_support, img)
                 pred = int(tor.argmax(scores))
                 if pred == label_idx :
                     correct += 1
@@ -81,6 +83,7 @@ class Trainer :
         self.model.way = self.way
         self.model.shot = self.shot
         self.model.train()
+        self.model.training = True
 
         return correct / total
 
