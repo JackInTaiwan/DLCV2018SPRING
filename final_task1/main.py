@@ -33,7 +33,9 @@ def load_data(base_dp, novel_dp, shot=5) :
     novel_test = np.zeros((20, 500 - shot, 32, 32, 3))
     for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))) :
         train_fp = os.path.join(novel_dp, dir_name, "train")
-        for i, img_fn in enumerate(random.shuffle(os.listdir(train_fp))) :
+        fn_list = os.listdir(train_fp)
+        random.shuffle(fn_list)
+        for i, img_fn in enumerate(fn_list) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
             img = (img - 0.5) * 2
