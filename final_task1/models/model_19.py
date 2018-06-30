@@ -50,7 +50,7 @@ class RelationNet(nn.Module) :
                     kernel_size=kernel_size,
                     stride=stride,
                     padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
-                    bias=False,
+                    bias=True,
                 ),
                 nn.ReLU(inplace=True),
             )
@@ -62,7 +62,7 @@ class RelationNet(nn.Module) :
                     kernel_size=kernel_size,
                     stride=stride,
                     padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
-                    bias=False,
+                    bias=True,
                 )
             )
         return conv
@@ -71,17 +71,17 @@ class RelationNet(nn.Module) :
     def fc(self, num_in, num_out, sig=False, relu=True) :
         if relu :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
                 nn.ReLU(inplace=True)
             )
         elif sig :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
                 nn.Sigmoid(),
             )
         else :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=False),
+                nn.Linear(num_in, num_out, bias=True),
             )
         return fc
 
