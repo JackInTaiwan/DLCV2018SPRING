@@ -123,6 +123,7 @@ if __name__ == "__main__" :
     parser.add_argument("--net", action="store", type=str, required=True, help="name of model")
     parser.add_argument("--version", action="store", type=int, default=0, help="version of model")
     parser.add_argument("--trainer", action="store", type=int, default=1, help="version of trainer")
+    parser.add_argument("--seed", action="store", type=int, default=0, help="seed")
 
     limit = parser.parse_args().l
     valid_limit = parser.parse_args().v
@@ -133,12 +134,14 @@ if __name__ == "__main__" :
     net_name = parser.parse_args().net
     model_version = parser.parse_args().version
     trainer_version = parser.parse_args().trainer
+    seed = parser.parse_args().seed
     record_dp = parser.parse_args().record
     json_fn = parser.parse_args().load
     LR = parser.parse_args().lr if parser.parse_args().lr else LR
     WAY = parser.parse_args().way if parser.parse_args().way else WAY
     SHOT = parser.parse_args().shot if parser.parse_args().shot else SHOT
 
+    random.seed(seed)
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
