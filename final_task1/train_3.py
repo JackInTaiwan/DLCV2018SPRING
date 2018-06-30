@@ -49,22 +49,17 @@ class Trainer:
 
 
     def eval(self):
-        correct, total = 0, self.novel_test.shape[0] * EVAL_TEST_SIZE
         self.model.eval()
+        novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3)
+        novel_test = tor.Tensor(self.novel_test).permute(0, 1, 4, 2, 3)
 
-        for label_idx, data in enumerate(self.novel_test):
-            for img in data[:EVAL_TEST_SIZE]:
-                img = tor.Tensor(img).unsqueeze(0).permute(0, 3, 1, 2).cuda()
-                scores = self.model(img)
-                pred = int(tor.argmax(scores))
-                if pred == label_idx:
-                    correct += 1
+        pred = self.model.pred(novel_support, novel_test)
+        labels = np.array([j // 495 for j in range(495 * 20)])
+        acc = np.mean(pred == labels)
 
         self.model.train()
-        self.model.way = self.way
-        self.model.shot = self.shot
 
-        return correct / total
+        return acc
 
 
     def get_loader(self) :
@@ -110,8 +105,7 @@ class Trainer:
                 scores = self.model(x)
 
                 # calculate training accuracy
-                acc = (tor.argmax(scores, dim=1) == y.view(-1, 1).cuda())
-                acc = np.mean(acc.cpu().numpy())
+                acc = self.eval()
                 train_acc_list.append(acc)
 
                 loss = self.loss_func(scores, y)
