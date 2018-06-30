@@ -101,10 +101,11 @@ class Trainer:
                 x, y = x.cuda(), y.cuda()
 
             scores = self.model(x)
+
             # calculate training accuracy
-            #acc = tor.argmax(scores.view(25, 5), dim=1) == tor.LongTensor(np.array([i // 5 for i in range(25)])).cuda()
-            #acc = np.mean(acc.cpu().numpy())
-            #train_acc_list.append(acc)
+            acc = (tor.argmax(scores, dim=1) == y.view(-1, 1).cuda())
+            acc = np.mean(acc.cpu().numpy())
+            train_acc_list.append(acc)
             
             loss = self.loss_func(scores, y)
             loss.backward()
@@ -116,7 +117,7 @@ class Trainer:
                 train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
                 self.recorder.checkpoint({
                     "loss": loss_avg,
-                    #"train_acc": train_acc_avg
+                    "train_acc": train_acc_avg
                 })
                 print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
 
