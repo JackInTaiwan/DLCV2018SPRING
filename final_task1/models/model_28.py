@@ -19,7 +19,7 @@ class Classifier(nn.Module) :
             nn.MaxPool2d(kernel_size=4),
         )
 
-        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 9, 100]
+        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 10, 100]
 
         self.score_dense = nn.Sequential(
             self.fc(score_dense_chls[0], score_dense_chls[1]),
