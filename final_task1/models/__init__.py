@@ -29,6 +29,7 @@ from .model_28 import Classifier as model_28
 from .model_29 import Classifier as model_29
 from .model_30 import Classifier as model_30
 from .model_31 import Classifier as model_31
+from .model_32 import Classifier as model_32
 
 
 
@@ -64,4 +65,5 @@ MODELS = [
     model_29,
     model_30,
     model_31,
+    model_32,
 ]
