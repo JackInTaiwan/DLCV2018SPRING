@@ -121,7 +121,7 @@ class RelationNet(nn.Module) :
 
             x_query = self.vgg16(x_query)
             x_query = x_query.view(1, -1)
-            x_query = x_query[0].repeat(x.size(0), 1)
+            x_query = x_query.repeat(x.size(0), 1)
 
             cat = tor.cat((x, x_query), 1)
             score = self.score_dense(cat)
