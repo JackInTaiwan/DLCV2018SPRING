@@ -70,6 +70,9 @@ class Trainer:
     def get_loader(self) :
         x = np.vstack((self.base_train.reshape(-1, 32, 32, 3), self.novel_support.reshape(-1, 32, 32, 3)))
         y = np.array([i // 500 for i in range(80 * 500)] + [(i // self.shot) + 80 for i in range(self.shot * 20)])
+        x = tor.Tensor(x)
+        y = tor.LongTensor(y)
+
         data_set = TensorDataset(x, y)
 
         data_loader = DataLoader(
@@ -92,8 +95,7 @@ class Trainer:
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
 
-            x = tor.permute(0, 3, 1, 2)
-            y = tor.LongTensor(y)
+            x = x.permute(0, 3, 1, 2)
 
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()

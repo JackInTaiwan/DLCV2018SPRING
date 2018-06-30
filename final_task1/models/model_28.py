@@ -82,5 +82,4 @@ class Classifier(nn.Module) :
             x = self.vgg16(x)
             x = x.view(x.size(0), -1)
             score = self.score_dense(x)
-            print (score)
             return score
