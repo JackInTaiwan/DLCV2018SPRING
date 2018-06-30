@@ -109,8 +109,6 @@ class Classifier(nn.Module) :
             query_feature = self.vgg16(query.view(1, 3, 32, 32))
             query_feature = query_feature.view(query_feature.size(0), -1).cpu().detach().numpy()
             pred = knn.predict(query_feature)
-            pred_list.append(int(pred[0][0]))
-
-        print (pred_list)
+            pred_list.append(int(pred[0]))
 
         return np.array(pred_list)
