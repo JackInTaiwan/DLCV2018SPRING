@@ -71,10 +71,7 @@ class Trainer:
         x = np.vstack((self.base_train.reshape(-1, 32, 32, 3), self.novel_support.reshape(-1, 32, 32, 3)))
         y = np.array([i // 500 for i in range(80 * 500)] + [(i // self.shot) + 80 for i in range(self.shot * 20)])
 
-        data_set = TensorDataset(
-            data_tensor=x,
-            target_tensor=y,
-        )
+        data_set = TensorDataset(x, y)
 
         data_loader = DataLoader(
             dataset=data_set,
