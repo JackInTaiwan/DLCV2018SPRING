@@ -19,7 +19,7 @@ EVAL_TEST_SIZE = 15
 EPOCH = 30
 STEP = 50000
 BATCHSIZE = 32
-LR = 0.0001
+LR = 0.00001
 LR_STEPSIZE, LR_GAMMA = 10000, 0.95
 
 
@@ -95,7 +95,7 @@ class Trainer:
         loss_list = []
         train_acc_list = []
 
-        for _ in range(self.step // (EVAL_TEST_SIZE // BATCHSIZE)) :
+        for _ in range(self.step // (AVAILABLE_SIZE // BATCHSIZE)) :
             for x, y in loader :
                 print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
                 self.optim.zero_grad()
