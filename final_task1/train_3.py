@@ -108,7 +108,6 @@ class Trainer:
 
                 # calculate training accuracy
                 acc = (tor.argmax(scores, dim=1) == y.view(-1, 1).cuda())
-                print (acc)
                 acc = np.mean(acc.cpu().numpy())
                 train_acc_list.append(acc)
 
