@@ -9,7 +9,7 @@ class Classifier(nn.Module) :
     def __init__(self):
         super(Classifier, self).__init__()
 
-        conv_chls = [3, 2 ** 6, 2 ** 7, 2 ** 8]
+        conv_chls = [3, 2 ** 7, 2 ** 8, 2 ** 8]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
@@ -19,17 +19,15 @@ class Classifier(nn.Module) :
             nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
-            nn.MaxPool2d(kernel_size=4),
-            nn.Tanh(),
+            nn.MaxPool2d(kernel_size=2),
+            #nn.Tanh(),
         )
 
-        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 10, 100]
+        score_dense_chls = [conv_chls[-1] * 4 * 4, 2 ** 10, 100]
 
-        self.score_dense = nn.Sequential(
-            self.fc(score_dense_chls[0], score_dense_chls[1]),
-            self.fc(score_dense_chls[1], score_dense_chls[2], relu=False),
-            nn.Sigmoid(),
-        )
+        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False)
+        self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
+        self.sig = nn.Sigmoid()
 
 
 
@@ -42,7 +40,7 @@ class Classifier(nn.Module) :
                     kernel_size=kernel_size,
                     stride=stride,
                     padding=int((kernel_size - 1) / 2),  # if stride=1   # add 0 surrounding the image
-                    bias=True,
+                    bias=False,
                 ),
                 nn.ReLU(inplace=True),
             )
@@ -63,17 +61,17 @@ class Classifier(nn.Module) :
     def fc(self, num_in, num_out, sig=False, relu=True) :
         if relu :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
                 nn.ReLU(inplace=True)
             )
         elif sig :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
                 nn.Sigmoid(),
             )
         else :
             fc = nn.Sequential(
-                nn.Linear(num_in, num_out, bias=True),
+                nn.Linear(num_in, num_out, bias=False),
             )
         return fc
 
@@ -83,10 +81,12 @@ class Classifier(nn.Module) :
 
 
     def forward(self, x) :
-            x = self.vgg16(x)
-            x = x.view(x.size(0), -1)
-            score = self.score_dense(x)
-            return score
+        x = self.vgg16(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc_1(x)
+        x = self.fc_2(x)
+        score = self.sig(x)
+        return score
 
 
     def pred(self, x_support, x_query) :
@@ -98,7 +98,9 @@ class Classifier(nn.Module) :
 
         x_support = x_support.view(-1, 3, 32, 32)
         x_support = self.vgg16(x_support)
-        x_support = x_support.view(x_support.size(0), -1).cpu().detach().numpy()
+        x_support = x_support.view(x_support.size(0), -1)
+        x_support = self.fc_1(x_support)
+        x_support = x_support.cpu().detach().numpy()
         y_support = np.array([i // 5 for i in range(shot * way)])
 
         knn.fit(x_support, y_support)
@@ -107,7 +109,8 @@ class Classifier(nn.Module) :
 
         for query in x_query.view(-1, 3, 32, 32) :
             query_feature = self.vgg16(query.view(1, 3, 32, 32))
-            query_feature = query_feature.view(query_feature.size(0), -1).cpu().detach().numpy()
+            query_feature = self.fc_1(query_feature.view(query_feature.size(0), -1))
+            query_feature = query_feature.cpu().detach().numpy()
             pred = knn.predict(query_feature)
             pred_list.append(int(pred[0]))
 
