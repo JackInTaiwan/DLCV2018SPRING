@@ -97,7 +97,7 @@ class Classifier(nn.Module) :
         )
 
         x_support = x_support.view(-1, 3, 32, 32)
-        x_support = self.vgg16(x_support)
+        x_support = self.vgg16(x_support).cpu().numpy()
         y_support = np.array([i // 5 for i in range(shot * way)])
 
         knn.fit(x_support, y_support)

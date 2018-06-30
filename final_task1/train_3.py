@@ -50,8 +50,8 @@ class Trainer:
 
     def eval(self):
         self.model.eval()
-        novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3)
-        novel_test = tor.Tensor(self.novel_test).permute(0, 1, 4, 2, 3)
+        novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3).cuda()
+        novel_test = tor.Tensor(self.novel_test).permute(0, 1, 4, 2, 3).cuda()
 
         pred = self.model.pred(novel_support, novel_test)
         labels = np.array([j // 495 for j in range(495 * 20)])
