@@ -1,4 +1,5 @@
 import os
+import random
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -30,9 +31,9 @@ def load_data(base_dp, novel_dp, shot=5) :
     # img shape = (32, 32, 3), pixel range=(0, 1)
     novel_support = np.zeros((20, shot, 32, 32, 3))
     novel_test = np.zeros((20, 500 - shot, 32, 32, 3))
-    for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))):
+    for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))) :
         train_fp = os.path.join(novel_dp, dir_name, "train")
-        for i, img_fn in enumerate(sorted(os.listdir(train_fp))):
+        for i, img_fn in enumerate(random.shuffle(os.listdir(train_fp))) :
             img_fp = os.path.join(train_fp, img_fn)
             img = plt.imread(img_fp)
             img = (img - 0.5) * 2
