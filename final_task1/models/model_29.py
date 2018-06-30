@@ -81,11 +81,12 @@ class Classifier(nn.Module) :
 
 
     def forward(self, x) :
-            x = self.vgg16(x)
-            x = x.view(x.size(0), -1)
-            x = self.fc_1(x)
-            score = self.fc_2(x)
-            return score
+        x = self.vgg16(x)
+        x = x.view(x.size(0), -1)
+        x = self.fc_1(x)
+        x = self.fc_2(x)
+        score = self.sig(x)
+        return score
 
 
     def pred(self, x_support, x_query) :
