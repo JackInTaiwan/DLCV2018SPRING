@@ -74,7 +74,7 @@ class Trainer :
         for label_idx, data in enumerate(self.novel_test) :
             for img in data[:EVAL_TEST_SIZE] :
                 img = tor.Tensor(img).unsqueeze(0).permute(0, 3, 1, 2).cuda()
-                novel_support = tor.Tensor(self.novel_support).cuda()
+                novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3).cuda()
                 scores = self.model(novel_support, img)
                 pred = int(tor.argmax(scores))
                 print (label_idx, pred)
