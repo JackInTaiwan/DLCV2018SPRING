@@ -1,3 +1,4 @@
+import numpy as np
 import torch.nn as nn
 from sklearn.neighbors import KNeighborsClassifier as KNN
 
@@ -88,10 +89,27 @@ class Classifier(nn.Module) :
             return score
 
 
-    def pred(self, x_support) :
+    def pred(self, x_support, x_query) :
+        shot, way = 5, 20
+
         knn = KNN(
-            n_neighbors=20,
+            n_neighbors=5,
         )
+
         x_support = x_support.view(-1, 3, 32, 32)
         x_support = self.vgg16(x_support)
+        y_support = np.array([i // 5 for i in range(shot * way)])
 
+        knn.fit(x_support, y_support)
+
+        pred_list = []
+
+        for query in x_query.view(-1, 3, 32, 32) :
+            query_feature = self.vgg16(query.view(1, 3, 32, 32))
+            query_feature = query_feature.cpu().numpy()
+            pred = knn.predict(query_feature)
+            pred_list.append(int(pred[0][0]))
+
+        print (pred_list)
+
+        return np.array(pred_list)
