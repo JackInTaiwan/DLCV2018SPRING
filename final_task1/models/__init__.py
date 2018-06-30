@@ -56,4 +56,5 @@ MODELS = [
     model_26,
     model_27,
     model_28,
+    model_29,
 ]
