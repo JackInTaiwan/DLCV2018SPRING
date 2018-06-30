@@ -19,8 +19,8 @@ class Classifier(nn.Module) :
             nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
             self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
-            nn.Tanh(),
             nn.MaxPool2d(kernel_size=4),
+            nn.Tanh(),
         )
 
         score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 10, 100]
