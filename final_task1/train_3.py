@@ -1,6 +1,7 @@
 import random
 import torch as tor
 import numpy as np
+from torch.utils.data import DataLoader, TensorDataset
 
 
 
@@ -17,7 +18,7 @@ EVAL_TEST_SIZE = 15
 
 EPOCH = 30
 STEP = 50000
-BATCHSIZE = 1
+BATCHSIZE = 32
 LR = 0.0001
 LR_STEPSIZE, LR_GAMMA = 10000, 0.95
 
@@ -66,17 +67,37 @@ class Trainer:
         return correct / total
 
 
-    def train(self):
+    def get_loader(self) :
+        x = np.vstack((self.base_train.reshape(-1, 32, 32, 3), self.novel_support.reshape(-1, 32, 32, 3)))
+        y = np.array([i // 500 for i in range(80 * 500)] + [(i // self.shot) + 80 for i in range(self.shot * 20)])
+
+        data_set = TensorDataset(
+            data_tensor=x,
+            target_tensor=y,
+        )
+
+        data_loader = DataLoader(
+            dataset=data_set,
+            batch_size=BATCHSIZE,
+            shuffle=True,
+            drop_last=True,
+        )
+
+        return data_loader
+
+
+
+    def train(self) :
+        loader = self.get_loader()
         loss_list = []
         train_acc_list = []
 
-        for i in range(self.step):
+        for x, y in loader :
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
 
-            x = self.novel_support
-            x = tor.Tensor(x).permute(0, 1, 4, 2, 3).view(-1, 3, 32, 32)
-            y = tor.LongTensor(np.array([i // 5 for i in range(20 * 5)]))
+            x = tor.permute(0, 3, 1, 2)
+            y = tor.LongTensor(y)
 
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()
