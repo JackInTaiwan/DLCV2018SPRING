@@ -93,7 +93,7 @@ class RelationNet(nn.Module) :
     def forward(self, x, x_query) :
         if self.training :
             #way, shot = x.size(0), x.size(1)
-            way, shot = 20, 5
+            way, shot = 5, 5
             x = x.view(way * shot, 3, 32, 32)
             x = self.vgg16(x)
             x = x.view(way * shot, -1)
