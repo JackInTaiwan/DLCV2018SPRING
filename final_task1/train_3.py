@@ -58,6 +58,8 @@ class Trainer:
         acc = np.mean(pred == labels)
 
         self.model.train()
+        novel_support.cpu()
+        novel_test.cpu()
 
         return acc
 
