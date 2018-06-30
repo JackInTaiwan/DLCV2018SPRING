@@ -107,7 +107,8 @@ class Trainer:
                 scores = self.model(x)
 
                 # calculate training accuracy
-                acc = self.eval()
+                acc = (tor.argmax(scores, dim=1) == y.view(-1, 1).cuda())
+                acc = np.mean(acc.cpu().numpy())
                 train_acc_list.append(acc)
 
                 loss = self.loss_func(scores, y)
