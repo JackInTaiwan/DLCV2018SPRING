@@ -92,6 +92,8 @@ class Trainer:
 
     def train(self) :
         loader = self.get_loader()
+        self.model.train()
+
         loss_list = []
         train_acc_list = []
 
