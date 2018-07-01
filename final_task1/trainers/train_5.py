@@ -99,8 +99,9 @@ class Trainer:
 
     def dump_data(self) :
         label_pick = random.sample(range(80), BATCHSIZE)
-        x_1 = self.base_train[label_pick][random.randrange(500)]
-        x_2 = self.base_train[label_pick][random.randrange(500)]
+        x_1 = self.base_train[label_pick]
+        x_1 = x_1[:, random.randrange(500)]
+        x_2 = self.base_train[label_pick][:, random.randrange(500)]
         x = np.vstack((x_1, x_2))
         y = np.array(label_pick * 2)
 
