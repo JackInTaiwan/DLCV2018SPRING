@@ -98,70 +98,73 @@ class Trainer:
 
 
     def dump_data(self) :
-        label_pick = ra
+        label_pick = random.sample(range(80))
+        x_1 = self.base_train[label_pick][random.randrange(500)]
+        x_2 = self.base_train[label_pick][random.randrange(500)]
+        x = np.vstack((x_1, x_2))
+        y = np.array(label_pick * 2)
 
+        return x, y
 
 
     def train(self) :
-        loader = self.get_loader()
         self.model.train()
 
         loss_list = []
         train_acc_list = []
 
         while self.step > 0 :
-            for x, y in loader :
-                if self.step > 0 :
-                    print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
-                    self.optim.zero_grad()
+            x, y = self.dump_data()
+            print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
+            self.optim.zero_grad()
 
-                    x = x.permute(0, 3, 1, 2)
+            x = x.permute(0, 3, 1, 2)
+            print (x.size())
+            if not self.cpu:
+                x, y = x.cuda(), y.cuda()
 
-                    if not self.cpu:
-                        x, y = x.cuda(), y.cuda()
+            scores, features = self.model(x)
 
-                    scores, features = self.model(x)
+            # calculate training accuracy
+            acc = (tor.argmax(scores, dim=1) == y.view(-1).cuda())
+            acc = np.mean(acc.cpu().numpy())
+            train_acc_list.append(acc)
 
-                    # calculate training accuracy
-                    acc = (tor.argmax(scores, dim=1) == y.view(-1).cuda())
-                    acc = np.mean(acc.cpu().numpy())
-                    train_acc_list.append(acc)
+            loss_cls = self.loss_func(scores, y)
+            loss_sim = (cosine_similarity(features[0], features[1], dim=1) * -1 + 1.0) / features[0].size(0)
+            loss = loss_cls + LDA * loss_sim
+            loss.backward()
 
-                    loss_cls = self.loss_func(scores, y)
-                    loss_sim = (cosine_similarity(features[0], features[1], dim=1) * -1 + 1.0) / features[0].size(0)
-                    loss = loss_cls + LDA * loss_sim
-                    loss.backward()
+            loss_list.append(float(loss.data))
 
-                    loss_list.append(float(loss.data))
+            if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0:
+                loss_avg = round(float(np.mean(np.array(loss_list))), 6)
+                train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
+                self.recorder.checkpoint({
+                    "loss": loss_avg,
+                    "train_acc": train_acc_avg
+                })
+                print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
 
-                    if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0:
-                        loss_avg = round(float(np.mean(np.array(loss_list))), 6)
-                        train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
-                        self.recorder.checkpoint({
-                            "loss": loss_avg,
-                            "train_acc": train_acc_avg
-                        })
-                        print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
+                loss_list = []
+                train_acc_list = []
 
-                        loss_list = []
-                        train_acc_list = []
+            if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0:
+                self.recorder.save_checkpoints()
 
-                    if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0:
-                        self.recorder.save_checkpoints()
+            if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0:
+                self.recorder.save_models()
 
-                    if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0:
-                        self.recorder.save_models()
+            if self.recorder.get_steps() % CAL_ACC_PERIOD == 0:
+                acc = self.eval_novel()
+                acc_test = self.eval_test()
+                self.recorder.checkpoint({
+                    "acc": acc,
+                    "lr": self.optim.param_groups[0]["lr"]
+                })
+                print("|Novel Acc: {:<8} | Test Acc: {:<8}".format(round(acc, 5), round(acc_test, 5)))
 
-                    if self.recorder.get_steps() % CAL_ACC_PERIOD == 0:
-                        acc = self.eval_novel()
-                        acc_test = self.eval_test()
-                        self.recorder.checkpoint({
-                            "acc": acc,
-                            "lr": self.optim.param_groups[0]["lr"]
-                        })
-                        print("|Novel Acc: {:<8} | Test Acc: {:<8}".format(round(acc, 5), round(acc_test, 5)))
-
-                    self.optim.step()
-                    self.lr_schedule.step()
-                    self.recorder.step()
-                    self.step -= 1
+            self.optim.step()
+            self.lr_schedule.step()
+            self.recorder.step()
+            self.step -= 1
