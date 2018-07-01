@@ -99,8 +99,7 @@ class Trainer:
 
     def dump_data(self) :
         label_pick = random.sample(range(80), BATCHSIZE)
-        x_1 = self.base_train[label_pick]
-        x_1 = x_1[:, random.randrange(500)]
+        x_1 = self.base_train[label_pick][:, random.randrange(500)]
         x_2 = self.base_train[label_pick][:, random.randrange(500)]
         x = np.vstack((x_1, x_2))
         y = np.array(label_pick * 2)
@@ -118,7 +117,7 @@ class Trainer:
             x, y = self.dump_data()
             print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
             self.optim.zero_grad()
-
+            x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
             x = x.permute(0, 3, 1, 2)
             print (x.size())
             if not self.cpu:
