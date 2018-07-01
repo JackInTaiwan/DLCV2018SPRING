@@ -14,6 +14,8 @@ SAVE_JSON_PERIOD = 50  # steps
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 EVAL_TEST_SIZE = 50
+EVAL_NOVEL_SIZE = 200
+
 
 EPOCH = 30
 STEP = 50000
@@ -52,10 +54,10 @@ class Trainer:
         self.model.eval()
 
         novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3).cuda()
-        novel_test = tor.Tensor(self.novel_test).permute(0, 1, 4, 2, 3).cuda()
+        novel_test = tor.Tensor(self.novel_test[:, :EVAL_NOVEL_SIZE]).permute(0, 1, 4, 2, 3).cuda()
 
         pred = self.model.pred(novel_support, novel_test)
-        labels = np.array([j // 495 for j in range(495 * 20)])
+        labels = np.array([j // EVAL_NOVEL_SIZE for j in range(EVAL_NOVEL_SIZE * 20)])
         acc = np.mean(pred == labels)
 
         self.model.train()

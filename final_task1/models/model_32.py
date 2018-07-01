@@ -93,7 +93,7 @@ class Classifier(nn.Module) :
 
 
     def pred(self, x_support, x_query) :
-        shot, way = 5, 20
+        way, shot = int(x_support.size(0)), int(x_support.size(1))
 
         knn = KNN(
             n_neighbors=5,
@@ -104,7 +104,7 @@ class Classifier(nn.Module) :
         x_support = x_support.view(x_support.size(0), -1)
         x_support = self.fc_1(x_support)
         x_support = x_support.cpu().detach().numpy()
-        y_support = np.array([i // 5 for i in range(shot * way)])
+        y_support = np.array([i // shot for i in range(shot * way)])
 
         knn.fit(x_support, y_support)
 
