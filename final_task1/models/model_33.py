@@ -97,7 +97,7 @@ class Classifier(nn.Module) :
         way, shot = int(x_support.size(0)), int(x_support.size(1))
 
         knn = KNN(
-            n_neighbors=1,
+            n_neighbors=3,
         )
 
         x_support = x_support.view(-1, 3, 32, 32)
