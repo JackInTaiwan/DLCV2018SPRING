@@ -22,8 +22,19 @@ def load_data(base_dp, novel_dp, shot=5) :
             img = plt.imread(img_fp)
             img = (img - 0.5) * 2
             #img = img * 225.
-
             base_train[label_idx][i] = img
+
+    # base_test loading
+    base_test = np.zeros((80, 100, 32, 32, 3))
+    for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
+        test_fp = os.path.join(base_dp, dir_name, "test")
+        for i, img_fn in enumerate(sorted(os.listdir(test_fp))) :
+            img_fp = os.path.join(test_fp, img_fn)
+            img = plt.imread(img_fp)
+            img = (img - 0.5) * 2
+            #img = img * 225.
+
+            base_test[label_idx][i] = img
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
@@ -47,7 +58,7 @@ def load_data(base_dp, novel_dp, shot=5) :
 
     print(base_train.shape, novel_support.shape, novel_test.shape)
 
-    return base_train, novel_support, novel_test
+    return base_train, base_test, novel_support, novel_test
 
 
 
@@ -136,13 +147,14 @@ if __name__ == "__main__" :
     random.seed(seed)
 
     """ Main """
-    base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
+    base_train, base_test, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
     recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, trainer_version, record_dp, json_fn, init)
 
     Trainer = TRAINERS[trainer_version - 1]
     trainer = Trainer(
         recorder=recorder,
         base_train=base_train,
+        base_test=base_test,
         novel_support=novel_support,
         novel_test=novel_test,
         way=WAY,

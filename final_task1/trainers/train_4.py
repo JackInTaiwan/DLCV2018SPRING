@@ -25,9 +25,10 @@ LR_STEPSIZE, LR_GAMMA = 20000, 0.95
 
 
 class Trainer:
-    def __init__(self, recorder, base_train, novel_support, novel_test, shot, way, cpu=False, lr=LR, step=None):
+    def __init__(self, recorder, base_train, base_test, novel_support, novel_test, shot, way, cpu=False, lr=LR, step=None):
         self.recorder = recorder
         self.base_train = base_train
+        self.base_test = base_test
         self.novel_support = novel_support
         self.novel_test = novel_test
         self.way = way
@@ -47,8 +48,9 @@ class Trainer:
         self.lr_schedule = tor.optim.lr_scheduler.StepLR(optimizer=self.optim, step_size=LR_STEPSIZE, gamma=LR_GAMMA)
 
 
-    def eval(self):
+    def eval_novel(self):
         self.model.eval()
+
         novel_support = tor.Tensor(self.novel_support).permute(0, 1, 4, 2, 3).cuda()
         novel_test = tor.Tensor(self.novel_test).permute(0, 1, 4, 2, 3).cuda()
 
@@ -61,6 +63,34 @@ class Trainer:
         novel_test.cpu()
 
         return acc
+
+
+
+    def eval_test(self) :
+        test_num = 100
+        x = self.base_test
+        y = np.array([i // test_num for i in range(80 * test_num)])
+        x, y = tor.Tensor(x), tor.Tensor(y, dtype=tor.long)
+
+        data_set = TensorDataset(x, y)
+
+        data_loader = DataLoader(
+            dataset=data_set,
+            batch_size=BATCHSIZE,
+            shuffle=True,
+            drop_last=True,
+        )
+
+        self.model.eval()
+        acc_list = []
+        for x, y in data_loader :
+            x, y = x.cuda(), y.cuda()
+            pred = self.model(x)
+            acc = np.mean((tor.argmax(pred).view(-1) == y.view(-1)).cpu().detach().numpy())
+            acc_list.append(acc)
+        self.model.train()
+
+        return float(np.mean(np.array(acc_list)))
 
 
     def get_loader(self) :
@@ -135,12 +165,13 @@ class Trainer:
                         self.recorder.save_models()
 
                     if self.recorder.get_steps() % CAL_ACC_PERIOD == 0:
-                        acc = self.eval()
+                        acc = self.eval_novel()
+                        acc_test = self.eval_test()
                         self.recorder.checkpoint({
                             "acc": acc,
                             "lr": self.optim.param_groups[0]["lr"]
                         })
-                        print("|Acc: {:<8}".format(round(acc, 5)))
+                        print("|Novel Acc: {:<8} | Test Acc".format(round(acc, 5), round(acc_test, 5)))
 
                     self.optim.step()
                     self.lr_schedule.step()
