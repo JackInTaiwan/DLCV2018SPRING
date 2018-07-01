@@ -114,7 +114,7 @@ class Classifier(nn.Module) :
                     if w == "1" :
                         x_tmp.append(x_support[i][k])
                 x_tmp = np.array(x_tmp)
-                x_tmp = np.mean(x_tmp, axis=1)
+                x_tmp = np.mean(x_tmp, axis=0)
                 x_support_total[i].append(x_tmp.reshape(-1))
 
         x_support_total = np.array(x_support_total)
