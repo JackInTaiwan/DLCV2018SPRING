@@ -6,7 +6,7 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 
 
 """
-model_29 + fc_1 remove relu (change extracting feature method)
+model_31 + small parameters
 """
 
 class Classifier(nn.Module) :
