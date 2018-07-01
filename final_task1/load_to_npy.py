@@ -24,7 +24,7 @@ def store_base_train():  # 80 classes, 500 images for each
 
 def store_base_valid():  # 80 classes, 100 images for each
     print('Store valid...')
-    classes = ['base/' + name + '/test/' for name in os.listdir('base/')]
+    classes = ['task2-dataset/base/' + name + '/test/' for name in os.listdir('task2-dataset/base/')]
     classes.sort()  # Image paths for each class
     base_valid = np.zeros((80, 100, 32, 32, 3), dtype=np.float32)
 
@@ -75,7 +75,7 @@ def test():
 
 if __name__ == '__main__':
     print('========= Preprocessing... ========== ')
-    store_base_train()
-    # store_base_valid()
+    #store_base_train()
+    store_base_valid()
     # store_novel()
     #store_test()
