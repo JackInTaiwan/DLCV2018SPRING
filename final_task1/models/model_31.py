@@ -1,4 +1,5 @@
 import numpy as np
+import torch as tor
 import torch.nn as nn
 from sklearn.neighbors import KNeighborsClassifier as KNN
 
@@ -104,7 +105,7 @@ class Classifier(nn.Module) :
         x_support = self.vgg16(x_support)
         x_support = x_support.view(x_support.size(0), -1)
         x_support = self.fc_1(x_support)
-        x_support = tor.mean(x_support, dim=1).cpu().detach().numpy()
+        x_support = tor.mean(x_support.view(20, shot, -1), dim=1).cpu().detach().numpy()
         y_support = np.array([i // 1 for i in range(1 * way)])
 
         knn.fit(x_support, y_support)
