@@ -13,7 +13,7 @@ class Classifier(nn.Module) :
     def __init__(self):
         super(Classifier, self).__init__()
 
-        conv_chls = [3, 2 ** 6, 2 ** 6, 2 ** 6]
+        conv_chls = [3, 2 ** 7, 2 ** 8, 2 ** 9]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
@@ -27,7 +27,7 @@ class Classifier(nn.Module) :
             #nn.Tanh(),
         )
 
-        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 7, 80]
+        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 10, 80]
 
         self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
