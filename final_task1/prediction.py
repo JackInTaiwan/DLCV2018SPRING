@@ -115,7 +115,7 @@ def evaluation(model, support_data, data_fp, output_fp) :
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model.pred(support_data, img)
         pred_list.append([i, table[int(pred[0])]])
-
+    print (pred_list)
     pred_df = pd.DataFrame(pred_list)
     pred_df.to_csv(output_fp, header=["image_id", "predicted_label"], index=None)
 
@@ -129,7 +129,7 @@ if __name__ == "__main__" :
     RECORDS_FP = "./records/"
 
     WAY = 5
-    SHOT = 5
+    SHOT = 10
 
     parser = ArgumentParser()
 

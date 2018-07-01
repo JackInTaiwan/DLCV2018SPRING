@@ -114,11 +114,14 @@ class Classifier(nn.Module) :
                     if w == "1" :
                         x_tmp.append(x_support[i][k])
                 x_tmp = np.array(x_tmp)
+                print (x_tmp)
                 x_tmp = np.mean(x_tmp, axis=1)
+                print (x_tmp)
                 x_support_total[i].append(x_tmp.reshape(-1))
 
         x_support_total = np.array(x_support_total)
         y_support = np.array([i // x_support_total.shape[1] for i in range(x_support_total.shape[1] * way)])
+        print(x_support_total.shape)
         x_support = x_support_total.reshape(-1, x_support_total.shape[2])
 
         knn.fit(x_support, y_support)
