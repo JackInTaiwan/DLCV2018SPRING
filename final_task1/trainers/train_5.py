@@ -21,7 +21,7 @@ EVAL_NOVEL_SIZE = 200
 
 EPOCH = 30
 STEP = 50000
-BATCHSIZE = 64
+BATCHSIZE = 32
 LR = 0.00001
 LR_STEPSIZE, LR_GAMMA = 20000, 0.95
 LDA = 1.0
@@ -98,7 +98,7 @@ class Trainer:
 
 
     def dump_data(self) :
-        label_pick = random.sample(range(80))
+        label_pick = random.sample(range(80), BATCHSIZE)
         x_1 = self.base_train[label_pick][random.randrange(500)]
         x_2 = self.base_train[label_pick][random.randrange(500)]
         x = np.vstack((x_1, x_2))
