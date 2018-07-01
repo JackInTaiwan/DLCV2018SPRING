@@ -97,7 +97,7 @@ class Classifier(nn.Module) :
         way, shot = int(x_support.size(0)), int(x_support.size(1))
 
         knn = KNN(
-            n_neighbors=5,
+            n_neighbors=1,
         )
 
         x_support = x_support.view(-1, 3, 32, 32)
@@ -105,7 +105,8 @@ class Classifier(nn.Module) :
         x_support = x_support.view(x_support.size(0), -1)
         x_support = self.fc_1(x_support)
         x_support = x_support.cpu().detach().numpy()
-        y_support = np.array([i // shot for i in range(shot * way)])
+        x_support = np.mean(x_support, axis=1)
+        y_support = np.array([i // 1 for i in range(1 * way)])
 
         knn.fit(x_support, y_support)
 
