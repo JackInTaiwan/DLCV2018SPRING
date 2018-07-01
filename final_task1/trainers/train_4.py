@@ -59,15 +59,14 @@ class Trainer:
         acc = np.mean(pred == labels)
 
         self.model.train()
-        novel_support.cpu()
-        novel_test.cpu()
+        novel_support = novel_support.cpu()
+        novel_support = novel_test.cpu()
 
         return acc
 
 
 
     def eval_test(self) :
-        EVAL_TEST_SIZE
         x = self.base_test[:, :EVAL_TEST_SIZE].reshape(-1, 32, 32, 3)
         y = np.array([i // EVAL_TEST_SIZE for i in range(80 * EVAL_TEST_SIZE)])
         x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
@@ -77,7 +76,7 @@ class Trainer:
         data_loader = DataLoader(
             dataset=data_set,
             batch_size=BATCHSIZE,
-            shuffle=True,
+            shuffle=False,
             drop_last=True,
         )
 
