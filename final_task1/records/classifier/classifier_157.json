@@ -1,0 +1,1 @@
+"{\"id\": \"e4639c247d1211e8ba3b000d3a01525d\", \"recorder_name\": \"classifier_157\", \"save_path\": \"records/classifier/\", \"mode\": \"torch\", \"model_names\": [\"classifier\"], \"desp\": \"model_version: 33 / trainer_version: 4\", \"steps\": 0, \"epochs\": 0, \"data\": {\"loss\": [[0, 4.416573]], \"train_acc\": [[0, 0.0]]}}"

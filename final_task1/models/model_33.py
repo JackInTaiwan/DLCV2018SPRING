@@ -109,15 +109,16 @@ class Classifier(nn.Module) :
         x_support = x_support.cpu().detach().numpy()
         x_support_total = [[] for _ in range(20)]
         for i in range(x_support.shape[0]) :
-            for j in range(2 ** shot) :
+            for j in range(1, 2 ** shot) :
+                x_tmp = []
                 for k, w in enumerate("{:0>5}".format(bin(j)[2:])) :
-                    x_tmp = []
                     if w == "1" :
                         x_tmp.append(x_support[i][k])
                 x_tmp = np.array(x_tmp)
                 x_tmp = np.mean(x_tmp, axis=1)
                 x_support_total[i].append(x_tmp.reshape(-1))
 
+        x_support_total = np.array(x_support_total)
         y_support = np.array([i // x_support_total.shape[1] for i in range(x_support_total.shape[1] * way)])
         x_support = x_support_total.reshape(-1, x_support_total.shape[2])
 
