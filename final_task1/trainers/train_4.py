@@ -68,7 +68,7 @@ class Trainer:
 
     def eval_test(self) :
         test_num = 100
-        x = self.base_test
+        x = self.base_test.reshape(-1, 32, 32, 3)
         y = np.array([i // test_num for i in range(80 * test_num)])
         x, y = tor.tensor(x), tor.tensor(y, dtype=tor.long)
         print (x.size(), y.size())
@@ -84,7 +84,7 @@ class Trainer:
         self.model.eval()
         acc_list = []
         for x, y in data_loader :
-            x, y = x.cuda(), y.cuda()
+            x, y = x.permute(0, 3, 1, 2).cuda(), y.cuda()
             pred = self.model(x)
             acc = np.mean((tor.argmax(pred).view(-1) == y.view(-1)).cpu().detach().numpy())
             acc_list.append(acc)
