@@ -119,7 +119,6 @@ class Trainer:
             self.optim.zero_grad()
             x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
             x = x.permute(0, 3, 1, 2)
-            print (x.size())
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()
 
