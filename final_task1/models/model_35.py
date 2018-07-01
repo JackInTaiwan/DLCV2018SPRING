@@ -27,7 +27,7 @@ class Classifier(nn.Module) :
             #nn.Tanh(),
         )
 
-        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 10, 80]
+        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 11, 80]
 
         self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
