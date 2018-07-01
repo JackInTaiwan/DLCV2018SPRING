@@ -24,7 +24,7 @@ def store_base_train():  # 80 classes, 500 images for each
 
 def store_base_valid():  # 80 classes, 100 images for each
     print('Store valid...')
-    classes = ['base/' + name + '/test/' for name in os.listdir('base/')]
+    classes = ['task2-dataset/base/' + name + '/test/' for name in os.listdir('task2-dataset/base/')]
     classes.sort()  # Image paths for each class
     base_valid = np.zeros((80, 100, 32, 32, 3), dtype=np.float32)
 
@@ -33,7 +33,7 @@ def store_base_valid():  # 80 classes, 100 images for each
         img_names.sort()
 
         for img_id, img_name in enumerate(img_names):
-            base_valid[class_id, img_id] = mpimg.imread(img_name)
+            base_valid[class_id, img_id] = plt.imread(img_name)
 
     np.save('base_valid.npy', base_valid)
 
@@ -50,7 +50,7 @@ def store_novel():  # 20 classes, 500 images for each
         img_names.sort()
 
         for img_id, img_name in enumerate(img_names):
-            novel[class_id, img_id] = mpimg.imread(img_name)
+            novel[class_id, img_id] = plt.imread(img_name)
 
     np.save('novel.npy', novel)
 
@@ -61,21 +61,16 @@ def store_test():  # total 2000 images of novel class
     test = np.zeros((2000, 32, 32, 3), dtype=np.float32)
     img_names = ['test/' + str(i) + '.png' for i in range(2000)]
     for img_id, img_name in enumerate(img_names):
-        test[img_id] = mpimg.imread(img_name)
+        test[img_id] = plt.imread(img_name)
 
     np.save('test.npy', test)
-
-
-
-def test():
-    print('test 1')
 
 
 
 
 if __name__ == '__main__':
     print('========= Preprocessing... ========== ')
-    # store_base_train()
-    # store_base_valid()
-    # store_novel()
-    store_test()
+    #store_base_train()
+    store_base_valid()
+    #store_novel()
+    #store_test()
