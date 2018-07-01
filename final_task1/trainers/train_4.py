@@ -13,7 +13,7 @@ SAVE_JSON_PERIOD = 50  # steps
 
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
-EVAL_TEST_SIZE = 15
+EVAL_TEST_SIZE = 50
 
 EPOCH = 30
 STEP = 50000
@@ -67,9 +67,9 @@ class Trainer:
 
 
     def eval_test(self) :
-        test_num = 100
-        x = self.base_test.reshape(-1, 32, 32, 3)
-        y = np.array([i // test_num for i in range(80 * test_num)])
+        EVAL_TEST_SIZE
+        x = self.base_test[:, :EVAL_TEST_SIZE].reshape(-1, 32, 32, 3)
+        y = np.array([i // EVAL_TEST_SIZE for i in range(80 * EVAL_TEST_SIZE)])
         x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
 
         data_set = TensorDataset(x, y)
