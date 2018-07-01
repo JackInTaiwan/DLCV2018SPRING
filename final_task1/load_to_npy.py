@@ -7,7 +7,7 @@ from matplotlib import pyplot as plt
 
 def store_base_train():  # 80 classes, 500 images for each
     print('Store train...')
-    classes = ['task2-dataset/base/' + name + '/train/' for name in os.listdir('base/')]
+    classes = ['task2-dataset/base/' + name + '/train/' for name in os.listdir('task2-dataset/base/')]
     classes.sort()  # Image paths for each class
     base_train = np.zeros((80, 500, 32, 32, 3), dtype=np.float32)
 

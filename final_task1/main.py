@@ -13,8 +13,8 @@ from models import MODELS
 
 def load_data(base_dp, novel_dp, shot=5) :
     # base_train loading
+    """
     base_train = np.zeros((80, 500, 32, 32, 3))
-
     for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
         train_fp = os.path.join(base_dp, dir_name, "train")
         for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
@@ -23,6 +23,9 @@ def load_data(base_dp, novel_dp, shot=5) :
             img = (img - 0.5) * 2
             #img = img * 225.
             base_train[label_idx][i] = img
+    """
+    base_train = np.load("./base_train.npy")
+    base_train = (base_train - 0.5) * 2
 
     # base_test loading
     base_test = np.zeros((80, 100, 32, 32, 3))
