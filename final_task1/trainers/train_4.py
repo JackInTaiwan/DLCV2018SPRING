@@ -85,7 +85,7 @@ class Trainer:
         for x, y in data_loader :
             x, y = x.permute(0, 3, 1, 2).cuda(), y.cuda()
             pred = self.model(x)
-            acc = np.mean((tor.argmax(pred).view(-1) == y.view(-1)).cpu().detach().numpy())
+            acc = np.mean((tor.argmax(pred, dim=1).view(-1) == y.view(-1)).cpu().detach().numpy())
             acc_list.append(acc)
         self.model.train()
 
