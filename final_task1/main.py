@@ -120,7 +120,7 @@ if __name__ == "__main__" :
     parser.add_argument("--lr", action="store", type=float, default=False, help="learning rate")
     parser.add_argument("--bs", action="store", type=int, default=None, help="batch size")
     parser.add_argument("--way", action="store", type=int, default=None, help="number of way")
-    parser.add_argument("--shot", action="store", type=int, default=None, help="number of shot")
+    parser.add_argument("--shot", action="store", type=int, default=5, help="number of shot")
     parser.add_argument("--load", action="store", type=str, default=None, help="the fn of json you want to load")
     parser.add_argument("--record", action="store", type=str, required=True, help="dir path of record")
     parser.add_argument("--net", action="store", type=str, required=True, help="name of model")
@@ -147,7 +147,7 @@ if __name__ == "__main__" :
     random.seed(seed)
 
     """ Main """
-    base_train, base_test, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
+    base_train, base_test, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, SHOT)
     recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, trainer_version, record_dp, json_fn, init)
 
     Trainer = TRAINERS[trainer_version - 1]
