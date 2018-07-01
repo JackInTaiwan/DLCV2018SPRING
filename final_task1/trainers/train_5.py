@@ -119,7 +119,6 @@ class Trainer:
             self.optim.zero_grad()
             x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
             x = x.permute(0, 3, 1, 2)
-            print (x.size())
             if not self.cpu:
                 x, y = x.cuda(), y.cuda()
 
@@ -132,6 +131,7 @@ class Trainer:
 
             loss_cls = self.loss_func(scores, y)
             loss_sim = tor.mean((cosine_similarity(features[0], features[1], dim=1) * -1 + 1.0))
+            print (loss_sim)
             loss = loss_cls + LDA * loss_sim
             loss.backward()
 
