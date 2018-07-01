@@ -131,8 +131,7 @@ class Trainer:
             train_acc_list.append(acc)
 
             loss_cls = self.loss_func(scores, y)
-            loss_sim = (cosine_similarity(features[0], features[1], dim=1) * -1 + 1.0) / features[0].size(0)
-            print (loss_sim)
+            loss_sim = tor.mean((cosine_similarity(features[0], features[1], dim=1) * -1 + 1.0))
             loss = loss_cls + LDA * loss_sim
             loss.backward()
 
