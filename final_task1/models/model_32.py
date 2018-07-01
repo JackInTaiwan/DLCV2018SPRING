@@ -13,7 +13,7 @@ class Classifier(nn.Module) :
     def __init__(self):
         super(Classifier, self).__init__()
 
-        conv_chls = [3, 2 ** 7, 2 ** 7, 2 ** 7]
+        conv_chls = [3, 2 ** 8, 2 ** 8, 2 ** 8]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
@@ -22,16 +22,15 @@ class Classifier(nn.Module) :
             self.conv(conv_chls[1], conv_chls[2], 3, 1),
             nn.BatchNorm2d(num_features=conv_chls[2]),
             nn.MaxPool2d(kernel_size=2),
-            self.conv(conv_chls[2], conv_chls[3], 3, 1, relu=False),
-            nn.MaxPool2d(kernel_size=2),
+            self.conv(conv_chls[2], conv_chls[3], 3, 1),
+            nn.MaxPool2d(kernel_size=4),
             #nn.Tanh(),
         )
 
-        score_dense_chls = [conv_chls[-1] * 4 * 4, 2 ** 9, 100]
+        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 9, 100]
 
         self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
-        self.sig = nn.Sigmoid()
 
 
 
@@ -97,7 +96,7 @@ class Classifier(nn.Module) :
         shot, way = 5, 20
 
         knn = KNN(
-            n_neighbors=1,
+            n_neighbors=5,
         )
 
         x_support = x_support.view(-1, 3, 32, 32)
