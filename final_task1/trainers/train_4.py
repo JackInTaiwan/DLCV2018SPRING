@@ -70,7 +70,8 @@ class Trainer:
         test_num = 100
         x = self.base_test.reshape(-1, 32, 32, 3)
         y = np.array([i // test_num for i in range(80 * test_num)])
-        x, y = tor.tensor(x), tor.tensor(y, dtype=tor.long)
+        x, y = tor.Tensor(x), tor.tensor(y, dtype=tor.long)
+
         data_set = TensorDataset(x, y)
 
         data_loader = DataLoader(
