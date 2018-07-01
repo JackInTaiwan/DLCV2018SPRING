@@ -28,6 +28,7 @@ def load_data(base_dp, novel_dp, shot=5) :
     base_train = (base_train - 0.5) * 2
 
     # base_test loading
+    """
     base_test = np.zeros((80, 100, 32, 32, 3))
     for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
         test_fp = os.path.join(base_dp, dir_name, "test")
@@ -38,6 +39,9 @@ def load_data(base_dp, novel_dp, shot=5) :
             #img = img * 225.
 
             base_test[label_idx][i] = img
+    """
+    base_test = np.load("./base_valid.npy")
+    base_test = (base_test - 0.5) * 2
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
