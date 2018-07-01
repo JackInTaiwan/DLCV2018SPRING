@@ -7,7 +7,7 @@ from argparse import ArgumentParser
 from butirecorder import Recorder
 from trainers import TRAINERS
 from models import MODELS
-
+import time
 
 
 
@@ -147,9 +147,12 @@ if __name__ == "__main__" :
     random.seed(seed)
 
     """ Main """
+    s = time.time()
     base_train, base_test, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, SHOT)
+    e = time.time()
+    print (e - s)
     recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, trainer_version, record_dp, json_fn, init)
-
+    print(time.time() -e)
     Trainer = TRAINERS[trainer_version - 1]
     trainer = Trainer(
         recorder=recorder,
