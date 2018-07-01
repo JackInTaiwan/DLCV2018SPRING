@@ -1,5 +1,4 @@
 import numpy as np
-import torch as tor
 import torch.nn as nn
 from sklearn.neighbors import KNeighborsClassifier as KNN
 

@@ -1,4 +1,5 @@
 import os
+import random
 import torch as tor
 import numpy as np
 import pandas as pd
@@ -6,6 +7,64 @@ import matplotlib.pyplot as plt
 from argparse import ArgumentParser
 from models import MODELS
 
+
+
+
+def load_data(base_dp, novel_dp, shot=5) :
+    # base_train loading
+    """
+    base_train = np.zeros((80, 500, 32, 32, 3))
+    for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
+        train_fp = os.path.join(base_dp, dir_name, "train")
+        for i, img_fn in enumerate(sorted(os.listdir(train_fp))) :
+            img_fp = os.path.join(train_fp, img_fn)
+            img = plt.imread(img_fp)
+            img = (img - 0.5) * 2
+            #img = img * 225.
+            base_train[label_idx][i] = img
+    """
+    base_train = np.load("./base_train.npy")
+    base_train = (base_train - 0.5) * 2
+
+    # base_test loading
+    """
+    base_test = np.zeros((80, 100, 32, 32, 3))
+    for label_idx, dir_name in enumerate(sorted(os.listdir(base_dp))) :
+        test_fp = os.path.join(base_dp, dir_name, "test")
+        for i, img_fn in enumerate(sorted(os.listdir(test_fp))) :
+            img_fp = os.path.join(test_fp, img_fn)
+            img = plt.imread(img_fp)
+            img = (img - 0.5) * 2
+            #img = img * 225.
+
+            base_test[label_idx][i] = img
+    """
+    base_test = np.load("./base_valid.npy")
+    base_test = (base_test - 0.5) * 2
+
+    # novel loading
+    # img shape = (32, 32, 3), pixel range=(0, 1)
+    novel_support = np.zeros((20, shot, 32, 32, 3))
+    novel_test = np.zeros((20, 500 - shot, 32, 32, 3))
+    for label_idx, dir_name in enumerate(sorted(os.listdir(novel_dp))) :
+        train_fp = os.path.join(novel_dp, dir_name, "train")
+        fn_list = os.listdir(train_fp)
+        random.shuffle(fn_list)
+        for i, img_fn in enumerate(fn_list) :
+            img_fp = os.path.join(train_fp, img_fn)
+            img = plt.imread(img_fp)
+            img = (img - 0.5) * 2
+            #img = img * 225.
+
+            if i < shot:
+                novel_support[label_idx][i] = img
+
+            else:
+                novel_test[label_idx][i - shot] = img
+
+    print(base_train.shape, novel_support.shape, novel_test.shape)
+
+    return base_train, base_test, novel_support, novel_test
 
 
 
@@ -51,8 +110,8 @@ def evaluation(model, support_data, data_fp, output_fp) :
         fn = "{}.png".format(i)
         img_fp = os.path.join(data_fp, fn)
         img = plt.imread(img_fp)
-        #img = (img - 0.5) * 2
-        img = img * 225.
+        img = (img - 0.5) * 2
+        #img = img * 225.
         img = tor.Tensor(img).view(1, 32, 32, 3).permute(0, 3, 1, 2).cuda()
         pred = model(support_data, img)
         pred = tor.argmax(pred, dim=0).cpu()
@@ -65,6 +124,14 @@ def evaluation(model, support_data, data_fp, output_fp) :
 
 
 if __name__ == "__main__" :
+    """ Parameters """
+    NOVEL_DIR_FP = "./task2-dataset/novel/"
+    BASE_DIR_FP = "./task2-dataset/base/"
+    RECORDS_FP = "./records/"
+
+    WAY = 5
+    SHOT = 5
+
     parser = ArgumentParser()
 
     parser.add_argument("--way", type=int, default=20, help="number of way")
@@ -73,6 +140,7 @@ if __name__ == "__main__" :
     parser.add_argument("--version", type=int, required=True, help="version of model")
     parser.add_argument("--data", type=str, required=True, help="data dir path")
     parser.add_argument("--output", type=str, required=True, help="file path for output" )
+    parser.add_argument("--seed", type=int, required=True, help="seed")
 
     way = parser.parse_args().way
     shot = parser.parse_args().shot
@@ -80,8 +148,12 @@ if __name__ == "__main__" :
     model_version = parser.parse_args().version
     data_fp = parser.parse_args().data
     output_fp = parser.parse_args().output
+    seed = parser.parse_args().seed
 
+    random.seed(seed)
+
+    base_train, base_test, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, SHOT)
     model = load_model(model_version, model_fp)
-    support_data = load_novel_class(shot)
-    evaluation(model, support_data, data_fp, output_fp)
+    #support_data = load_novel_class(shot)
+    evaluation(model, novel_support, data_fp, output_fp)
 
