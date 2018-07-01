@@ -93,56 +93,56 @@ class Trainer:
         loss_list = []
         train_acc_list = []
 
-        for _ in range(self.step // (AVAILABLE_SIZE // BATCHSIZE)) :
+        while self.step > 0 :
             for x, y in loader :
-                print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
-                self.optim.zero_grad()
+                if self.step > 0 :
+                    print("|Steps: {:>5} |".format(self.recorder.get_steps()), end="\r")
+                    self.optim.zero_grad()
 
-                x = x.permute(0, 3, 1, 2)
+                    x = x.permute(0, 3, 1, 2)
 
-                if not self.cpu:
-                    x, y = x.cuda(), y.cuda()
+                    if not self.cpu:
+                        x, y = x.cuda(), y.cuda()
 
-                scores = self.model(x)
+                    scores = self.model(x)
 
-                # calculate training accuracy
-                acc = (tor.argmax(scores, dim=1) == y.view(-1).cuda())
-                acc = np.mean(acc.cpu().numpy())
-                train_acc_list.append(acc)
+                    # calculate training accuracy
+                    acc = (tor.argmax(scores, dim=1) == y.view(-1).cuda())
+                    acc = np.mean(acc.cpu().numpy())
+                    train_acc_list.append(acc)
 
-                loss = self.loss_func(scores, y)
-                loss.backward()
+                    loss = self.loss_func(scores, y)
+                    loss.backward()
 
-                loss_list.append(float(loss.data))
+                    loss_list.append(float(loss.data))
 
-                if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0:
-                    loss_avg = round(float(np.mean(np.array(loss_list))), 6)
-                    train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
-                    self.recorder.checkpoint({
-                        "loss": loss_avg,
-                        "train_acc": train_acc_avg
-                    })
-                    print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
+                    if self.recorder.get_steps() % SHOW_LOSS_PERIOD == 0:
+                        loss_avg = round(float(np.mean(np.array(loss_list))), 6)
+                        train_acc_avg = round(float(np.mean(np.array(train_acc_list))), 5)
+                        self.recorder.checkpoint({
+                            "loss": loss_avg,
+                            "train_acc": train_acc_avg
+                        })
+                        print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
 
-                    loss_list = []
-                    train_acc_list = []
+                        loss_list = []
+                        train_acc_list = []
 
-                if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0:
-                    self.recorder.save_checkpoints()
+                    if self.recorder.get_steps() % SAVE_JSON_PERIOD == 0:
+                        self.recorder.save_checkpoints()
 
-                if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0:
-                    self.recorder.save_models()
+                    if self.recorder.get_steps() % SAVE_MODEL_PERIOD == 0:
+                        self.recorder.save_models()
 
-                if self.recorder.get_steps() % CAL_ACC_PERIOD == 0:
-                    acc = self.eval()
-                    self.recorder.checkpoint({
-                        "acc": acc,
-                        "lr": self.optim.param_groups[0]["lr"]
-                    })
-                    print("|Acc: {:<8}".format(round(acc, 5)))
+                    if self.recorder.get_steps() % CAL_ACC_PERIOD == 0:
+                        acc = self.eval()
+                        self.recorder.checkpoint({
+                            "acc": acc,
+                            "lr": self.optim.param_groups[0]["lr"]
+                        })
+                        print("|Acc: {:<8}".format(round(acc, 5)))
 
-                self.optim.step()
-                self.lr_schedule.step()
-                self.recorder.step()
-
-
+                    self.optim.step()
+                    self.lr_schedule.step()
+                    self.recorder.step()
+                    self.step -= 1
