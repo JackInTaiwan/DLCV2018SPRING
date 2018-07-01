@@ -6,7 +6,7 @@ from torch.utils.data import DataLoader, TensorDataset
 
 
 """ Parameters """
-CAL_ACC_PERIOD = 1000  # steps
+CAL_ACC_PERIOD = 1  # steps
 SHOW_LOSS_PERIOD = 100  # steps
 SAVE_MODEL_PERIOD = 1000  # epochs
 SAVE_JSON_PERIOD = 50  # steps
@@ -14,7 +14,7 @@ SAVE_JSON_PERIOD = 50  # steps
 AVAILABLE_SIZE = None
 EVAL_TRAIN_SIZE = 100
 EVAL_TEST_SIZE = 50
-EVAL_NOVEL_SIZE = 2
+EVAL_NOVEL_SIZE = 200
 
 
 EPOCH = 30
