@@ -171,7 +171,7 @@ class Trainer:
                             "acc": acc,
                             "lr": self.optim.param_groups[0]["lr"]
                         })
-                        print("|Novel Acc: {:<8} | Test Acc".format(round(acc, 5), round(acc_test, 5)))
+                        print("|Novel Acc: {:<8} | Test Acc: {:<8}".format(round(acc, 5), round(acc_test, 5)))
 
                     self.optim.step()
                     self.lr_schedule.step()
