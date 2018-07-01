@@ -5,9 +5,7 @@ import matplotlib.pyplot as plt
 
 from argparse import ArgumentParser
 from butirecorder import Recorder
-from train import Trainer as Trainer_1
-from train_2 import Trainer as Trainer_2
-from train_3 import Trainer as Trainer_3
+from trainers import TRAINERS
 from models import MODELS
 
 
@@ -53,7 +51,7 @@ def load_data(base_dp, novel_dp, shot=5) :
 
 
 
-def load_recorder(net_name, Model, model_version, model_index, record_dp, json_fn, init) :
+def load_recorder(net_name, Model, model_version, model_index, trainer_version, record_dp, json_fn, init) :
     model = Model()
     if init :
         model.init_weight()
@@ -68,7 +66,7 @@ def load_recorder(net_name, Model, model_version, model_index, record_dp, json_f
             models={
                 net_name: model,
             },
-            desp="model_version: {}".format(model_version),
+            desp="model_version: {} / trainer_version: {}".format(model_version, trainer_version),
         )
 
     else :
@@ -79,7 +77,7 @@ def load_recorder(net_name, Model, model_version, model_index, record_dp, json_f
             models={
                 net_name: model,
             },
-            desp="model_version: {}".format(model_version),
+            desp="model_version: {} / trainer_version: {}".format(model_version, trainer_version),
         )
         recorder.load(json_fn)
 
@@ -93,12 +91,6 @@ if __name__ == "__main__" :
     NOVEL_DIR_FP = "./task2-dataset/novel/"
     BASE_DIR_FP = "./task2-dataset/base/"
     RECORDS_FP = "./records/"
-
-    TRAINERS = [
-        Trainer_1,
-        Trainer_2,
-        Trainer_3,
-    ]
 
     WAY = 5
     SHOT = 5
@@ -145,7 +137,7 @@ if __name__ == "__main__" :
 
     """ Main """
     base_train, novel_support, novel_test = load_data(BASE_DIR_FP, NOVEL_DIR_FP, shot=5)
-    recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, record_dp, json_fn, init)
+    recorder = load_recorder(net_name, MODELS[model_version - 1], model_version, model_index, trainer_version, record_dp, json_fn, init)
 
     Trainer = TRAINERS[trainer_version - 1]
     trainer = Trainer(
