@@ -23,7 +23,7 @@ def load_data(base_dp, novel_dp, shot=5) :
             img = (img - 0.5) * 2
             #img = img * 225.
 
-            base_train[label_idx][i-shot] = img
+            base_train[label_idx][i] = img
 
     # novel loading
     # img shape = (32, 32, 3), pixel range=(0, 1)
