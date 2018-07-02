@@ -14,7 +14,7 @@ class Classifier(nn.Module) :
     def __init__(self):
         super(Classifier, self).__init__()
 
-        conv_chls = [3, 2 ** 7, 2 ** 8, 2 ** 8]
+        conv_chls = [3, 2 ** 8, 2 ** 8, 2 ** 8]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
