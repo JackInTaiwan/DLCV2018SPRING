@@ -31,7 +31,7 @@ class Classifier(nn.Module) :
 
         score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 12, 80]
 
-        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
+        self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=False)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)
         self.sig = nn.Sigmoid()
 
@@ -90,6 +90,7 @@ class Classifier(nn.Module) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
         x = self.fc_1(x)
+        x = nn.Tanh(x)
         score = self.fc_2(x)
 
         return score
