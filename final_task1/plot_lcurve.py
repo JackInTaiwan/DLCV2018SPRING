@@ -21,6 +21,6 @@ plt.figure(1)
 loss_list = data["data"]["loss"]
 plt.xlabel("steps")
 plt.ylabel("loss")
-plt.plot([item[0] for item in acc_list], [item[1] for item in loss_list], c="red")
+plt.plot([item[0] for item in loss_list], [item[1] for item in loss_list], c="red")
 
 plt.show()
