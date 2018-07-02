@@ -24,7 +24,7 @@ STEP = 50000
 BATCHSIZE = 32
 LR = 0.00001
 LR_STEPSIZE, LR_GAMMA = 20000, 0.95
-LDA = 100.0
+LDA = 1.0
 
 
 
@@ -144,7 +144,6 @@ class Trainer:
                     "train_acc": train_acc_avg
                 })
                 print("|Loss: {:<8} |Train Acc: {:<8}".format(loss_avg, train_acc_avg))
-                print (loss_sim)
 
                 loss_list = []
                 train_acc_list = []
