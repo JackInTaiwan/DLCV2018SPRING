@@ -129,7 +129,7 @@ if __name__ == "__main__" :
     RECORDS_FP = "./records/"
 
     WAY = 5
-    SHOT = 10
+    SHOT = 5
 
     parser = ArgumentParser()
 
