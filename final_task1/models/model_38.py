@@ -7,14 +7,15 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 
 
 """
-model_31 + bigger parameters
+model_37 + score_dense smaller
+acc ~ 0.525 
 """
 
 class Classifier(nn.Module) :
     def __init__(self):
         super(Classifier, self).__init__()
 
-        conv_chls = [3, 2 ** 8, 2 ** 9, 2 ** 9]
+        conv_chls = [3, 2 ** 7, 2 ** 8, 2 ** 9]
 
         self.vgg16 = nn.Sequential(
             self.conv(conv_chls[0], conv_chls[1], 3, 1),
@@ -28,7 +29,7 @@ class Classifier(nn.Module) :
             #nn.Tanh(),
         )
 
-        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 9, 80]
+        score_dense_chls = [conv_chls[-1] * 2 * 2, 2 ** 12, 80]
 
         self.fc_1 = self.fc(score_dense_chls[0], score_dense_chls[1], relu=False, sig=True)
         self.fc_2 = self.fc(score_dense_chls[1], score_dense_chls[2], relu=False)

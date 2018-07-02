@@ -8,6 +8,7 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 
 """
 model_31 + bigger parameters
+acc ~ .54 (LDA=1.0)
 """
 
 class Classifier(nn.Module) :

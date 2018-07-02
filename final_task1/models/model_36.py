@@ -7,6 +7,7 @@ from sklearn.neighbors import KNeighborsClassifier as KNN
 
 """
 model_33 + cosine-similarity
+acc ~ 0.49
 """
 
 class Classifier(nn.Module) :
