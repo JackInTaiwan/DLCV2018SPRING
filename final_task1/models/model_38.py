@@ -78,6 +78,7 @@ class Classifier(nn.Module) :
         else :
             fc = nn.Sequential(
                 nn.Linear(num_in, num_out, bias=True),
+                nn.Tanh(),
             )
         return fc
 
@@ -90,7 +91,6 @@ class Classifier(nn.Module) :
         x = self.vgg16(x)
         x = x.view(x.size(0), -1)
         x = self.fc_1(x)
-        x = nn.Tanh(x)
         score = self.fc_2(x)
 
         return score
